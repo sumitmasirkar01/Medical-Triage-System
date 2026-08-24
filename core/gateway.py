@@ -1,100 +1,107 @@
-import threading
+# core/gateway.py
+"""
+Clinical Triage Gateway & Starvation-Free Dynamic Aging Queue.
+Routes incoming Head CT volumes into RED, YELLOW, or GREEN operational zones
+and computes dynamic priority scores to prevent patient starvation in emergency queues.
+"""
+
 import time
-from dataclasses import dataclass
 from enum import Enum
-from typing import List, Dict, Any
+from dataclasses import dataclass, field
+from typing import Optional, List, Dict, Any
+import numpy as np
 
 
 class TriageZone(Enum):
-    ZONE_1_ESCALATED = "Zone 1: Immediate Escalation"
-    ZONE_2_SECOND_READ = "Zone 2: Second-Read Audit"
-    ZONE_3_ROUTINE = "Zone 3: Normal Worklist"
+    """Operational clinical prioritization zones."""
+    RED = "RED"        # Emergent / Immediate Acute Intervention Required (P_crit >= 0.70)
+    YELLOW = "YELLOW"  # Indeterminate / Elevated Risk Monitoring (0.30 <= P_crit < 0.70)
+    GREEN = "GREEN"    # Routine / Low Risk Baseline (P_crit < 0.30)
 
 
 @dataclass
 class TriageRecord:
+    """Standardized patient triage metadata and inferential audit record."""
+    patient_id: str
     study_uid: str
-    pseudonym_token: str
-    modality: str
     p_critical: float
-    confidence: float
-    subtypes: List[float]
-    assigned_zone: TriageZone
-    ingress_monotonic: float
-    ingress_wall_time: float
-    heatmap_iou: float
-    is_explainability_verified: bool
-
-    def current_priority_score(self, current_mono: float, alpha: float = 0.25, k_half: float = 1800.0) -> float:
-        """
-        S(t) = P(critical) * C + alpha * (t / (t + K))
-        Using monotonic clock to guarantee resistance against NTP clock shifts.
-        """
-        wait_seconds = max(0.0, current_mono - self.ingress_monotonic)
-        aging_boost = alpha * (wait_seconds / (wait_seconds + k_half))
-        return float((self.p_critical * self.confidence) + aging_boost)
+    confidence: float = 1.0
+    psi_score: float = 1.0
+    arrival_time: float = field(default_factory=time.time)
+    assigned_zone: Optional[TriageZone] = None
+    priority_score: float = 0.0
+    metadata: Dict[str, Any] = field(default_factory=dict)
 
 
 class TriageGateway:
-    """Thread-safe operational triage controller."""
-    def __init__(self, p_high: float = 0.85, c_high: float = 0.80, p_low: float = 0.45):
-        self.p_high = p_high
-        self.c_high = c_high
-        self.p_low = p_low
-        self._lock = threading.RLock()
-        self._worklist: List[TriageRecord] = []
+    """
+    Deterministic Triage Router with Starvation-Free Aging Dynamics:
+    
+    Priority Score Formulation:
+        S(t) = P_critical * Confidence + lambda_aging * (t / 60.0) + gamma_psi * (1.0 - PSI)
+        
+    Where:
+        - P_critical * Confidence: Calibrated acute risk magnitude
+        - lambda_aging: Starvation prevention rate per minute in queue (default: 0.005/min)
+        - gamma_psi * (1.0 - PSI): Saliency instability uncertainty penalty
+    """
 
-    def classify_zone(self, p_crit: float, confidence: float) -> TriageZone:
-        if p_crit >= self.p_high and confidence >= self.c_high:
-            return TriageZone.ZONE_1_ESCALATED
-        elif (self.p_low <= p_crit < self.p_high) or (confidence < self.c_high):
-            return TriageZone.ZONE_2_SECOND_READ
-        else:
-            return TriageZone.ZONE_3_ROUTINE
-
-    def register_study(
+    def __init__(
         self,
-        study_uid: str,
-        pseudonym_token: str,
-        modality: str,
-        p_crit: float,
-        confidence: float,
-        subtypes: List[float],
-        iou_score: float,
-        is_verified: bool,
-        arrival_offset_sec: float = 0.0
-    ) -> TriageRecord:
-        with self._lock:
-            zone = self.classify_zone(p_crit, confidence)
-            now_mono = time.monotonic() - arrival_offset_sec
-            now_wall = time.time() - arrival_offset_sec
-            
-            record = TriageRecord(
-                study_uid=study_uid,
-                pseudonym_token=pseudonym_token,
-                modality=modality,
-                p_critical=p_crit,
-                confidence=confidence,
-                subtypes=subtypes,
-                assigned_zone=zone,
-                ingress_monotonic=now_mono,
-                ingress_wall_time=now_wall,
-                heatmap_iou=iou_score,
-                is_explainability_verified=is_verified
-            )
-            self._worklist.append(record)
-            return record
+        red_threshold: float = 0.70,
+        yellow_lower: float = 0.30,
+        yellow_upper: float = 0.70,
+        aging_rate_per_min: float = 0.005,
+        psi_penalty_weight: float = 0.05
+    ):
+        self.red_threshold = red_threshold
+        self.yellow_lower = yellow_lower
+        self.yellow_upper = yellow_upper
+        self.aging_rate_per_min = aging_rate_per_min
+        self.psi_penalty_weight = psi_penalty_weight
 
-    def get_dynamic_ranked_queue(self) -> List[Dict[str, Any]]:
-        with self._lock:
-            curr_mono = time.monotonic()
-            ranked = []
-            for record in self._worklist:
-                score = record.current_priority_score(curr_mono)
-                ranked.append({
-                    "record": record,
-                    "score": score,
-                    "wait_minutes": (curr_mono - record.ingress_monotonic) / 60.0
-                })
-            ranked.sort(key=lambda item: item["score"], reverse=True)
-            return ranked
+    def route_record(self, record: TriageRecord) -> TriageZone:
+        """Assigns the operational triage zone based on calibrated critical hemorrhage probability."""
+        p = float(np.clip(record.p_critical, 0.0, 1.0))
+        
+        if p >= self.red_threshold:
+            zone = TriageZone.RED
+        elif self.yellow_lower <= p < self.yellow_upper:
+            zone = TriageZone.YELLOW
+        else:
+            zone = TriageZone.GREEN
+
+        record.assigned_zone = zone
+        return zone
+
+    def compute_priority_score(self, record: TriageRecord, elapsed_seconds: Optional[float] = None) -> float:
+        """
+        Calculates monotonic dynamic priority score S(t) for queue sorting.
+        Ensures patients with lower initial risk cannot starve indefinitely behind newer arrivals.
+        """
+        if elapsed_seconds is None:
+            elapsed_seconds = max(0.0, time.time() - record.arrival_time)
+        else:
+            elapsed_seconds = max(0.0, float(elapsed_seconds))
+
+        elapsed_minutes = elapsed_seconds / 60.0
+        
+        # Base risk weighted by model confidence
+        base_risk = record.p_critical * record.confidence
+        
+        # Linear aging term to prevent queue starvation
+        aging_boost = self.aging_rate_per_min * elapsed_minutes
+        
+        # Explainability uncertainty penalty (unstable Grad-CAM bumps priority for human verification)
+        psi_penalty = self.psi_penalty_weight * max(0.0, 1.0 - record.psi_score)
+        
+        total_score = base_risk + aging_boost + psi_penalty
+        record.priority_score = float(total_score)
+        return record.priority_score
+
+    def sort_queue(self, queue: List[TriageRecord]) -> List[TriageRecord]:
+        """Sorts emergency worklist by dynamic priority score S(t) descending."""
+        now = time.time()
+        for rec in queue:
+            self.compute_priority_score(rec, elapsed_seconds=now - rec.arrival_time)
+        return sorted(queue, key=lambda r: r.priority_score, reverse=True)

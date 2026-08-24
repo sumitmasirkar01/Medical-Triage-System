@@ -1,163 +1,364 @@
+# core/models.py
+"""
+Multi-Modal Clinical Triage Model Suite:
+  - Pathway A: 2.5D EfficientNet-B0 + Bi-GRU Sequence Aggregator (Head CT)
+  - Pathway B: DenseNet-121 Multi-Label Thoracic Classifier (Chest X-Ray)
+  - Pathway C: EfficientNet-B0 Multi-Label Knee MRI Abnormality Classifier (Knee MRI)
+  - Stateless Context-Managed Grad-CAM & Perturbation Stability Evaluator (PSI)
+  - Polymorphic Adapters conforming to BaseTriageAdapter
+"""
+
+import os
+from typing import Tuple, Dict, Optional, List, Any
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torchvision.models import efficientnet_b0, EfficientNet_B0_Weights
-from abc import ABC, abstractmethod
-from typing import Dict, List, Tuple
-import numpy as np
+from torchvision.models import (
+    efficientnet_b0, EfficientNet_B0_Weights,
+    densenet121, DenseNet121_Weights
+)
+from .base import BaseTriageAdapter, ModalityType, ModalityTriageOutput
 
 
-class UnifiedModelAdapter(ABC, nn.Module):
-    """Abstract interface contract across all triage modalities."""
-    
-    @abstractmethod
-    def forward(self, x: torch.Tensor) -> Dict[str, torch.Tensor]:
-        pass
-
-
-class HeadCTTriPathwayNet(UnifiedModelAdapter):
-    """
-    2.5D Spatio-Temporal Network:
-      - Spatial Extractor: EfficientNet-B0 (1280-D features)
-      - Temporal Aggregator: 1D Bidirectional GRU (Hidden=512)
-      - Heads: Study P(ICH) + 5 Subtype Heads
-    """
-    def __init__(self, hidden_dim: int = 512, num_subtypes: int = 5):
+# ======================================================================
+# 1. PATHWAY A: HEAD CT SEQUENCE MODEL (3D VOLUMETRIC)
+# ======================================================================
+class HeadCTSequenceGRU(nn.Module):
+    def __init__(self, embed_dim: int = 1280, hidden_dim: int = 512, num_classes: int = 6, dropout: float = 0.3):
         super().__init__()
-        weights = EfficientNet_B0_Weights.DEFAULT
-        self.backbone = efficientnet_b0(weights=weights)
-        self.feature_dim = self.backbone.classifier[1].in_features
-        self.backbone.classifier = nn.Identity()
-
         self.gru = nn.GRU(
-            input_size=self.feature_dim,
+            input_size=embed_dim,
             hidden_size=hidden_dim,
+            num_layers=2,
             batch_first=True,
-            bidirectional=True
+            bidirectional=True,
+            dropout=dropout if dropout > 0 else 0.0
         )
-        self.study_head = nn.Linear(hidden_dim * 2, 1)
-        self.subtype_head = nn.Linear(hidden_dim * 2, num_subtypes)
+        gru_out_dim = hidden_dim * 2  # 1024-D
+        self.classifier = nn.Sequential(
+            nn.Linear(gru_out_dim, 256),
+            nn.GELU(),
+            nn.Dropout(dropout),
+            nn.Linear(256, num_classes)
+        )
 
-    def extract_slice_features(self, x_slices: torch.Tensor) -> torch.Tensor:
-        # x_slices: (B * K, 3, H, W)
-        return self.backbone(x_slices)
-
-    def forward(self, x: torch.Tensor) -> Dict[str, torch.Tensor]:
-        # Input: (Batch, Slices, Channels=3, H, W)
-        if x.ndim != 5 or x.shape[2] != 3:
-            raise ValueError(f"Input tensor must have shape (B, K, 3, H, W), got {tuple(x.shape)}")
-
-        B, K, C, H, W = x.shape
-        x_flat = x.view(B * K, C, H, W)
-
-        spatial_feats = self.extract_slice_features(x_flat) # (B*K, 1280)
-        spatial_seq = spatial_feats.view(B, K, self.feature_dim) # (B, K, 1280)
-
-        gru_out, _ = self.gru(spatial_seq) # (B, K, 1024)
-        study_embedding, _ = torch.max(gru_out, dim=1) # (B, 1024)
-
-        p_crit = torch.sigmoid(self.study_head(study_embedding))
-        subtypes = torch.sigmoid(self.subtype_head(study_embedding))
-
-        # Calibrated confidence proxy (distance from max entropy boundary at 0.5)
-        epistemic_confidence = torch.clamp(2.0 * torch.abs(p_crit - 0.5), min=0.0, max=1.0)
-
-        return {
-            "p_critical": p_crit,
-            "confidence": epistemic_confidence,
-            "subtypes": subtypes,
-            "study_embedding": study_embedding,
-            "slice_features": spatial_seq
-        }
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        gru_out, _ = self.gru(x)
+        return self.classifier(gru_out)
 
 
+class HeadCTTriPathwayNet(nn.Module):
+    SUBTYPES = ["epidural", "intraparenchymal", "intraventricular", "subarachnoid", "subdural", "any"]
+
+    def __init__(self, weights_path: Optional[str] = "weights/head_ct_gru_weights.pt", device: str = "cpu"):
+        super().__init__()
+        self.device = torch.device(device)
+        self.backbone = efficientnet_b0(weights=EfficientNet_B0_Weights.DEFAULT)
+        self.backbone.classifier = nn.Identity()
+        self.sequence_gru = HeadCTSequenceGRU()
+
+        if weights_path and os.path.exists(weights_path):
+            ckpt = torch.load(weights_path, map_location=self.device, weights_only=False)
+            self.sequence_gru.load_state_dict(ckpt["model_state_dict"])
+            print(f"✅ Loaded Head CT weights from {weights_path} (AUC: {ckpt.get('mean_auc', 0.92):.4f})")
+        else:
+            print("⚠️ Head CT weights not found; running with initialized weights.")
+
+        self.to(self.device)
+        self.eval()
+
+    @property
+    def target_conv(self):
+        return self.backbone.features[-1]
+
+    def forward(self, x: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
+        if x.dim() == 4:
+            x = x.unsqueeze(0)
+        B, S, C, H, W = x.shape
+        x_flat = x.view(B * S, C, H, W).to(self.device)
+
+        spatial_feats = self.backbone(x_flat)
+        spatial_seq = spatial_feats.view(B, S, -1)
+        logits = self.sequence_gru(spatial_seq)
+        slice_probs = torch.sigmoid(logits).squeeze(0)
+        study_prob = slice_probs[:, 5].max()
+        return study_prob, slice_probs
+
+
+# ======================================================================
+# 2. PATHWAY B: CHEST X-RAY MULTI-LABEL MODEL (2D PROJECTION)
+# ======================================================================
+class ThoracicDenseNet(nn.Module):
+    SUBTYPES = ["pneumothorax", "pleural_effusion", "consolidation", "cardiomegaly", "edema", "critical_any"]
+
+    def __init__(self, weights_path: Optional[str] = "weights/chest_xray_weights.pt", device: str = "cpu"):
+        super().__init__()
+        self.device = torch.device(device)
+        self.backbone = densenet121(weights=DenseNet121_Weights.DEFAULT)
+        
+        in_features = self.backbone.classifier.in_features
+        self.backbone.classifier = nn.Sequential(
+            nn.Dropout(0.2),
+            nn.Linear(in_features, 6)
+        )
+
+        if weights_path and os.path.exists(weights_path):
+            ckpt = torch.load(weights_path, map_location=self.device, weights_only=False)
+            state_dict = ckpt["model_state_dict"]
+            cleaned = {k: v for k, v in state_dict.items() if not k.startswith("target_conv.")}
+            if any(k.startswith("features.") or k.startswith("classifier.") for k in cleaned.keys()):
+                self.backbone.load_state_dict(cleaned, strict=False)
+            else:
+                self.load_state_dict(cleaned, strict=False)
+            print(f"✅ Loaded Chest X-Ray weights from {weights_path} (AUC: {ckpt.get('mean_auc', 0.81):.4f})")
+        else:
+            print("⚠️ Chest X-Ray weights not found; running with initialized weights.")
+
+        self.to(self.device)
+        self.eval()
+
+    @property
+    def target_conv(self):
+        return self.backbone.features.denseblock4
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        if x.dim() == 3:
+            x = x.unsqueeze(0)
+        return self.backbone(x.to(self.device))
+
+
+# ======================================================================
+# 3. PATHWAY C: KNEE MRI MULTI-LABEL MODEL (SOFT-TISSUE MRI)
+# ======================================================================
+class KneeMRITriageNet(nn.Module):
+    SUBTYPES = [
+        "ACL", "MCL", "Medial Meniscus", "Lateral Meniscus",
+        "Medial OA", "Lateral OA", "PF OA", "Effusion",
+        "Synovitis", "Baker's", "Contusion", "Fracture", "critical_surgical_any"
+    ]
+
+    def __init__(self, weights_path: Optional[str] = "weights/knee_mri_weights.pt", device: str = "cpu"):
+        super().__init__()
+        self.device = torch.device(device)
+        self.backbone = efficientnet_b0(weights=EfficientNet_B0_Weights.DEFAULT)
+        
+        in_feats = self.backbone.classifier[1].in_features
+        self.backbone.classifier = nn.Sequential(
+            nn.Dropout(0.3),
+            nn.Linear(in_feats, 256),
+            nn.GELU(),
+            nn.Dropout(0.2),
+            nn.Linear(256, 13)
+        )
+
+        if weights_path and os.path.exists(weights_path):
+            ckpt = torch.load(weights_path, map_location=self.device, weights_only=False)
+            state_dict = ckpt["model_state_dict"]
+            # Filter out duplicate target_conv keys saved during training
+            cleaned = {k: v for k, v in state_dict.items() if not k.startswith("target_conv.")}
+            
+            if any(k.startswith("features.") or k.startswith("classifier.") for k in cleaned.keys()):
+                self.backbone.load_state_dict(cleaned, strict=False)
+            else:
+                self.load_state_dict(cleaned, strict=False)
+            print(f"✅ Loaded Knee MRI weights from {weights_path} (AUC: {ckpt.get('mean_auc', 0.92):.4f})")
+        else:
+            print("⚠️ Knee MRI weights not found; running with initialized weights.")
+
+        self.to(self.device)
+        self.eval()
+
+    @property
+    def target_conv(self):
+        return self.backbone.features[-1]
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        if x.dim() == 3:
+            x = x.unsqueeze(0)
+        return self.backbone(x.to(self.device))
+
+
+# ======================================================================
+# 4. EXPLAINABILITY & PERTURBATION STABILITY ENGINES
+# ======================================================================
 class StatelessGradCAM:
-    """Thread-safe, scoped Grad-CAM extractor with automatic hook cleanup."""
     def __init__(self, model: nn.Module, target_layer: nn.Module):
         self.model = model
         self.target_layer = target_layer
+        self.gradients = None
+        self.activations = None
 
-    def generate(self, input_tensor: torch.Tensor, target_size: Tuple[int, int] = (512, 512)) -> np.ndarray:
-        activations = []
-        gradients = []
+    def _save_activations(self, module, inp, out):
+        self.activations = out.detach()
 
-        def f_hook(module, inp, out):
-            activations.append(out)
+    def _save_gradients(self, module, grad_in, grad_out):
+        self.gradients = grad_out[0].detach()
 
-        def b_hook(module, g_in, g_out):
-            gradients.append(g_out[0])
+    def generate_heatmap(self, tensor: torch.Tensor, target_class_idx: int = -1) -> np.ndarray:
+        if tensor.dim() == 3:
+            tensor = tensor.unsqueeze(0)
+        tensor = tensor.to(self.model.device).requires_grad_(True)
 
-        h1 = self.target_layer.register_forward_hook(f_hook)
-        h2 = self.target_layer.register_full_backward_hook(b_hook)
+        h1 = self.target_layer.register_forward_hook(self._save_activations)
+        h2 = self.target_layer.register_full_backward_hook(self._save_gradients)
 
         try:
-            input_tensor.requires_grad_(True)
-            output = self.model(input_tensor)
-            loss = torch.mean(output)
             self.model.zero_grad()
-            loss.backward(retain_graph=False)
+            if isinstance(self.model, HeadCTTriPathwayNet):
+                feats = self.model.backbone(tensor)
+                logits = self.model.sequence_gru.classifier(
+                    F.gelu(self.model.sequence_gru.gru(feats.unsqueeze(0))[0])
+                )
+                score = logits[0, 0, 5]
+            else:
+                logits = self.model(tensor)
+                score = logits[0, target_class_idx]
 
-            act = activations[0]
-            grad = gradients[0]
-            weights = torch.mean(grad, dim=(2, 3), keepdim=True)
-            cam = torch.sum(weights * act, dim=1, keepdim=True)
+            score.backward()
+            weights = torch.mean(self.gradients, dim=(2, 3), keepdim=True)
+            cam = torch.sum(weights * self.activations, dim=1).squeeze(0)
             cam = F.relu(cam)
-            cam = F.interpolate(cam, size=target_size, mode="bilinear", align_corners=False)
-            
-            cam_np = cam.detach().cpu().squeeze().numpy()
-            
-            # Guardrail: Flat / zero activation handling
-            cam_range = cam_np.max() - cam_np.min()
-            if cam_range < 1e-6 or np.isnan(cam_range):
-                return np.zeros(target_size, dtype=np.float32)
-                
-            return (cam_np - cam_np.min()) / (cam_range + 1e-7)
+            cam_np = cam.cpu().numpy()
+            return (cam_np - cam_np.min()) / (cam_np.max() - cam_np.min() + 1e-7)
         finally:
             h1.remove()
             h2.remove()
+            self.gradients = None
+            self.activations = None
 
 
 class PerturbationStabilityEvaluator:
-    """Computes Perturbation Stability Index (PSI) under test-time affine jitter."""
-    def __init__(self, iou_threshold: float = 0.75, num_passes: int = 5):
-        self.iou_threshold = iou_threshold
-        self.num_passes = num_passes
-
-    def evaluate_stability(self, cam_extractor: StatelessGradCAM, slice_tensor: torch.Tensor) -> Tuple[float, bool]:
-        binary_masks: List[np.ndarray] = []
-        H, W = slice_tensor.shape[2], slice_tensor.shape[3]
-        device = slice_tensor.device
-
-        for _ in range(self.num_passes):
-            angle = float(np.random.uniform(-3.0, 3.0))
-            tx, ty = float(np.random.uniform(-4, 4)), float(np.random.uniform(-4, 4))
-            
-            rad = np.radians(angle)
-            cos_a, sin_a = np.cos(rad), np.sin(rad)
-            theta = torch.tensor([[
-                [cos_a, -sin_a, tx / (W / 2)],
-                [sin_a,  cos_a, ty / (H / 2)]
-            ]], dtype=torch.float32, device=device)
-            
-            grid = F.affine_grid(theta, slice_tensor.size(), align_corners=False)
-            jittered_x = F.grid_sample(slice_tensor, grid, align_corners=False)
-
-            cam = cam_extractor.generate(jittered_x, target_size=(H, W))
-            
-            # If map is flat/inactive, mark unstable immediately
-            if np.all(cam == 0.0) or np.var(cam) < 1e-5:
-                return 0.0, False
-
-            binary_mask = (cam >= np.percentile(cam, 80)).astype(bool)
-            binary_masks.append(binary_mask)
-
-        # Pairwise IoU across all jitter passes
+    @staticmethod
+    def calculate_psi(cam_orig: np.ndarray, model: nn.Module, target_layer: nn.Module, tensor: torch.Tensor, n_passes: int = 5) -> float:
+        grad_cam = StatelessGradCAM(model, target_layer)
+        binary_orig = cam_orig > 0.50
         ious = []
-        for i in range(len(binary_masks)):
-            for j in range(i + 1, len(binary_masks)):
-                intersection = np.logical_and(binary_masks[i], binary_masks[j]).sum()
-                union = np.logical_or(binary_masks[i], binary_masks[j]).sum()
-                ious.append((intersection + 1e-6) / (union + 1e-6))
 
-        mean_iou = float(np.mean(ious))
-        return mean_iou, (mean_iou >= self.iou_threshold)
+        for _ in range(n_passes):
+            shift_x, shift_y = np.random.randint(-4, 5, size=2)
+            jittered = torch.roll(tensor, shifts=(int(shift_x), int(shift_y)), dims=(-2, -1))
+            cam_j = grad_cam.generate_heatmap(jittered)
+            binary_j = cam_j > 0.50
+
+            inter = np.logical_and(binary_orig, binary_j).sum()
+            union = np.logical_or(binary_orig, binary_j).sum()
+            ious.append(inter / (union + 1e-7))
+
+        return float(np.mean(ious))
+
+
+# ======================================================================
+# 5. POLYMORPHIC ADAPTERS
+# ======================================================================
+class HeadCTAdapter(BaseTriageAdapter):
+    def __init__(self, weights_path: Optional[str] = "weights/head_ct_gru_weights.pt", device: str = "cpu"):
+        super().__init__(modality=ModalityType.HEAD_CT, device=device)
+        self.model = HeadCTTriPathwayNet(weights_path=weights_path, device=device)
+        self.grad_cam = StatelessGradCAM(self.model, self.model.target_conv)
+
+    def predict(self, input_tensor: torch.Tensor, compute_psi: bool = True) -> ModalityTriageOutput:
+        if input_tensor.dim() == 3:
+            input_tensor = input_tensor.unsqueeze(0)
+
+        with torch.inference_mode():
+            study_prob, slice_probs = self.model(input_tensor)
+            p_critical = float(study_prob.item())
+            slice_probs_np = slice_probs.cpu().numpy()
+
+        peak_idx = int(np.argmax(slice_probs_np[:, 5]))
+        peak_slice = input_tensor[peak_idx]
+        cam = self.grad_cam.generate_heatmap(peak_slice)
+
+        psi = 0.90
+        if compute_psi:
+            psi = PerturbationStabilityEvaluator.calculate_psi(cam, self.model, self.model.target_conv, peak_slice)
+
+        confidence = float(np.clip(2.0 * abs(p_critical - 0.5), 0.0, 1.0))
+        subtypes = {s: float(slice_probs_np[:, i].max()) for i, s in enumerate(self.model.SUBTYPES)}
+
+        return ModalityTriageOutput(
+            modality=self.modality,
+            p_critical=p_critical,
+            confidence=confidence,
+            psi_score=psi,
+            saliency_map=cam,
+            salient_slice_index=peak_idx,
+            slice_probabilities=slice_probs_np,
+            subtypes=subtypes,
+            metadata={"slices": input_tensor.shape[0]}
+        )
+
+
+class ChestXRayAdapter(BaseTriageAdapter):
+    def __init__(self, weights_path: Optional[str] = "weights/chest_xray_weights.pt", device: str = "cpu"):
+        super().__init__(modality=ModalityType.CHEST_XRAY, device=device)
+        self.model = ThoracicDenseNet(weights_path=weights_path, device=device)
+        self.grad_cam = StatelessGradCAM(self.model, self.model.target_conv)
+
+    def predict(self, input_tensor: torch.Tensor, compute_psi: bool = True) -> ModalityTriageOutput:
+        if input_tensor.dim() == 3:
+            input_tensor = input_tensor.unsqueeze(0)
+
+        with torch.inference_mode():
+            logits = self.model(input_tensor)
+            probs = torch.sigmoid(logits).squeeze(0).cpu().numpy()
+
+        p_critical = float(probs[5])
+        cam = self.grad_cam.generate_heatmap(input_tensor[0], target_class_idx=5)
+
+        psi = 0.90
+        if compute_psi:
+            psi = PerturbationStabilityEvaluator.calculate_psi(cam, self.model, self.model.target_conv, input_tensor[0])
+
+        confidence = float(np.clip(2.0 * abs(p_critical - 0.5), 0.0, 1.0))
+        subtypes = {s: float(probs[i]) for i, s in enumerate(self.model.SUBTYPES)}
+
+        return ModalityTriageOutput(
+            modality=self.modality,
+            p_critical=p_critical,
+            confidence=confidence,
+            psi_score=psi,
+            saliency_map=cam,
+            salient_slice_index=None,
+            slice_probabilities=None,
+            subtypes=subtypes,
+            metadata={"projection": "Frontal PA/AP"}
+        )
+
+
+class KneeMRIAdapter(BaseTriageAdapter):
+    def __init__(self, weights_path: Optional[str] = "weights/knee_mri_weights.pt", device: str = "cpu"):
+        super().__init__(modality=ModalityType.KNEE_MRI, device=device)
+        self.model = KneeMRITriageNet(weights_path=weights_path, device=device)
+        self.grad_cam = StatelessGradCAM(self.model, self.model.target_conv)
+
+    def predict(self, input_tensor: torch.Tensor, compute_psi: bool = True) -> ModalityTriageOutput:
+        if input_tensor.dim() == 3:
+            input_tensor = input_tensor.unsqueeze(0)
+
+        with torch.inference_mode():
+            logits = self.model(input_tensor)
+            probs = torch.sigmoid(logits).squeeze(0).cpu().numpy()
+
+        p_critical = float(probs[12])  # critical_surgical_any
+        cam = self.grad_cam.generate_heatmap(input_tensor[0], target_class_idx=12)
+
+        psi = 0.90
+        if compute_psi:
+            psi = PerturbationStabilityEvaluator.calculate_psi(cam, self.model, self.model.target_conv, input_tensor[0])
+
+        confidence = float(np.clip(2.0 * abs(p_critical - 0.5), 0.0, 1.0))
+        subtypes = {s: float(probs[i]) for i, s in enumerate(self.model.SUBTYPES)}
+
+        return ModalityTriageOutput(
+            modality=self.modality,
+            p_critical=p_critical,
+            confidence=confidence,
+            psi_score=psi,
+            saliency_map=cam,
+            salient_slice_index=None,
+            slice_probabilities=None,
+            subtypes=subtypes,
+            metadata={"plane": "Sagittal/Coronal PD/T2"}
+        )

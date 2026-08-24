@@ -1,8 +1,18 @@
-.venv/
+# Python bytecode & cache
 __pycache__/
-core/__pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+
+# Local Generated Data / DICOM artifacts
+sample_dicoms/
 *.dcm
-*.h5
-*.png
-.vscode/
+
+# OS artifacts
+.DS_Store
+Thumbs.db
