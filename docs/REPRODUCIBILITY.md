@@ -44,7 +44,26 @@ install this project with `--no-deps`.
 .\.venv\Scripts\python.exe -m scripts.demo_smoke --dicom sample_dicoms\DEMO_CT.dcm
 ```
 
-Expected supported-suite result as of 2026-10-01: `15 passed`.
+Expected supported-suite result as of 2026-10-21: `126 passed`.
+
+## Research experiment provenance
+
+Validate the frozen experiment registry before and after every research run:
+
+```powershell
+.\.venv\Scripts\python.exe -m scripts.experiment_registry validate
+```
+
+Register a completed run with immutable split, configuration, and result hashes:
+
+```powershell
+.\.venv\Scripts\python.exe -m scripts.experiment_registry register `
+  --run-id ct-pooling-001 --modality head_ct `
+  --purpose "study pooling ablation" --dataset-id rsna-ich-2019 `
+  --seed 42 --split-manifest path\to\split.csv --config path\to\config.json `
+  --artifact metrics=path\to\metrics.json `
+  --artifact checkpoint=path\to\checkpoint.pt
+```
 
 ## Model bundle resolution
 

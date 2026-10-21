@@ -1,10 +1,10 @@
 # STAT-Triage AI
 
 STAT-Triage AI is a research prototype for evidence-backed medical-imaging
-worklist prioritization. The current supported evaluation is a **slice-level
-RSNA intracranial hemorrhage pilot**. Chest X-ray, knee MRI, volumetric CT,
-conformal prediction, sequential stopping, and counterfactual explanations are
-experimental work and are not validated features of the supported path.
+worklist prioritization. The supported backend routes three independently
+validated research adapters: slice-level RSNA head CT, NIH ChestX-ray14, and
+three-plane Stanford MRNet knee MRI. It does not perform cross-modality neural
+fusion, and the modality-specific scores are not directly comparable.
 
 ## Current evidence
 
@@ -20,9 +20,10 @@ The first locked test produced an `any` hemorrhage ROC-AUC of 0.8417 and
 sensitivity of 0.8831 at the calibration-selected threshold. These are pilot,
 slice-level results and do not establish study-level or clinical performance.
 
-The evidence bundle is under `artifacts/rsna_baseline/`. Dataset semantics and
-limitations are documented in `docs/DATASET_CONTRACTS.md`. The execution plan is
-in `PROJECT_PLAN.md`.
+The locked evidence bundles are under `artifacts/`. Dataset semantics and
+limitations are documented in `docs/DATASET_CONTRACTS.md`. The frozen research
+protocol is in `docs/RESEARCH_PROTOCOL.md`, with machine-readable experiment
+provenance under `research/`.
 
 ## Authoritative report
 

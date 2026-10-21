@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "protocol": {
+    "role": "research_protocol",
+    "path": "research/protocol.json",
+    "bytes": 1025,
+    "sha256": "00a2fe78baac53691c84e80e97b304cde396b4cb6194c5a6b83cb7b5b2fe1810"
+  },
+  "runs": []
+}
