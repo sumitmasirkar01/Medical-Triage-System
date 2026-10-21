@@ -1,0 +1,149 @@
+{
+  "schema_version": "1.0",
+  "dataset": "NIH ChestX-ray14",
+  "selection_scope": "official_train_val_patients_only",
+  "selected_seed": 213,
+  "candidate_seeds": 256,
+  "balance_score": 0.0022201092454033934,
+  "development_patient_fractions": {
+    "train": 0.799985718366181,
+    "validation": 0.10000714081690945,
+    "calibration": 0.10000714081690945
+  },
+  "splits": {
+    "train": {
+      "images": 68709,
+      "patients": 22406,
+      "view_counts": {
+        "PA": 44676,
+        "AP": 24033
+      },
+      "targets": {
+        "pneumothorax": {
+          "positive_images": 2082,
+          "positive_patients": 847,
+          "prevalence": 0.03030170719993014
+        },
+        "pleural_effusion": {
+          "positive_images": 6857,
+          "positive_patients": 2782,
+          "prevalence": 0.0997976975359851
+        },
+        "consolidation": {
+          "positive_images": 2253,
+          "positive_patients": 1292,
+          "prevalence": 0.03279046413133651
+        },
+        "atelectasis": {
+          "positive_images": 6634,
+          "positive_patients": 3322,
+          "prevalence": 0.09655212563128557
+        }
+      }
+    },
+    "validation": {
+      "images": 8984,
+      "patients": 2801,
+      "view_counts": {
+        "PA": 5807,
+        "AP": 3177
+      },
+      "targets": {
+        "pneumothorax": {
+          "positive_images": 285,
+          "positive_patients": 115,
+          "prevalence": 0.03172306322350846
+        },
+        "pleural_effusion": {
+          "positive_images": 933,
+          "positive_patients": 375,
+          "prevalence": 0.10385129118432769
+        },
+        "consolidation": {
+          "positive_images": 308,
+          "positive_patients": 164,
+          "prevalence": 0.03428317008014248
+        },
+        "atelectasis": {
+          "positive_images": 864,
+          "positive_patients": 432,
+          "prevalence": 0.09617097061442564
+        }
+      }
+    },
+    "calibration": {
+      "images": 8831,
+      "patients": 2801,
+      "view_counts": {
+        "PA": 5731,
+        "AP": 3100
+      },
+      "targets": {
+        "pneumothorax": {
+          "positive_images": 270,
+          "positive_patients": 118,
+          "prevalence": 0.030574113916883704
+        },
+        "pleural_effusion": {
+          "positive_images": 869,
+          "positive_patients": 345,
+          "prevalence": 0.09840335182878496
+        },
+        "consolidation": {
+          "positive_images": 291,
+          "positive_patients": 161,
+          "prevalence": 0.03295210055486355
+        },
+        "atelectasis": {
+          "positive_images": 782,
+          "positive_patients": 428,
+          "prevalence": 0.08855169290001133
+        }
+      }
+    },
+    "test": {
+      "images": 25596,
+      "patients": 2797,
+      "view_counts": {
+        "AP": 14500,
+        "PA": 11096
+      },
+      "targets": {
+        "pneumothorax": {
+          "positive_images": 2665,
+          "positive_patients": 407,
+          "prevalence": 0.10411783091107986
+        },
+        "pleural_effusion": {
+          "positive_images": 4658,
+          "positive_patients": 773,
+          "prevalence": 0.18198155961869042
+        },
+        "consolidation": {
+          "positive_images": 1815,
+          "positive_patients": 533,
+          "prevalence": 0.07090951711204876
+        },
+        "atelectasis": {
+          "positive_images": 3279,
+          "positive_patients": 799,
+          "prevalence": 0.12810595405532113
+        }
+      }
+    }
+  },
+  "checks": {
+    "rows": 112120,
+    "unique_images": 112120,
+    "unique_patients": 30805,
+    "patient_leakage": 0,
+    "image_leakage": 0,
+    "unassigned_rows": 0,
+    "official_test_preserved": true
+  },
+  "manifest": {
+    "path": "/kaggle/working/nih_cxr14_manifest_split.csv",
+    "sha256": "4617f87be669d3d41458c3e9fb4efb9710359d2c9f06876e3b3f002665d98574",
+    "bytes": 18390243
+  }
+}

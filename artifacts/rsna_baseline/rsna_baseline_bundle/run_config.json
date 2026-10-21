@@ -1,0 +1,73 @@
+{
+  "seed": 42,
+  "model": "torchvision_efficientnet_b0",
+  "initial_weights": "EfficientNet_B0_Weights.IMAGENET1K_V1",
+  "training_scope": "RSNA pilot slice-level baseline",
+  "labels": [
+    "epidural",
+    "intraparenchymal",
+    "intraventricular",
+    "subarachnoid",
+    "subdural",
+    "any"
+  ],
+  "input_size": [
+    224,
+    224
+  ],
+  "windows": {
+    "brain": {
+      "center": 40,
+      "width": 80
+    },
+    "subdural": {
+      "center": 75,
+      "width": 215
+    },
+    "bone": {
+      "center": 600,
+      "width": 2800
+    }
+  },
+  "normalization": {
+    "mean": [
+      0.485,
+      0.456,
+      0.406
+    ],
+    "std": [
+      0.229,
+      0.224,
+      0.225
+    ]
+  },
+  "training_examples": 1682,
+  "validation_examples": 232,
+  "batch_size": 32,
+  "positive_weights": {
+    "epidural": 20.0,
+    "intraparenchymal": 7.009523868560791,
+    "intraventricular": 11.100719451904297,
+    "subarachnoid": 7.670103073120117,
+    "subdural": 5.8653059005737305,
+    "any": 1.9664902687072754
+  },
+  "training_plan": [
+    {
+      "stage": "classifier",
+      "epochs": 2,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001,
+      "backbone_frozen": true
+    },
+    {
+      "stage": "upper_backbone",
+      "epochs": 6,
+      "learning_rate": 0.0002,
+      "weight_decay": 0.0001,
+      "backbone_frozen": false
+    }
+  ],
+  "selection_metric": "validation_any_roc_auc",
+  "cohort_note": "Pilot cohort enriched to 800 positive and 1600 negative slices before patient-separated splitting."
+}

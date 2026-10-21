@@ -1,0 +1,339 @@
+{
+  "schema_version": "2.0",
+  "status": "passed",
+  "generated_at": "2026-10-21T11:09:24.795935+00:00",
+  "scope": {
+    "system_type": "routed_multi_model_multimodal_imaging_triage",
+    "modalities": [
+      "head_ct",
+      "chest_xray",
+      "knee_mri"
+    ],
+    "modality_count": 3,
+    "metrics_recomputed": true,
+    "clinical_use_authorized": false
+  },
+  "release_manifest_validation": {
+    "name": "stat-triage-ai",
+    "version": "0.1.0",
+    "status": "research_demo",
+    "supported_source_files": 62,
+    "report_sha256": "5c7345a7fc9fa26fd74d92152c36e268e49b0a0bf15bb7503799d05838b063ef",
+    "expected_tests": 123,
+    "checkpoint_sha256": "4a15c605bb1481de7f12a4881f9c9b5adb36d9386ecac0aa6eb3ae7c3ae805b1",
+    "schema_version": "2.0",
+    "modality_checkpoint_sha256": {
+      "head_ct": "4a15c605bb1481de7f12a4881f9c9b5adb36d9386ecac0aa6eb3ae7c3ae805b1",
+      "chest_xray": "609a353cf2d640ca7471e3952797b25ea4f5841d7f11fe7dfc8821dbfd9298bb",
+      "knee_mri": "610847b2e4b9f6779528ab820c5744ef161d363f0e0748c3a0b2084881c350cc"
+    }
+  },
+  "multimodal_validation": {
+    "schema_version": "1.0",
+    "status": "passed",
+    "release_status": "research_demonstration",
+    "modality_count": 3,
+    "metrics_recomputed": true,
+    "modalities": {
+      "head_ct": {
+        "bundle_path": "E:\\Medical_Triage_system\\artifacts\\rsna_baseline\\rsna_baseline_bundle",
+        "endpoint": "slice_level_any_hemorrhage",
+        "evaluation_level": "slice",
+        "labels": [
+          "epidural",
+          "intraparenchymal",
+          "intraventricular",
+          "subarachnoid",
+          "subdural",
+          "any"
+        ],
+        "bundle": "STAT-Triage RSNA slice-level pilot",
+        "artifact_count": 9,
+        "checkpoint_sha256": "4a15c605bb1481de7f12a4881f9c9b5adb36d9386ecac0aa6eb3ae7c3ae805b1",
+        "threshold": 0.2538610100746155,
+        "metrics_recomputed": true
+      },
+      "chest_xray": {
+        "bundle_path": "E:\\Medical_Triage_system\\artifacts\\chest_xray\\nih_cxr14_locked_test_bundle",
+        "endpoint": "nih_cxr14_four_target_triage",
+        "evaluation_level": "image",
+        "labels": [
+          "pneumothorax",
+          "pleural_effusion",
+          "consolidation",
+          "atelectasis"
+        ],
+        "status": "validated_pilot",
+        "artifact_count": 7,
+        "checkpoint_sha256": "609a353cf2d640ca7471e3952797b25ea4f5841d7f11fe7dfc8821dbfd9298bb",
+        "test_images": 25596,
+        "test_patients": 2797,
+        "metrics_recomputed": true
+      },
+      "knee_mri": {
+        "bundle_path": "E:\\Medical_Triage_system\\artifacts\\mrnet_baseline",
+        "endpoint": "mrnet_three_target_exam_triage",
+        "evaluation_level": "exam",
+        "labels": [
+          "abnormal",
+          "acl",
+          "meniscus"
+        ],
+        "status": "complete",
+        "artifact_count": 9,
+        "checkpoint_sha256": "610847b2e4b9f6779528ab820c5744ef161d363f0e0748c3a0b2084881c350cc",
+        "checkpoint_epoch": 8,
+        "planes": [
+          "axial",
+          "coronal",
+          "sagittal"
+        ],
+        "test_exams": 120,
+        "patient_identifiers_available": false,
+        "metrics_recomputed": true
+      }
+    }
+  },
+  "head_ct_deep_validation": {
+    "scope": {
+      "modality": "head_ct",
+      "evaluation_level": "slice",
+      "endpoint": "slice_level_any_hemorrhage",
+      "locked_test_untouched": true
+    },
+    "bundle_validation": {
+      "bundle": "STAT-Triage RSNA slice-level pilot",
+      "artifact_count": 9,
+      "checkpoint_sha256": "4a15c605bb1481de7f12a4881f9c9b5adb36d9386ecac0aa6eb3ae7c3ae805b1",
+      "threshold": 0.2538610100746155,
+      "endpoint": "slice_level_any_hemorrhage"
+    },
+    "cohorts": {
+      "calibration_rows": 244,
+      "calibration_patients": 222,
+      "test_rows": 242,
+      "test_patients": 222,
+      "patient_overlap": 0
+    },
+    "locked_test_metrics": {
+      "roc_auc": 0.8417158598976782,
+      "average_precision": 0.7771225762157327,
+      "sensitivity": 0.8831168831168831,
+      "specificity": 0.509090909090909,
+      "ppv": 0.4563758389261745,
+      "npv": 0.9032258064516129,
+      "accuracy": 0.628099173553719,
+      "tp": 68,
+      "tn": 84,
+      "fp": 81,
+      "fn": 9,
+      "positive_images": 77,
+      "negative_images": 165
+    },
+    "threshold_audit": {
+      "threshold": 0.253861,
+      "target_sensitivity": 0.9,
+      "sensitivity": 0.9113924050632911,
+      "specificity": 0.5515151515151515,
+      "tp": 72,
+      "tn": 91,
+      "fp": 74,
+      "fn": 7,
+      "positive_examples": 79,
+      "negative_examples": 165,
+      "selection_rule": "largest_threshold_with_sensitivity_at_least_target"
+    },
+    "calibration_audit": {
+      "epidural": {
+        "temperature": 0.39289958372921674,
+        "selected_method": "temperature_scaling",
+        "minimum_nll_improvement": 1e-06,
+        "nll_improvement": 0.06561899439040168,
+        "before": {
+          "negative_log_likelihood": 0.13524990211476245,
+          "brier_score": 0.02802888682361485,
+          "expected_calibration_error": 0.09246034226199364,
+          "examples": 244,
+          "positives": 3,
+          "bins": 10
+        },
+        "after": {
+          "negative_log_likelihood": 0.06963090772436077,
+          "brier_score": 0.015000394335058957,
+          "expected_calibration_error": 0.010600374277318393,
+          "examples": 244,
+          "positives": 3,
+          "bins": 10
+        }
+      },
+      "intraparenchymal": {
+        "temperature": 0.9913659429694968,
+        "selected_method": "temperature_scaling",
+        "minimum_nll_improvement": 1e-06,
+        "nll_improvement": 9.197329693788614e-06,
+        "before": {
+          "negative_log_likelihood": 0.4217002756480991,
+          "brier_score": 0.14030775088847217,
+          "expected_calibration_error": 0.19022779221562267,
+          "examples": 244,
+          "positives": 32,
+          "bins": 10
+        },
+        "after": {
+          "negative_log_likelihood": 0.4216910783184053,
+          "brier_score": 0.14035410584205674,
+          "expected_calibration_error": 0.1896221710529199,
+          "examples": 244,
+          "positives": 32,
+          "bins": 10
+        }
+      },
+      "intraventricular": {
+        "temperature": 1.188166562865658,
+        "selected_method": "temperature_scaling",
+        "minimum_nll_improvement": 1e-06,
+        "nll_improvement": 0.00402744345432654,
+        "before": {
+          "negative_log_likelihood": 0.44671950078886696,
+          "brier_score": 0.14868707516113766,
+          "expected_calibration_error": 0.23440155820672035,
+          "examples": 244,
+          "positives": 18,
+          "bins": 10
+        },
+        "after": {
+          "negative_log_likelihood": 0.4426920573345404,
+          "brier_score": 0.14696446216229556,
+          "expected_calibration_error": 0.24669067340504075,
+          "examples": 244,
+          "positives": 18,
+          "bins": 10
+        }
+      },
+      "subarachnoid": {
+        "temperature": 0.9225011475160704,
+        "selected_method": "temperature_scaling",
+        "minimum_nll_improvement": 1e-06,
+        "nll_improvement": 0.00073549998695005,
+        "before": {
+          "negative_log_likelihood": 0.4873417397985113,
+          "brier_score": 0.16056557762778745,
+          "expected_calibration_error": 0.2521929288202779,
+          "examples": 244,
+          "positives": 21,
+          "bins": 10
+        },
+        "after": {
+          "negative_log_likelihood": 0.48660623981156126,
+          "brier_score": 0.16031861555615762,
+          "expected_calibration_error": 0.24521519893556581,
+          "examples": 244,
+          "positives": 21,
+          "bins": 10
+        }
+      },
+      "subdural": {
+        "temperature": 1.332059766122145,
+        "selected_method": "temperature_scaling",
+        "minimum_nll_improvement": 1e-06,
+        "nll_improvement": 0.007934645348731117,
+        "before": {
+          "negative_log_likelihood": 0.5685285627130408,
+          "brier_score": 0.19982478710331406,
+          "expected_calibration_error": 0.2717272528672915,
+          "examples": 244,
+          "positives": 34,
+          "bins": 10
+        },
+        "after": {
+          "negative_log_likelihood": 0.5605939173643096,
+          "brier_score": 0.19516539529028903,
+          "expected_calibration_error": 0.27937102509839506,
+          "examples": 244,
+          "positives": 34,
+          "bins": 10
+        }
+      },
+      "any": {
+        "temperature": 1.098222932442834,
+        "selected_method": "temperature_scaling",
+        "minimum_nll_improvement": 1e-06,
+        "nll_improvement": 0.0010687343535493166,
+        "before": {
+          "negative_log_likelihood": 0.47159570126197736,
+          "brier_score": 0.15771259281699615,
+          "expected_calibration_error": 0.08802534322491168,
+          "examples": 244,
+          "positives": 79,
+          "bins": 10
+        },
+        "after": {
+          "negative_log_likelihood": 0.47052696690842805,
+          "brier_score": 0.15710172539444842,
+          "expected_calibration_error": 0.09579257358931362,
+          "examples": 244,
+          "positives": 79,
+          "bins": 10
+        }
+      }
+    },
+    "grouped_bootstrap_audit": {
+      "confidence_level": 0.95,
+      "seed": 42,
+      "requested_replicates": 2000,
+      "valid_class_replicates": 2000,
+      "sampling_unit": "patient_id",
+      "groups": 222,
+      "rows": 242,
+      "intervals": {
+        "roc_auc": {
+          "lower": 0.7876220599831416,
+          "upper": 0.8893493824019684,
+          "valid_replicates": 2000
+        },
+        "average_precision": {
+          "lower": 0.6939907227536977,
+          "upper": 0.8490225206905369,
+          "valid_replicates": 2000
+        },
+        "sensitivity": {
+          "lower": 0.810126582278481,
+          "upper": 0.95,
+          "valid_replicates": 2000
+        },
+        "specificity": {
+          "lower": 0.43125,
+          "upper": 0.58536986521181,
+          "valid_replicates": 2000
+        },
+        "ppv": {
+          "lower": 0.3723939888164027,
+          "upper": 0.5333445945945945,
+          "valid_replicates": 2000
+        },
+        "npv": {
+          "lower": 0.8414634146341463,
+          "upper": 0.9565334268349696,
+          "valid_replicates": 2000
+        },
+        "accuracy": {
+          "lower": 0.5619707695434223,
+          "upper": 0.690481234866828,
+          "valid_replicates": 2000
+        }
+      }
+    },
+    "policy": {
+      "calibration_applied_to_locked_release": false,
+      "threshold_retuned_on_test": false,
+      "bootstrap_changes_point_estimates": false
+    },
+    "limitations": [
+      "Slice-level pilot rather than complete study-level evaluation.",
+      "Cohort was enriched to one-third positive before splitting.",
+      "PPV, NPV, accuracy, and average precision depend on this enriched prevalence.",
+      "Sigmoid scores are not calibrated population probabilities.",
+      "Subtype results are exploratory; epidural has very few positive examples."
+    ]
+  }
+}

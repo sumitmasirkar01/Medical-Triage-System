@@ -1,0 +1,87 @@
+{
+  "dataset": "Stanford MRNet",
+  "selected_seed": 254,
+  "balance_score": 0.17661208314660326,
+  "seed_candidates": 1000,
+  "patient_identifiers_available": false,
+  "split_unit": "exam_id",
+  "official_valid_preserved_as_locked_test": true,
+  "splits": {
+    "train": {
+      "exams": 904,
+      "positive_exams": {
+        "abnormal": 723,
+        "acl": 166,
+        "meniscus": 317
+      },
+      "prevalence": {
+        "abnormal": 0.7997787610619469,
+        "acl": 0.1836283185840708,
+        "meniscus": 0.3506637168141593
+      },
+      "source_partition": [
+        "train"
+      ]
+    },
+    "validation": {
+      "exams": 113,
+      "positive_exams": {
+        "abnormal": 94,
+        "acl": 21,
+        "meniscus": 40
+      },
+      "prevalence": {
+        "abnormal": 0.831858407079646,
+        "acl": 0.18584070796460178,
+        "meniscus": 0.35398230088495575
+      },
+      "source_partition": [
+        "train"
+      ]
+    },
+    "calibration": {
+      "exams": 113,
+      "positive_exams": {
+        "abnormal": 96,
+        "acl": 21,
+        "meniscus": 40
+      },
+      "prevalence": {
+        "abnormal": 0.8495575221238938,
+        "acl": 0.18584070796460178,
+        "meniscus": 0.35398230088495575
+      },
+      "source_partition": [
+        "train"
+      ]
+    },
+    "test": {
+      "exams": 120,
+      "positive_exams": {
+        "abnormal": 95,
+        "acl": 54,
+        "meniscus": 52
+      },
+      "prevalence": {
+        "abnormal": 0.7916666666666666,
+        "acl": 0.45,
+        "meniscus": 0.43333333333333335
+      },
+      "source_partition": [
+        "valid"
+      ]
+    }
+  },
+  "checks": {
+    "rows": 1250,
+    "unique_exams": 1250,
+    "duplicate_exam_ids": 0,
+    "unassigned_rows": 0,
+    "all_plane_paths_exist": true
+  },
+  "manifest": {
+    "path": "/kaggle/working/mrnet_manifest/mrnet_manifest_split.csv",
+    "bytes": 388714,
+    "sha256": "517d69f88ad8e9bd5b714d70cfa047c60c31242b0507569495de2876c4472f11"
+  }
+}

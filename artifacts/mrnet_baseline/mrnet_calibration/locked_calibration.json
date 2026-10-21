@@ -1,0 +1,140 @@
+{
+  "status": "locked",
+  "partition": "calibration",
+  "test_partition_accessed": false,
+  "checkpoint": {
+    "path": "/kaggle/working/mrnet_baseline/best_mrnet_resnet18.pt",
+    "sha256": "610847b2e4b9f6779528ab820c5744ef161d363f0e0748c3a0b2084881c350cc",
+    "epoch": 8,
+    "stage": "upper_backbone",
+    "validation_macro_auc": 0.8297263458957015
+  },
+  "manifest_sha256": "517d69f88ad8e9bd5b714d70cfa047c60c31242b0507569495de2876c4472f11",
+  "target_sensitivity_policy": {
+    "abnormal": 0.9,
+    "acl": 0.9,
+    "meniscus": 0.85
+  },
+  "inference_reused": false,
+  "exams": 113,
+  "targets": {
+    "abnormal": {
+      "calibration": {
+        "slope": 5.315177014130555,
+        "intercept": 2.296065636338574,
+        "selected_method": "affine_logistic_scaling",
+        "minimum_nll_improvement": 1e-06,
+        "nll_improvement": 0.3268742699727741,
+        "before": {
+          "negative_log_likelihood": 0.6793817525381166,
+          "brier_score": 0.24309336361182055,
+          "expected_calibration_error": 0.3558243013821484,
+          "examples": 113,
+          "positives": 96,
+          "bins": 10
+        },
+        "after": {
+          "negative_log_likelihood": 0.35250748256534253,
+          "brier_score": 0.11173267850841677,
+          "expected_calibration_error": 0.046692537651125694,
+          "examples": 113,
+          "positives": 96,
+          "bins": 10
+        }
+      },
+      "operating_point": {
+        "threshold": 0.6246190829679077,
+        "target_sensitivity": 0.9,
+        "sensitivity": 0.90625,
+        "specificity": 0.23529411764705882,
+        "tp": 87,
+        "tn": 4,
+        "fp": 13,
+        "fn": 9,
+        "positive_examples": 96,
+        "negative_examples": 17,
+        "selection_rule": "largest_threshold_with_sensitivity_at_least_target"
+      }
+    },
+    "acl": {
+      "calibration": {
+        "slope": 6.9402563697674315,
+        "intercept": -1.7659235292741176,
+        "selected_method": "affine_logistic_scaling",
+        "minimum_nll_improvement": 1e-06,
+        "nll_improvement": 0.2673407268692121,
+        "before": {
+          "negative_log_likelihood": 0.67139547287975,
+          "brier_score": 0.23916970812799243,
+          "expected_calibration_error": 0.3129008203585054,
+          "examples": 113,
+          "positives": 21,
+          "bins": 10
+        },
+        "after": {
+          "negative_log_likelihood": 0.40405474601053787,
+          "brier_score": 0.12276784489224206,
+          "expected_calibration_error": 0.06459485845252226,
+          "examples": 113,
+          "positives": 21,
+          "bins": 10
+        }
+      },
+      "operating_point": {
+        "threshold": 0.056712984052332584,
+        "target_sensitivity": 0.9,
+        "sensitivity": 0.9047619047619048,
+        "specificity": 0.20652173913043478,
+        "tp": 19,
+        "tn": 19,
+        "fp": 73,
+        "fn": 2,
+        "positive_examples": 21,
+        "negative_examples": 92,
+        "selection_rule": "largest_threshold_with_sensitivity_at_least_target"
+      }
+    },
+    "meniscus": {
+      "calibration": {
+        "slope": 4.822406183885676,
+        "intercept": -0.6405136811736922,
+        "selected_method": "affine_logistic_scaling",
+        "minimum_nll_improvement": 1e-06,
+        "nll_improvement": 0.07807581755770066,
+        "before": {
+          "negative_log_likelihood": 0.6691587951036588,
+          "brier_score": 0.23806054398846413,
+          "expected_calibration_error": 0.14354754213134593,
+          "examples": 113,
+          "positives": 40,
+          "bins": 10
+        },
+        "after": {
+          "negative_log_likelihood": 0.5910829775459582,
+          "brier_score": 0.2002958294186215,
+          "expected_calibration_error": 0.07575178466412527,
+          "examples": 113,
+          "positives": 40,
+          "bins": 10
+        }
+      },
+      "operating_point": {
+        "threshold": 0.20426116577253828,
+        "target_sensitivity": 0.85,
+        "sensitivity": 0.85,
+        "specificity": 0.273972602739726,
+        "tp": 34,
+        "tn": 20,
+        "fp": 53,
+        "fn": 6,
+        "positive_examples": 40,
+        "negative_examples": 73,
+        "selection_rule": "largest_threshold_with_sensitivity_at_least_target"
+      }
+    }
+  },
+  "predictions": {
+    "path": "/kaggle/working/mrnet_calibration/calibration_predictions.csv",
+    "sha256": "b8419db379a894dfb3c1fe71a000aa5d60e4c41718ef44a366a682aef30c1fbd"
+  }
+}

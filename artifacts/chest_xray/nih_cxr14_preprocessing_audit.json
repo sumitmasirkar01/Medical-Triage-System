@@ -1,0 +1,153 @@
+{
+  "status": "passed",
+  "selection_partition": "train",
+  "seed": 42,
+  "input_size": [
+    224,
+    224
+  ],
+  "resize": "aspect_preserving_bilinear_center_pad_zero",
+  "channels": "grayscale_repeated_three_times",
+  "normalization": "ImageNet mean/std",
+  "examples": [
+    {
+      "image_id": "00024749_000.png",
+      "patient_id": "24749",
+      "view": "PA",
+      "selection_reason": "pneumothorax",
+      "inspection": {
+        "path": "/kaggle/input/datasets/nih-chest-xrays/data/images_011/images/00024749_000.png",
+        "format": "PNG",
+        "original_mode": "L",
+        "original_width": 1024,
+        "original_height": 1024,
+        "grayscale_min": 0,
+        "grayscale_max": 255
+      },
+      "tensor_shape": [
+        3,
+        224,
+        224
+      ],
+      "tensor_min": -2.1179039478302,
+      "tensor_max": 2.5877127647399902,
+      "tensor_finite": true
+    },
+    {
+      "image_id": "00019880_007.png",
+      "patient_id": "19880",
+      "view": "PA",
+      "selection_reason": "pleural_effusion",
+      "inspection": {
+        "path": "/kaggle/input/datasets/nih-chest-xrays/data/images_009/images/00019880_007.png",
+        "format": "PNG",
+        "original_mode": "L",
+        "original_width": 1024,
+        "original_height": 1024,
+        "grayscale_min": 0,
+        "grayscale_max": 255
+      },
+      "tensor_shape": [
+        3,
+        224,
+        224
+      ],
+      "tensor_min": -2.1179039478302,
+      "tensor_max": 2.6225709915161133,
+      "tensor_finite": true
+    },
+    {
+      "image_id": "00012643_000.png",
+      "patient_id": "12643",
+      "view": "PA",
+      "selection_reason": "consolidation",
+      "inspection": {
+        "path": "/kaggle/input/datasets/nih-chest-xrays/data/images_006/images/00012643_000.png",
+        "format": "PNG",
+        "original_mode": "L",
+        "original_width": 1024,
+        "original_height": 1024,
+        "grayscale_min": 0,
+        "grayscale_max": 248
+      },
+      "tensor_shape": [
+        3,
+        224,
+        224
+      ],
+      "tensor_min": -2.1179039478302,
+      "tensor_max": 2.465708017349243,
+      "tensor_finite": true
+    },
+    {
+      "image_id": "00012520_001.png",
+      "patient_id": "12520",
+      "view": "PA",
+      "selection_reason": "atelectasis",
+      "inspection": {
+        "path": "/kaggle/input/datasets/nih-chest-xrays/data/images_006/images/00012520_001.png",
+        "format": "PNG",
+        "original_mode": "L",
+        "original_width": 1024,
+        "original_height": 1024,
+        "grayscale_min": 0,
+        "grayscale_max": 252
+      },
+      "tensor_shape": [
+        3,
+        224,
+        224
+      ],
+      "tensor_min": -2.1179039478302,
+      "tensor_max": 2.483137607574463,
+      "tensor_finite": true
+    },
+    {
+      "image_id": "00008048_000.png",
+      "patient_id": "8048",
+      "view": "AP",
+      "selection_reason": "no_selected_finding_AP",
+      "inspection": {
+        "path": "/kaggle/input/datasets/nih-chest-xrays/data/images_004/images/00008048_000.png",
+        "format": "PNG",
+        "original_mode": "L",
+        "original_width": 1024,
+        "original_height": 1024,
+        "grayscale_min": 3,
+        "grayscale_max": 233
+      },
+      "tensor_shape": [
+        3,
+        224,
+        224
+      ],
+      "tensor_min": -1.998030662536621,
+      "tensor_max": 2.082265853881836,
+      "tensor_finite": true
+    },
+    {
+      "image_id": "00016377_001.png",
+      "patient_id": "16377",
+      "view": "PA",
+      "selection_reason": "no_selected_finding_PA",
+      "inspection": {
+        "path": "/kaggle/input/datasets/nih-chest-xrays/data/images_008/images/00016377_001.png",
+        "format": "PNG",
+        "original_mode": "L",
+        "original_width": 1024,
+        "original_height": 1024,
+        "grayscale_min": 0,
+        "grayscale_max": 255
+      },
+      "tensor_shape": [
+        3,
+        224,
+        224
+      ],
+      "tensor_min": -2.1179039478302,
+      "tensor_max": 2.465708017349243,
+      "tensor_finite": true
+    }
+  ],
+  "preview": "/kaggle/working/nih_cxr14_preprocessing_preview.png"
+}

@@ -1,0 +1,83 @@
+{
+  "seed": 42,
+  "architecture": "torchvision_densenet121",
+  "initial_weights": "DenseNet121_Weights.IMAGENET1K_V1",
+  "labels": [
+    "pneumothorax",
+    "pleural_effusion",
+    "consolidation",
+    "atelectasis"
+  ],
+  "input_size": [
+    224,
+    224
+  ],
+  "preprocessing": "grayscale_repeat3_aspect_resize_center_pad_imagenet_normalization",
+  "loss": "masked_weighted_bce_with_logits",
+  "positive_weights": {
+    "pneumothorax": 32.001441955566406,
+    "pleural_effusion": 9.020271301269531,
+    "consolidation": 29.496671676635742,
+    "atelectasis": 9.357099533081055
+  },
+  "selection_metric": "validation_macro_average_precision",
+  "train_images": 68709,
+  "validation_images": 8984,
+  "batch_size": 64,
+  "workers": 4,
+  "training_plan": [
+    {
+      "stage": "classifier",
+      "epochs": 2,
+      "learning_rate": 0.001
+    },
+    {
+      "stage": "upper_backbone",
+      "epochs": 3,
+      "learning_rate": 0.0002
+    }
+  ],
+  "best_epoch": 4,
+  "best_validation_macro_average_precision": 0.23671278113805114,
+  "best_validation_metrics": {
+    "macro_roc_auc": 0.7946505768676428,
+    "macro_average_precision": 0.23671278113805114,
+    "per_target": {
+      "pneumothorax": {
+        "roc_auc": 0.8013322765472135,
+        "average_precision": 0.140336539525574,
+        "positives": 285,
+        "negatives": 8699
+      },
+      "pleural_effusion": {
+        "roc_auc": 0.8560041871333912,
+        "average_precision": 0.44155933957970395,
+        "positives": 933,
+        "negatives": 8051
+      },
+      "consolidation": {
+        "roc_auc": 0.7469510232736374,
+        "average_precision": 0.08704181590564589,
+        "positives": 308,
+        "negatives": 8676
+      },
+      "atelectasis": {
+        "roc_auc": 0.7743148205163292,
+        "average_precision": 0.27791342954128073,
+        "positives": 864,
+        "negatives": 8120
+      }
+    },
+    "loss": 1.065759985793567
+  },
+  "manifest_sha256": "4617f87be669d3d41458c3e9fb4efb9710359d2c9f06876e3b3f002665d98574",
+  "cached_images": true,
+  "cache_images_sha256": "357d4dd6fe33158eb663ff9df80ccc9e00f3c130edf0fde4962725c3ab5d1f0a",
+  "cache_manifest_sha256": "80d5fec9285333f779c48a9181b29c36c9b6cb61c268da9b2e0332244637e700",
+  "device": "cuda",
+  "python": "3.13.15",
+  "torch": "2.11.0+cu128",
+  "total_training_seconds": 687.4862449300001,
+  "test_partition_accessed": false,
+  "calibration_partition_accessed": false
+}

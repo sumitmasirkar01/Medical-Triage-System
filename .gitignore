@@ -6,6 +6,7 @@ __pycache__/
 
 # Virtual Environment
 .venv/
+.venv-*/
 venv/
 ENV/
 
@@ -16,3 +17,17 @@ sample_dicoms/
 # OS artifacts
 .DS_Store
 Thumbs.db
+
+# Reproducible report render and visual-QA outputs
+docs/generated/
+docs/.qa_rsna_report/
+
+# Local editor/tool state
+.streamlit/
+.coverage
+htmlcov/
+
+# Local package builds
+dist/
+build/
+*.egg-info/

@@ -1,0 +1,59 @@
+{
+  "status": "independent_audit_does_not_replace_locked_release_intervals",
+  "method": "grouped_percentile_bootstrap",
+  "prediction_source": {
+    "path": "artifacts/rsna_baseline/rsna_baseline_bundle/test_predictions.csv",
+    "sha256": "3a9a1b49e9c70e0cfc6b7342647638f1280be0b2da8e3747007e949027b6d7e4"
+  },
+  "threshold_source": {
+    "path": "artifacts/rsna_baseline/rsna_baseline_bundle/operating_point.json",
+    "sha256": "24b5a0a2b93f485b3740f1ce0a83aa721ef14326682bdc1d71fc6ee621e8b010",
+    "threshold": 0.2538610100746155
+  },
+  "result": {
+    "confidence_level": 0.95,
+    "seed": 42,
+    "requested_replicates": 2000,
+    "valid_class_replicates": 2000,
+    "sampling_unit": "patient_id",
+    "groups": 222,
+    "rows": 242,
+    "intervals": {
+      "roc_auc": {
+        "lower": 0.7876220599831416,
+        "upper": 0.8893493824019684,
+        "valid_replicates": 2000
+      },
+      "average_precision": {
+        "lower": 0.6939907227536977,
+        "upper": 0.8490225206905369,
+        "valid_replicates": 2000
+      },
+      "sensitivity": {
+        "lower": 0.810126582278481,
+        "upper": 0.95,
+        "valid_replicates": 2000
+      },
+      "specificity": {
+        "lower": 0.43125,
+        "upper": 0.58536986521181,
+        "valid_replicates": 2000
+      },
+      "ppv": {
+        "lower": 0.3723939888164027,
+        "upper": 0.5333445945945945,
+        "valid_replicates": 2000
+      },
+      "npv": {
+        "lower": 0.8414634146341463,
+        "upper": 0.9565334268349696,
+        "valid_replicates": 2000
+      },
+      "accuracy": {
+        "lower": 0.5619707695434223,
+        "upper": 0.690481234866828,
+        "valid_replicates": 2000
+      }
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "endpoint": "slice_level_any_hemorrhage",
+  "score": "sigmoid_model_output_not_population_calibrated",
+  "target_sensitivity": 0.9,
+  "threshold_selection_split": "calibration",
+  "threshold": 0.2538610100746155,
+  "calibration_sensitivity": 0.9113924050632911,
+  "calibration_specificity": 0.5515151515151515,
+  "calibration_confusion_counts": {
+    "tp": 72,
+    "tn": 91,
+    "fp": 74,
+    "fn": 7
+  },
+  "calibration_auc": 0.8432681242807825,
+  "calibration_images": 244,
+  "calibration_positive_images": 79,
+  "calibration_negative_images": 165,
+  "model_checkpoint": "/kaggle/working/rsna_baseline/best_efficientnet_b0.pt",
+  "model_checkpoint_sha256": "4a15c605bb1481de7f12a4881f9c9b5adb36d9386ecac0aa6eb3ae7c3ae805b1",
+  "selected_model_epoch": 4,
+  "selection_warning": "Pilot cohort was enriched before splitting. Scores are not calibrated population probabilities, and predictive values will not represent RSNA prevalence."
+}

@@ -1,0 +1,177 @@
+{
+  "status": "locked",
+  "partition": "calibration",
+  "test_partition_accessed": false,
+  "checkpoint": {
+    "path": "/kaggle/input/datasets/masirkarsumit/nih-cxr14-evaluation-recovery/artifacts/chest_xray/nih_densenet_training/nih_densenet/best_densenet121.pt",
+    "sha256": "609a353cf2d640ca7471e3952797b25ea4f5841d7f11fe7dfc8821dbfd9298bb",
+    "epoch": 4
+  },
+  "manifest_sha256": "4617f87be669d3d41458c3e9fb4efb9710359d2c9f06876e3b3f002665d98574",
+  "target_sensitivity_policy": {
+    "pneumothorax": 0.9,
+    "pleural_effusion": 0.85,
+    "consolidation": 0.85,
+    "atelectasis": 0.85
+  },
+  "inference_reused": false,
+  "examples": 8831,
+  "targets": {
+    "pneumothorax": {
+      "calibration": {
+        "slope": 0.7099819590973796,
+        "intercept": -3.1577200288516045,
+        "selected_method": "affine_logistic_scaling",
+        "minimum_nll_improvement": 1e-06,
+        "nll_improvement": 0.31528935665955377,
+        "before": {
+          "negative_log_likelihood": 0.43055086991015745,
+          "brier_score": 0.13784808403163112,
+          "expected_calibration_error": 0.25167540226343055,
+          "examples": 8831,
+          "positives": 270,
+          "bins": 10
+        },
+        "after": {
+          "negative_log_likelihood": 0.11526151325060369,
+          "brier_score": 0.027758026728985946,
+          "expected_calibration_error": 0.0024345934776615597,
+          "examples": 8831,
+          "positives": 270,
+          "bins": 10
+        }
+      },
+      "operating_point": {
+        "threshold": 0.014949340588526329,
+        "target_sensitivity": 0.9,
+        "sensitivity": 0.9,
+        "specificity": 0.4992407429038664,
+        "tp": 243,
+        "tn": 4274,
+        "fp": 4287,
+        "fn": 27,
+        "positive_examples": 270,
+        "negative_examples": 8561,
+        "selection_rule": "largest_threshold_with_sensitivity_at_least_target"
+      }
+    },
+    "pleural_effusion": {
+      "calibration": {
+        "slope": 0.9015950038351164,
+        "intercept": -2.1887120474821797,
+        "selected_method": "affine_logistic_scaling",
+        "minimum_nll_improvement": 1e-06,
+        "nll_improvement": 0.23145502253669664,
+        "before": {
+          "negative_log_likelihood": 0.46517922305723775,
+          "brier_score": 0.14939535959782776,
+          "expected_calibration_error": 0.23562268053065116,
+          "examples": 8831,
+          "positives": 869,
+          "bins": 10
+        },
+        "after": {
+          "negative_log_likelihood": 0.2337242005205411,
+          "brier_score": 0.06867740871118529,
+          "expected_calibration_error": 0.011197380239440115,
+          "examples": 8831,
+          "positives": 869,
+          "bins": 10
+        }
+      },
+      "operating_point": {
+        "threshold": 0.07231348258727417,
+        "target_sensitivity": 0.85,
+        "sensitivity": 0.8504027617951668,
+        "specificity": 0.7211755840241145,
+        "tp": 739,
+        "tn": 5742,
+        "fp": 2220,
+        "fn": 130,
+        "positive_examples": 869,
+        "negative_examples": 7962,
+        "selection_rule": "largest_threshold_with_sensitivity_at_least_target"
+      }
+    },
+    "consolidation": {
+      "calibration": {
+        "slope": 0.8715141772628416,
+        "intercept": -3.3390437848195518,
+        "selected_method": "affine_logistic_scaling",
+        "minimum_nll_improvement": 1e-06,
+        "nll_improvement": 0.4285136231723595,
+        "before": {
+          "negative_log_likelihood": 0.5562095374717203,
+          "brier_score": 0.18861431409869664,
+          "expected_calibration_error": 0.3420665797473782,
+          "examples": 8831,
+          "positives": 291,
+          "bins": 10
+        },
+        "after": {
+          "negative_log_likelihood": 0.12769591429936078,
+          "brier_score": 0.03035668963104854,
+          "expected_calibration_error": 0.001368463284912732,
+          "examples": 8831,
+          "positives": 291,
+          "bins": 10
+        }
+      },
+      "operating_point": {
+        "threshold": 0.01777103701007546,
+        "target_sensitivity": 0.85,
+        "sensitivity": 0.852233676975945,
+        "specificity": 0.49426229508196723,
+        "tp": 248,
+        "tn": 4221,
+        "fp": 4319,
+        "fn": 43,
+        "positive_examples": 291,
+        "negative_examples": 8540,
+        "selection_rule": "largest_threshold_with_sensitivity_at_least_target"
+      }
+    },
+    "atelectasis": {
+      "calibration": {
+        "slope": 0.7985660275050637,
+        "intercept": -2.200072189431003,
+        "selected_method": "affine_logistic_scaling",
+        "minimum_nll_improvement": 1e-06,
+        "nll_improvement": 0.268190547036874,
+        "before": {
+          "negative_log_likelihood": 0.5220645467658958,
+          "brier_score": 0.1745467636141742,
+          "expected_calibration_error": 0.2718831949568705,
+          "examples": 8831,
+          "positives": 782,
+          "bins": 10
+        },
+        "after": {
+          "negative_log_likelihood": 0.25387399972902175,
+          "brier_score": 0.07214390127858698,
+          "expected_calibration_error": 0.006538597857985547,
+          "examples": 8831,
+          "positives": 782,
+          "bins": 10
+        }
+      },
+      "operating_point": {
+        "threshold": 0.05870004422460506,
+        "target_sensitivity": 0.85,
+        "sensitivity": 0.850383631713555,
+        "specificity": 0.5580817492856256,
+        "tp": 665,
+        "tn": 4492,
+        "fp": 3557,
+        "fn": 117,
+        "positive_examples": 782,
+        "negative_examples": 8049,
+        "selection_rule": "largest_threshold_with_sensitivity_at_least_target"
+      }
+    }
+  },
+  "predictions": {
+    "path": "/kaggle/working/nih_densenet_calibration/calibration_predictions.csv",
+    "sha256": "3666d582b8691f70ac22b9804e5e5b8a6d8386adfb551ad0ec1845ab2119fa58"
+  }
+}

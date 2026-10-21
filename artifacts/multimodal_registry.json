@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "status": "research_demonstration",
+  "modalities": {
+    "head_ct": {
+      "bundle_path": "artifacts/rsna_baseline/rsna_baseline_bundle",
+      "endpoint": "slice_level_any_hemorrhage",
+      "evaluation_level": "slice",
+      "labels": [
+        "epidural",
+        "intraparenchymal",
+        "intraventricular",
+        "subarachnoid",
+        "subdural",
+        "any"
+      ],
+      "checkpoint_sha256": "4a15c605bb1481de7f12a4881f9c9b5adb36d9386ecac0aa6eb3ae7c3ae805b1"
+    },
+    "chest_xray": {
+      "bundle_path": "artifacts/chest_xray/nih_cxr14_locked_test_bundle",
+      "endpoint": "nih_cxr14_four_target_triage",
+      "evaluation_level": "image",
+      "labels": [
+        "pneumothorax",
+        "pleural_effusion",
+        "consolidation",
+        "atelectasis"
+      ],
+      "checkpoint_sha256": "609a353cf2d640ca7471e3952797b25ea4f5841d7f11fe7dfc8821dbfd9298bb"
+    },
+    "knee_mri": {
+      "bundle_path": "artifacts/mrnet_baseline",
+      "endpoint": "mrnet_three_target_exam_triage",
+      "evaluation_level": "exam",
+      "labels": [
+        "abnormal",
+        "acl",
+        "meniscus"
+      ],
+      "checkpoint_sha256": "610847b2e4b9f6779528ab820c5744ef161d363f0e0748c3a0b2084881c350cc"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "stat-triage-ai"
+version = "0.1.0"
+description = "Evidence-backed multimodal medical-imaging triage research system"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "matplotlib>=3.10,<4",
+  "numpy>=2.2,<3",
+  "pandas>=2.2,<4",
+  "Pillow>=11,<13",
+  "pydicom>=3,<4",
+  "python-docx>=1.1,<2",
+  "scikit-learn>=1.6,<2",
+  "streamlit>=1.57,<2",
+  "torch>=2.10,<3",
+  "torchvision>=0.25,<1",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10"]
+
+[tool.setuptools.packages.find]
+include = ["stat_triage*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "--strict-markers"

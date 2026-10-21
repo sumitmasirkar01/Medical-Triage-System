@@ -1,0 +1,41 @@
+{
+  "bundle": "STAT-Triage RSNA slice-level pilot",
+  "files": {
+    "test_metrics.json": {
+      "bytes": 3083,
+      "sha256": "a0fb02479f9f3e50896c8cdc8f65e700a32c2b47aec05b6bc509502ec9b66590"
+    },
+    "test_predictions.csv": {
+      "bytes": 41369,
+      "sha256": "3a9a1b49e9c70e0cfc6b7342647638f1280be0b2da8e3747007e949027b6d7e4"
+    },
+    "calibration_predictions.csv": {
+      "bytes": 44125,
+      "sha256": "1e4e92c1a8ed598aa7734246ed8ccbb39a54eb587f9cbeb3208054d29a2b7d38"
+    },
+    "operating_point.json": {
+      "bytes": 940,
+      "sha256": "24b5a0a2b93f485b3740f1ce0a83aa721ef14326682bdc1d71fc6ee621e8b010"
+    },
+    "training_history.csv": {
+      "bytes": 2236,
+      "sha256": "16ef7efa26b9413647ed016a2250ffeb410a6c5d3651ee7be33bfae36f377f93"
+    },
+    "run_config.json": {
+      "bytes": 1513,
+      "sha256": "5811f31090c38de0183d848ce605dcdcb827eabd68ea5d40fbbb60c0910ef255"
+    },
+    "best_efficientnet_b0.pt": {
+      "bytes": 16365573,
+      "sha256": "4a15c605bb1481de7f12a4881f9c9b5adb36d9386ecac0aa6eb3ae7c3ae805b1"
+    },
+    "rsna_pilot_manifest_split.csv": {
+      "bytes": 523819,
+      "sha256": "4335d70dded5351bd3d43e0dc72f036cc74957baa0e30e2b61dc771b7f4d7783"
+    },
+    "rsna_hu_window_preview.png": {
+      "bytes": 1384131,
+      "sha256": "e6d5c0f0d77696f61180d9a62a24bd08dc793cff299d8801773db9268add4c56"
+    }
+  }
+}

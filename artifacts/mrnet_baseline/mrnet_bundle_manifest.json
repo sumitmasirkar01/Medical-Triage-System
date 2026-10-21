@@ -1,0 +1,49 @@
+{
+  "bundle": "Stanford MRNet three-plane research baseline",
+  "created_at": "2026-10-20T21:42:12.320459+00:00",
+  "checkpoint_sha256": "610847b2e4b9f6779528ab820c5744ef161d363f0e0748c3a0b2084881c350cc",
+  "manifest_sha256": "517d69f88ad8e9bd5b714d70cfa047c60c31242b0507569495de2876c4472f11",
+  "test_partition": "official MRNet valid partition locked as test",
+  "test_exams": 120,
+  "threshold_retuned_on_test": false,
+  "calibrator_refit_on_test": false,
+  "patient_identifiers_available": false,
+  "files": {
+    "mrnet_manifest/mrnet_manifest_split.csv": {
+      "bytes": 388714,
+      "sha256": "517d69f88ad8e9bd5b714d70cfa047c60c31242b0507569495de2876c4472f11"
+    },
+    "mrnet_manifest/mrnet_split_summary.json": {
+      "bytes": 1972,
+      "sha256": "0559a8b2c482cc5cc5d0f84468f41517282d9f21da3d1050b982a560a98c57b1"
+    },
+    "mrnet_baseline/best_mrnet_resnet18.pt": {
+      "bytes": 46366559,
+      "sha256": "610847b2e4b9f6779528ab820c5744ef161d363f0e0748c3a0b2084881c350cc"
+    },
+    "mrnet_baseline/training_history.csv": {
+      "bytes": 1133,
+      "sha256": "093563f0bf6c95d5a2eeef65c4a981d472823020b02f399faa8834daf525c93b"
+    },
+    "mrnet_baseline/run_config.json": {
+      "bytes": 975,
+      "sha256": "30598187e4b8eda380d88ecddb472521be1ccd2ac87d94795f3b0aa5814cf247"
+    },
+    "mrnet_calibration/calibration_predictions.csv": {
+      "bytes": 15544,
+      "sha256": "b8419db379a894dfb3c1fe71a000aa5d60e4c41718ef44a366a682aef30c1fbd"
+    },
+    "mrnet_calibration/locked_calibration.json": {
+      "bytes": 4449,
+      "sha256": "1cc8ceae0a101e4c65bae5069be0312376243e4b38912714caeec1850cfb6d3e"
+    },
+    "mrnet_test/test_predictions.csv": {
+      "bytes": 13382,
+      "sha256": "fe5e5997c7d4231b3a608030c4ac4cd80c87da79c0966488499f707876f5737c"
+    },
+    "mrnet_test/test_metrics.json": {
+      "bytes": 7152,
+      "sha256": "b2ee7a088f5d809fbd0c3fbc2cbedfa4b93774d2c668933dd23bfc47652ddee1"
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "model": "shared_resnet18_max_pool_three_plane_fusion",
+  "targets": [
+    "abnormal",
+    "acl",
+    "meniscus"
+  ],
+  "planes": [
+    "axial",
+    "coronal",
+    "sagittal"
+  ],
+  "manifest": "/kaggle/working/mrnet_manifest/mrnet_manifest_split.csv",
+  "seed": 42,
+  "positive_weights": {
+    "abnormal": 0.25034579634666443,
+    "acl": 4.4457831382751465,
+    "meniscus": 1.85173499584198
+  },
+  "best_validation_macro_auc": 0.8297263458957015,
+  "checkpoint_sha256": "610847b2e4b9f6779528ab820c5744ef161d363f0e0748c3a0b2084881c350cc",
+  "test_partition_used": false,
+  "arguments": {
+    "manifest": "/kaggle/working/mrnet_manifest/mrnet_manifest_split.csv",
+    "output_dir": "/kaggle/working/mrnet_baseline",
+    "batch_size": 1,
+    "workers": 2,
+    "size": 224,
+    "slice_chunk_size": 32,
+    "fusion_epochs": 5,
+    "upper_epochs": 3,
+    "fusion_lr": 0.001,
+    "upper_lr": 1e-05,
+    "weight_decay": 0.0001,
+    "accumulation_steps": 4,
+    "seed": 42
+  }
+}

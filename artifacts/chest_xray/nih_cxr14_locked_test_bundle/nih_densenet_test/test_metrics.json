@@ -1,0 +1,309 @@
+{
+  "status": "complete",
+  "partition": "official_test",
+  "generated_at": "2026-10-20T16:21:31.522719+00:00",
+  "test_images": 25596,
+  "test_patients": 2797,
+  "checkpoint_sha256": "609a353cf2d640ca7471e3952797b25ea4f5841d7f11fe7dfc8821dbfd9298bb",
+  "manifest_sha256": "4617f87be669d3d41458c3e9fb4efb9710359d2c9f06876e3b3f002665d98574",
+  "locked_calibration_sha256": "9220f74a223932f17f625f68144466ed80b250d06c8dbcb6ecf0dea8d2de8375",
+  "threshold_retuned_on_test": false,
+  "calibrator_refit_on_test": false,
+  "inference_seconds": 1815.374418953,
+  "mean_inference_ms_per_image": 70.92414513802939,
+  "bootstrap_replicates": 2000,
+  "targets": {
+    "pneumothorax": {
+      "threshold": 0.014949340588526329,
+      "point_estimates": {
+        "roc_auc": 0.8125886837443566,
+        "average_precision": 0.3190630949861747,
+        "sensitivity": 0.9598499061913696,
+        "specificity": 0.3430290872617854,
+        "ppv": 0.14515122283379675,
+        "npv": 0.9865797065094695,
+        "accuracy": 0.40725113298952964,
+        "tp": 2558,
+        "tn": 7866,
+        "fp": 15065,
+        "fn": 107,
+        "positive_images": 2665,
+        "negative_images": 22931
+      },
+      "calibration_metrics": {
+        "negative_log_likelihood": 0.2961873562515172,
+        "brier_score": 0.08553585930853388,
+        "expected_calibration_error": 0.05097957166285126,
+        "examples": 25596,
+        "positives": 2665,
+        "bins": 10
+      },
+      "patient_grouped_bootstrap": {
+        "confidence_level": 0.95,
+        "seed": 42,
+        "requested_replicates": 2000,
+        "valid_class_replicates": 2000,
+        "sampling_unit": "patient_id",
+        "groups": 2797,
+        "rows": 25596,
+        "intervals": {
+          "roc_auc": {
+            "lower": 0.7986466707173959,
+            "upper": 0.8258011702849036,
+            "valid_replicates": 2000
+          },
+          "average_precision": {
+            "lower": 0.2860713518160889,
+            "upper": 0.353377266836051,
+            "valid_replicates": 2000
+          },
+          "sensitivity": {
+            "lower": 0.9482149361929951,
+            "upper": 0.9705046690804923,
+            "valid_replicates": 2000
+          },
+          "specificity": {
+            "lower": 0.3255695423459191,
+            "upper": 0.36014550539480755,
+            "valid_replicates": 2000
+          },
+          "ppv": {
+            "lower": 0.12797628590250923,
+            "upper": 0.16315856586141536,
+            "valid_replicates": 2000
+          },
+          "npv": {
+            "lower": 0.9827356646490123,
+            "upper": 0.98993516946609,
+            "valid_replicates": 2000
+          },
+          "accuracy": {
+            "lower": 0.3923321204219317,
+            "upper": 0.422702280621933,
+            "valid_replicates": 2000
+          }
+        }
+      }
+    },
+    "pleural_effusion": {
+      "threshold": 0.07231348258727417,
+      "point_estimates": {
+        "roc_auc": 0.7820850562873454,
+        "average_precision": 0.4382968534213697,
+        "sensitivity": 0.9167024474023185,
+        "specificity": 0.4358104881077467,
+        "ppv": 0.26549773052291237,
+        "npv": 0.9592137075580784,
+        "accuracy": 0.5233239568682607,
+        "tp": 4270,
+        "tn": 9125,
+        "fp": 11813,
+        "fn": 388,
+        "positive_images": 4658,
+        "negative_images": 20938
+      },
+      "calibration_metrics": {
+        "negative_log_likelihood": 0.3983866496370099,
+        "brier_score": 0.1264728916043197,
+        "expected_calibration_error": 0.02437507657088869,
+        "examples": 25596,
+        "positives": 4658,
+        "bins": 10
+      },
+      "patient_grouped_bootstrap": {
+        "confidence_level": 0.95,
+        "seed": 43,
+        "requested_replicates": 2000,
+        "valid_class_replicates": 2000,
+        "sampling_unit": "patient_id",
+        "groups": 2797,
+        "rows": 25596,
+        "intervals": {
+          "roc_auc": {
+            "lower": 0.7702938152857206,
+            "upper": 0.7939964133989652,
+            "valid_replicates": 2000
+          },
+          "average_precision": {
+            "lower": 0.40974133236393584,
+            "upper": 0.4668910632541354,
+            "valid_replicates": 2000
+          },
+          "sensitivity": {
+            "lower": 0.904258599830915,
+            "upper": 0.928375727559009,
+            "valid_replicates": 2000
+          },
+          "specificity": {
+            "lower": 0.41494816866885725,
+            "upper": 0.4578894278615482,
+            "valid_replicates": 2000
+          },
+          "ppv": {
+            "lower": 0.24860249426305348,
+            "upper": 0.28371149207806917,
+            "valid_replicates": 2000
+          },
+          "npv": {
+            "lower": 0.9541549936996185,
+            "upper": 0.9643051208089783,
+            "valid_replicates": 2000
+          },
+          "accuracy": {
+            "lower": 0.5077307772330212,
+            "upper": 0.539495499356958,
+            "valid_replicates": 2000
+          }
+        }
+      }
+    },
+    "consolidation": {
+      "threshold": 0.01777103701007546,
+      "point_estimates": {
+        "roc_auc": 0.6674439615022434,
+        "average_precision": 0.11704745456773283,
+        "sensitivity": 0.9393939393939394,
+        "specificity": 0.22517976535889997,
+        "ppv": 0.08469524613779743,
+        "npv": 0.979871912168344,
+        "accuracy": 0.27582434755430535,
+        "tp": 1705,
+        "tn": 5355,
+        "fp": 18426,
+        "fn": 110,
+        "positive_images": 1815,
+        "negative_images": 23781
+      },
+      "calibration_metrics": {
+        "negative_log_likelihood": 0.24870457495123016,
+        "brier_score": 0.0651257800181669,
+        "expected_calibration_error": 0.019404342859935232,
+        "examples": 25596,
+        "positives": 1815,
+        "bins": 10
+      },
+      "patient_grouped_bootstrap": {
+        "confidence_level": 0.95,
+        "seed": 44,
+        "requested_replicates": 2000,
+        "valid_class_replicates": 2000,
+        "sampling_unit": "patient_id",
+        "groups": 2797,
+        "rows": 25596,
+        "intervals": {
+          "roc_auc": {
+            "lower": 0.6524513844025762,
+            "upper": 0.6833796819681014,
+            "valid_replicates": 2000
+          },
+          "average_precision": {
+            "lower": 0.10476987135910847,
+            "upper": 0.13178980719993263,
+            "valid_replicates": 2000
+          },
+          "sensitivity": {
+            "lower": 0.9258887510433109,
+            "upper": 0.9520913524151303,
+            "valid_replicates": 2000
+          },
+          "specificity": {
+            "lower": 0.20950404482734425,
+            "upper": 0.2408030062378607,
+            "valid_replicates": 2000
+          },
+          "ppv": {
+            "lower": 0.07710493215210032,
+            "upper": 0.09271267221716534,
+            "valid_replicates": 2000
+          },
+          "npv": {
+            "lower": 0.9757799529723409,
+            "upper": 0.9839035663197355,
+            "valid_replicates": 2000
+          },
+          "accuracy": {
+            "lower": 0.2623688705372101,
+            "upper": 0.28925430955477355,
+            "valid_replicates": 2000
+          }
+        }
+      }
+    },
+    "atelectasis": {
+      "threshold": 0.05870004422460506,
+      "point_estimates": {
+        "roc_auc": 0.7199805956597856,
+        "average_precision": 0.2654834398187324,
+        "sensitivity": 0.896004879536444,
+        "specificity": 0.35560335170497825,
+        "ppv": 0.1696402794618627,
+        "npv": 0.9588014981273408,
+        "accuracy": 0.4248320050007814,
+        "tp": 2938,
+        "tn": 7936,
+        "fp": 14381,
+        "fn": 341,
+        "positive_images": 3279,
+        "negative_images": 22317
+      },
+      "calibration_metrics": {
+        "negative_log_likelihood": 0.34968019153433544,
+        "brier_score": 0.10420943471186926,
+        "expected_calibration_error": 0.014904587821345622,
+        "examples": 25596,
+        "positives": 3279,
+        "bins": 10
+      },
+      "patient_grouped_bootstrap": {
+        "confidence_level": 0.95,
+        "seed": 45,
+        "requested_replicates": 2000,
+        "valid_class_replicates": 2000,
+        "sampling_unit": "patient_id",
+        "groups": 2797,
+        "rows": 25596,
+        "intervals": {
+          "roc_auc": {
+            "lower": 0.7059734767985081,
+            "upper": 0.7335149550796897,
+            "valid_replicates": 2000
+          },
+          "average_precision": {
+            "lower": 0.2457786239320868,
+            "upper": 0.28579264195990456,
+            "valid_replicates": 2000
+          },
+          "sensitivity": {
+            "lower": 0.8790683318977893,
+            "upper": 0.911055689180197,
+            "valid_replicates": 2000
+          },
+          "specificity": {
+            "lower": 0.33429423086525856,
+            "upper": 0.3765425436708925,
+            "valid_replicates": 2000
+          },
+          "ppv": {
+            "lower": 0.15820764995673317,
+            "upper": 0.1809270558117219,
+            "valid_replicates": 2000
+          },
+          "npv": {
+            "lower": 0.9527231359756839,
+            "upper": 0.964153811826453,
+            "valid_replicates": 2000
+          },
+          "accuracy": {
+            "lower": 0.4085789505053098,
+            "upper": 0.44120827337723306,
+            "valid_replicates": 2000
+          }
+        }
+      }
+    }
+  },
+  "predictions": {
+    "path": "/kaggle/working/nih_densenet_test/test_predictions.csv",
+    "sha256": "4c0d66a9a20eaa4b8bc7871dfa9f690bc7e42ef5c7323007fd2064bf93a80ae3"
+  }
+}

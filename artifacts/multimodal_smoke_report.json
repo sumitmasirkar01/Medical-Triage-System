@@ -1,0 +1,185 @@
+{
+  "status": "passed",
+  "generated_at": "2026-10-21T09:54:13.802513+00:00",
+  "device": "cpu",
+  "synthetic_deidentified_inputs": true,
+  "real_locked_checkpoints": true,
+  "modalities_exercised": [
+    "chest_xray",
+    "head_ct",
+    "knee_mri"
+  ],
+  "lazy_loading_sequence": [
+    [],
+    [
+      "head_ct"
+    ],
+    [
+      "head_ct",
+      "chest_xray"
+    ],
+    [
+      "head_ct",
+      "chest_xray",
+      "knee_mri"
+    ]
+  ],
+  "explicitly_unloaded_modalities": [
+    "head_ct",
+    "chest_xray",
+    "knee_mri"
+  ],
+  "loaded_after_unload": [],
+  "active_worklist_order": [
+    "smoke_head_ct",
+    "SMOKE-CXR",
+    "SMOKE-MRI"
+  ],
+  "audit_actions": [
+    "ENQUEUED",
+    "ENQUEUED",
+    "ENQUEUED"
+  ],
+  "cuda_peak_memory_mb": null,
+  "results": [
+    {
+      "exam_id": "smoke_head_ct",
+      "modality": "head_ct",
+      "endpoint": "slice_level_any_hemorrhage",
+      "model_id": "efficientnet_b0_epoch_4",
+      "model_sha256": "4a15c605bb1481de7f12a4881f9c9b5adb36d9386ecac0aa6eb3ae7c3ae805b1",
+      "raw_scores": {
+        "epidural": 0.05969550460577011,
+        "intraparenchymal": 0.11916963756084442,
+        "intraventricular": 0.029510747641324997,
+        "subarachnoid": 0.25794312357902527,
+        "subdural": 0.47476986050605774,
+        "any": 0.2851925790309906
+      },
+      "calibrated_scores": {
+        "epidural": 0.05969550460577011,
+        "intraparenchymal": 0.11916963756084442,
+        "intraventricular": 0.029510747641324997,
+        "subarachnoid": 0.25794312357902527,
+        "subdural": 0.47476986050605774,
+        "any": 0.2851925790309906
+      },
+      "thresholds": {
+        "any": 0.2538610100746155
+      },
+      "decisions": {
+        "any": true
+      },
+      "latency_ms": 91.12450000066019,
+      "input_hashes": {
+        "smoke_head_ct.dcm": "e1d30916734ef83a2511542cdbe7299fb936014f66f46a8bf7db98e7a3dc8e64"
+      },
+      "warnings": [
+        "sigmoid_model_output_not_population_calibrated"
+      ],
+      "automatic_zone": "RED",
+      "positive_targets": [
+        "any"
+      ],
+      "worklist_rationale": [
+        "urgent_locked_decision:any"
+      ]
+    },
+    {
+      "exam_id": "SMOKE-CXR",
+      "modality": "chest_xray",
+      "endpoint": "nih_cxr14_four_target_triage",
+      "model_id": "densenet121_epoch_4",
+      "model_sha256": "609a353cf2d640ca7471e3952797b25ea4f5841d7f11fe7dfc8821dbfd9298bb",
+      "raw_scores": {
+        "pneumothorax": 0.01181265286279806,
+        "pleural_effusion": 0.8895164048281177,
+        "consolidation": 0.6480842907682008,
+        "atelectasis": 0.616312793346784
+      },
+      "calibrated_scores": {
+        "pneumothorax": 0.00183184491567983,
+        "pleural_effusion": 0.4235650442816628,
+        "consolidation": 0.056953959525751725,
+        "atelectasis": 0.1392407581207024
+      },
+      "thresholds": {
+        "pneumothorax": 0.014949340588526329,
+        "pleural_effusion": 0.07231348258727417,
+        "consolidation": 0.01777103701007546,
+        "atelectasis": 0.05870004422460506
+      },
+      "decisions": {
+        "pneumothorax": false,
+        "pleural_effusion": true,
+        "consolidation": true,
+        "atelectasis": true
+      },
+      "latency_ms": 123.40020000010554,
+      "input_hashes": {
+        "smoke_chest_xray.png": "5fb6cf4b83229a75acecf7722465e9f6ea89ebb813b5b61fe39f6eab2cb2c75a"
+      },
+      "warnings": [
+        "research_triage_pilot_not_for_clinical_use",
+        "input_frontal_view_cannot_be_verified_from_pixels_alone"
+      ],
+      "automatic_zone": "YELLOW",
+      "positive_targets": [
+        "pleural_effusion",
+        "consolidation",
+        "atelectasis"
+      ],
+      "worklist_rationale": [
+        "positive_locked_decision:pleural_effusion,consolidation,atelectasis"
+      ]
+    },
+    {
+      "exam_id": "SMOKE-MRI",
+      "modality": "knee_mri",
+      "endpoint": "mrnet_three_target_exam_triage",
+      "model_id": "shared_resnet18_three_plane_epoch_8",
+      "model_sha256": "610847b2e4b9f6779528ab820c5744ef161d363f0e0748c3a0b2084881c350cc",
+      "raw_scores": {
+        "abnormal": 0.4923996493561813,
+        "acl": 0.48640596878112985,
+        "meniscus": 0.5287325726709714
+      },
+      "calibrated_scores": {
+        "abnormal": 0.8942080714996745,
+        "acl": 0.10494951785558732,
+        "meniscus": 0.47859762872904743
+      },
+      "thresholds": {
+        "abnormal": 0.6246190829679077,
+        "acl": 0.056712984052332584,
+        "meniscus": 0.20426116577253828
+      },
+      "decisions": {
+        "abnormal": true,
+        "acl": true,
+        "meniscus": true
+      },
+      "latency_ms": 433.85480000142707,
+      "input_hashes": {
+        "axial/axial.npy": "5dc64cbf997305d529789db66e8a1578707f82a984d1b714d6382d449b92b74c",
+        "coronal/coronal.npy": "f3927bb941bc5c49fc845b524d99caf52256e60b3a1802d533f9a1fa4437dab3",
+        "sagittal/sagittal.npy": "a325eebde18abec329dee5a3226b45905925367a3bb5a53fe8ef685ca0b99992"
+      },
+      "warnings": [
+        "research_triage_pilot_not_for_clinical_use",
+        "input_plane_identity_is_caller_supplied_and_not_encoded_in_npy",
+        "mrnet_patient_identifiers_unavailable_for_split_verification",
+        "high_sensitivity_operating_points_have_low_specificity"
+      ],
+      "automatic_zone": "YELLOW",
+      "positive_targets": [
+        "abnormal",
+        "acl",
+        "meniscus"
+      ],
+      "worklist_rationale": [
+        "positive_locked_decision:abnormal,acl,meniscus"
+      ]
+    }
+  ]
+}

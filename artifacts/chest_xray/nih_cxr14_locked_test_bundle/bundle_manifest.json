@@ -1,0 +1,37 @@
+{
+  "bundle": "NIH ChestX-ray14 locked evaluation recovery",
+  "status": "validated_pilot",
+  "reproduced_after_runtime_reset": true,
+  "threshold_retuned_on_test": false,
+  "calibrator_refit_on_test": false,
+  "files": {
+    "nih_densenet/best_densenet121.pt": {
+      "bytes": 28444310,
+      "sha256": "609a353cf2d640ca7471e3952797b25ea4f5841d7f11fe7dfc8821dbfd9298bb"
+    },
+    "nih_cxr14_manifest_split.csv": {
+      "bytes": 18390243,
+      "sha256": "4617f87be669d3d41458c3e9fb4efb9710359d2c9f06876e3b3f002665d98574"
+    },
+    "nih_cxr14_split_summary.json": {
+      "bytes": 3897,
+      "sha256": "1a6335cbe8172e9845e65b4104ec331156cf0d7fe832ef9f8f80a8625e6c0ff1"
+    },
+    "nih_densenet_calibration/calibration_predictions.csv": {
+      "bytes": 1758775,
+      "sha256": "3666d582b8691f70ac22b9804e5e5b8a6d8386adfb551ad0ec1845ab2119fa58"
+    },
+    "nih_densenet_calibration/locked_calibration.json": {
+      "bytes": 5853,
+      "sha256": "9220f74a223932f17f625f68144466ed80b250d06c8dbcb6ecf0dea8d2de8375"
+    },
+    "nih_densenet_test/test_predictions.csv": {
+      "bytes": 4153410,
+      "sha256": "4c0d66a9a20eaa4b8bc7871dfa9f690bc7e42ef5c7323007fd2064bf93a80ae3"
+    },
+    "nih_densenet_test/test_metrics.json": {
+      "bytes": 9642,
+      "sha256": "93d48cca3fa4f74f58294dccd0d3518cd9232c53887a68c2351c23dc429a9293"
+    }
+  }
+}

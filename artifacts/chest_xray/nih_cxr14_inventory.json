@@ -1,0 +1,92 @@
+{
+  "schema_version": "1.0",
+  "dataset": "NIH ChestX-ray14",
+  "status": "inventory_complete",
+  "files": {
+    "metadata_csv": "/kaggle/input/datasets/nih-chest-xrays/data/Data_Entry_2017.csv",
+    "metadata_sha256": "88f75094e25ccc0c6f1f9cdfd4b2f94f9379a0ae07d5ff4dcf94242707b07462",
+    "train_val_list": "/kaggle/input/datasets/nih-chest-xrays/data/train_val_list.txt",
+    "train_val_list_sha256": "61fbe896321c1c1c8b75f3e4f3a08e4fef6486d95ef8a667c31d4d60dca6cb81",
+    "test_list": "/kaggle/input/datasets/nih-chest-xrays/data/test_list.txt",
+    "test_list_sha256": "38ca5ef7f756092946f57c1a59faca882ed589a1ab1f72590b45dc06c6d5e1cc"
+  },
+  "cohort": {
+    "metadata_rows": 112120,
+    "unique_metadata_images": 112120,
+    "unique_patients": 30805,
+    "duplicate_metadata_rows": 0,
+    "image_files_discovered": 112120,
+    "unique_image_filenames": 112120,
+    "duplicate_image_filenames": 0,
+    "metadata_images_missing_on_disk": 0,
+    "images_without_metadata": 0
+  },
+  "targets": {
+    "pneumothorax": {
+      "source_label": "Pneumothorax",
+      "positive_images": 5302,
+      "positive_patients": 1487
+    },
+    "pleural_effusion": {
+      "source_label": "Effusion",
+      "positive_images": 13317,
+      "positive_patients": 4275
+    },
+    "consolidation": {
+      "source_label": "Consolidation",
+      "positive_images": 4667,
+      "positive_patients": 2150
+    },
+    "atelectasis": {
+      "source_label": "Atelectasis",
+      "positive_images": 11559,
+      "positive_patients": 4981
+    }
+  },
+  "all_source_label_counts": {
+    "Atelectasis": 11559,
+    "Cardiomegaly": 2776,
+    "Consolidation": 4667,
+    "Edema": 2303,
+    "Effusion": 13317,
+    "Emphysema": 2516,
+    "Fibrosis": 1686,
+    "Hernia": 227,
+    "Infiltration": 19894,
+    "Mass": 5782,
+    "No Finding": 60361,
+    "Nodule": 6331,
+    "Pleural_Thickening": 3385,
+    "Pneumonia": 1431,
+    "Pneumothorax": 5302
+  },
+  "metadata_quality": {
+    "view_counts": {
+      "PA": 67310,
+      "AP": 44810
+    },
+    "gender_counts": {
+      "M": 63340,
+      "F": 48780
+    },
+    "invalid_age_values": 0,
+    "ages_over_120": 16,
+    "no_finding_with_additional_labels": 0
+  },
+  "supplied_split": {
+    "train_entries": 86524,
+    "test_entries": 25596,
+    "duplicate_train_entries": 0,
+    "duplicate_test_entries": 0,
+    "image_overlap": 0,
+    "patient_overlap": 0,
+    "train_entries_missing_metadata": 0,
+    "test_entries_missing_metadata": 0,
+    "metadata_images_unassigned": 0
+  },
+  "examples": {
+    "missing_images": [],
+    "orphan_images": [],
+    "duplicate_image_filenames": []
+  }
+}

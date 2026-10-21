@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0",
+  "status": "passed",
+  "release_status": "research_demonstration",
+  "modality_count": 3,
+  "metrics_recomputed": true,
+  "modalities": {
+    "head_ct": {
+      "bundle_path": "E:\\Medical_Triage_system\\artifacts\\rsna_baseline\\rsna_baseline_bundle",
+      "endpoint": "slice_level_any_hemorrhage",
+      "evaluation_level": "slice",
+      "labels": [
+        "epidural",
+        "intraparenchymal",
+        "intraventricular",
+        "subarachnoid",
+        "subdural",
+        "any"
+      ],
+      "bundle": "STAT-Triage RSNA slice-level pilot",
+      "artifact_count": 9,
+      "checkpoint_sha256": "4a15c605bb1481de7f12a4881f9c9b5adb36d9386ecac0aa6eb3ae7c3ae805b1",
+      "threshold": 0.2538610100746155,
+      "metrics_recomputed": true
+    },
+    "chest_xray": {
+      "bundle_path": "E:\\Medical_Triage_system\\artifacts\\chest_xray\\nih_cxr14_locked_test_bundle",
+      "endpoint": "nih_cxr14_four_target_triage",
+      "evaluation_level": "image",
+      "labels": [
+        "pneumothorax",
+        "pleural_effusion",
+        "consolidation",
+        "atelectasis"
+      ],
+      "status": "validated_pilot",
+      "artifact_count": 7,
+      "checkpoint_sha256": "609a353cf2d640ca7471e3952797b25ea4f5841d7f11fe7dfc8821dbfd9298bb",
+      "test_images": 25596,
+      "test_patients": 2797,
+      "metrics_recomputed": true
+    },
+    "knee_mri": {
+      "bundle_path": "E:\\Medical_Triage_system\\artifacts\\mrnet_baseline",
+      "endpoint": "mrnet_three_target_exam_triage",
+      "evaluation_level": "exam",
+      "labels": [
+        "abnormal",
+        "acl",
+        "meniscus"
+      ],
+      "status": "complete",
+      "artifact_count": 9,
+      "checkpoint_sha256": "610847b2e4b9f6779528ab820c5744ef161d363f0e0748c3a0b2084881c350cc",
+      "checkpoint_epoch": 8,
+      "planes": [
+        "axial",
+        "coronal",
+        "sagittal"
+      ],
+      "test_exams": 120,
+      "patient_identifiers_available": false,
+      "metrics_recomputed": true
+    }
+  }
+}

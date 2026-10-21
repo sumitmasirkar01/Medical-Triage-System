@@ -1,0 +1,144 @@
+{
+  "status": "calibration_only_audit_not_applied_to_locked_release",
+  "method": "per_target_scalar_temperature_scaling_with_identity_fallback",
+  "selection_objective": "binary_negative_log_likelihood",
+  "source": {
+    "path": "artifacts/rsna_baseline/rsna_baseline_bundle/calibration_predictions.csv",
+    "sha256": "1e4e92c1a8ed598aa7734246ed8ccbb39a54eb587f9cbeb3208054d29a2b7d38",
+    "rows": 244
+  },
+  "targets": {
+    "epidural": {
+      "temperature": 0.39289958372921674,
+      "selected_method": "temperature_scaling",
+      "minimum_nll_improvement": 1e-06,
+      "nll_improvement": 0.06561899439040168,
+      "before": {
+        "negative_log_likelihood": 0.13524990211476245,
+        "brier_score": 0.02802888682361485,
+        "expected_calibration_error": 0.09246034226199364,
+        "examples": 244,
+        "positives": 3,
+        "bins": 10
+      },
+      "after": {
+        "negative_log_likelihood": 0.06963090772436077,
+        "brier_score": 0.015000394335058957,
+        "expected_calibration_error": 0.010600374277318393,
+        "examples": 244,
+        "positives": 3,
+        "bins": 10
+      }
+    },
+    "intraparenchymal": {
+      "temperature": 0.9913659429694968,
+      "selected_method": "temperature_scaling",
+      "minimum_nll_improvement": 1e-06,
+      "nll_improvement": 9.197329693788614e-06,
+      "before": {
+        "negative_log_likelihood": 0.4217002756480991,
+        "brier_score": 0.14030775088847217,
+        "expected_calibration_error": 0.19022779221562267,
+        "examples": 244,
+        "positives": 32,
+        "bins": 10
+      },
+      "after": {
+        "negative_log_likelihood": 0.4216910783184053,
+        "brier_score": 0.14035410584205674,
+        "expected_calibration_error": 0.1896221710529199,
+        "examples": 244,
+        "positives": 32,
+        "bins": 10
+      }
+    },
+    "intraventricular": {
+      "temperature": 1.188166562865658,
+      "selected_method": "temperature_scaling",
+      "minimum_nll_improvement": 1e-06,
+      "nll_improvement": 0.00402744345432654,
+      "before": {
+        "negative_log_likelihood": 0.44671950078886696,
+        "brier_score": 0.14868707516113766,
+        "expected_calibration_error": 0.23440155820672035,
+        "examples": 244,
+        "positives": 18,
+        "bins": 10
+      },
+      "after": {
+        "negative_log_likelihood": 0.4426920573345404,
+        "brier_score": 0.14696446216229556,
+        "expected_calibration_error": 0.24669067340504075,
+        "examples": 244,
+        "positives": 18,
+        "bins": 10
+      }
+    },
+    "subarachnoid": {
+      "temperature": 0.9225011475160704,
+      "selected_method": "temperature_scaling",
+      "minimum_nll_improvement": 1e-06,
+      "nll_improvement": 0.00073549998695005,
+      "before": {
+        "negative_log_likelihood": 0.4873417397985113,
+        "brier_score": 0.16056557762778745,
+        "expected_calibration_error": 0.2521929288202779,
+        "examples": 244,
+        "positives": 21,
+        "bins": 10
+      },
+      "after": {
+        "negative_log_likelihood": 0.48660623981156126,
+        "brier_score": 0.16031861555615762,
+        "expected_calibration_error": 0.24521519893556581,
+        "examples": 244,
+        "positives": 21,
+        "bins": 10
+      }
+    },
+    "subdural": {
+      "temperature": 1.332059766122145,
+      "selected_method": "temperature_scaling",
+      "minimum_nll_improvement": 1e-06,
+      "nll_improvement": 0.007934645348731117,
+      "before": {
+        "negative_log_likelihood": 0.5685285627130408,
+        "brier_score": 0.19982478710331406,
+        "expected_calibration_error": 0.2717272528672915,
+        "examples": 244,
+        "positives": 34,
+        "bins": 10
+      },
+      "after": {
+        "negative_log_likelihood": 0.5605939173643096,
+        "brier_score": 0.19516539529028903,
+        "expected_calibration_error": 0.27937102509839506,
+        "examples": 244,
+        "positives": 34,
+        "bins": 10
+      }
+    },
+    "any": {
+      "temperature": 1.098222932442834,
+      "selected_method": "temperature_scaling",
+      "minimum_nll_improvement": 1e-06,
+      "nll_improvement": 0.0010687343535493166,
+      "before": {
+        "negative_log_likelihood": 0.47159570126197736,
+        "brier_score": 0.15771259281699615,
+        "expected_calibration_error": 0.08802534322491168,
+        "examples": 244,
+        "positives": 79,
+        "bins": 10
+      },
+      "after": {
+        "negative_log_likelihood": 0.47052696690842805,
+        "brier_score": 0.15710172539444842,
+        "expected_calibration_error": 0.09579257358931362,
+        "examples": 244,
+        "positives": 79,
+        "bins": 10
+      }
+    }
+  }
+}

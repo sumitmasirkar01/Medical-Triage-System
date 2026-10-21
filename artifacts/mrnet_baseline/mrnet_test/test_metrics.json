@@ -1,0 +1,238 @@
+{
+  "status": "complete",
+  "partition": "official_valid_locked_as_test",
+  "generated_at": "2026-10-20T21:40:24.343880+00:00",
+  "test_exams": 120,
+  "sampling_unit": "exam_id",
+  "patient_identifiers_available": false,
+  "checkpoint_sha256": "610847b2e4b9f6779528ab820c5744ef161d363f0e0748c3a0b2084881c350cc",
+  "manifest_sha256": "517d69f88ad8e9bd5b714d70cfa047c60c31242b0507569495de2876c4472f11",
+  "locked_calibration_sha256": "1cc8ceae0a101e4c65bae5069be0312376243e4b38912714caeec1850cfb6d3e",
+  "threshold_retuned_on_test": false,
+  "calibrator_refit_on_test": false,
+  "inference_seconds": 87.84870305899949,
+  "mean_inference_ms_per_exam": 732.0725254916625,
+  "bootstrap_replicates": 2000,
+  "targets": {
+    "abnormal": {
+      "threshold": 0.6246190829679077,
+      "point_estimates": {
+        "roc_auc": 0.7385263157894737,
+        "average_precision": 0.9011565114261051,
+        "sensitivity": 0.9789473684210527,
+        "specificity": 0.28,
+        "ppv": 0.8378378378378378,
+        "npv": 0.7777777777777778,
+        "accuracy": 0.8333333333333334,
+        "tp": 93,
+        "tn": 7,
+        "fp": 18,
+        "fn": 2,
+        "positive_images": 95,
+        "negative_images": 25
+      },
+      "calibration_metrics": {
+        "negative_log_likelihood": 0.4686065462755283,
+        "brier_score": 0.1419357034096974,
+        "expected_calibration_error": 0.11219307262658791,
+        "examples": 120,
+        "positives": 95,
+        "bins": 10
+      },
+      "exam_grouped_bootstrap": {
+        "confidence_level": 0.95,
+        "seed": 42,
+        "requested_replicates": 2000,
+        "valid_class_replicates": 2000,
+        "sampling_unit": "exam_id",
+        "groups": 120,
+        "rows": 120,
+        "intervals": {
+          "roc_auc": {
+            "lower": 0.6039572831423896,
+            "upper": 0.8508917057119246,
+            "valid_replicates": 2000
+          },
+          "average_precision": {
+            "lower": 0.8261978840962025,
+            "upper": 0.963165999374414,
+            "valid_replicates": 2000
+          },
+          "sensitivity": {
+            "lower": 0.9473544232922733,
+            "upper": 1.0,
+            "valid_replicates": 2000
+          },
+          "specificity": {
+            "lower": 0.1,
+            "upper": 0.46153846153846156,
+            "valid_replicates": 2000
+          },
+          "ppv": {
+            "lower": 0.7678571428571429,
+            "upper": 0.9038586956521738,
+            "valid_replicates": 2000
+          },
+          "npv": {
+            "lower": 0.42857142857142855,
+            "upper": 1.0,
+            "valid_replicates": 2000
+          },
+          "accuracy": {
+            "lower": 0.7666666666666667,
+            "upper": 0.9,
+            "valid_replicates": 2000
+          }
+        }
+      }
+    },
+    "acl": {
+      "threshold": 0.056712984052332584,
+      "point_estimates": {
+        "roc_auc": 0.8571829405162739,
+        "average_precision": 0.7722474245263908,
+        "sensitivity": 1.0,
+        "specificity": 0.15151515151515152,
+        "ppv": 0.4909090909090909,
+        "npv": 1.0,
+        "accuracy": 0.5333333333333333,
+        "tp": 54,
+        "tn": 10,
+        "fp": 56,
+        "fn": 0,
+        "positive_images": 54,
+        "negative_images": 66
+      },
+      "calibration_metrics": {
+        "negative_log_likelihood": 0.6325701127020286,
+        "brier_score": 0.22437444744108395,
+        "expected_calibration_error": 0.22169136834860145,
+        "examples": 120,
+        "positives": 54,
+        "bins": 10
+      },
+      "exam_grouped_bootstrap": {
+        "confidence_level": 0.95,
+        "seed": 43,
+        "requested_replicates": 2000,
+        "valid_class_replicates": 2000,
+        "sampling_unit": "exam_id",
+        "groups": 120,
+        "rows": 120,
+        "intervals": {
+          "roc_auc": {
+            "lower": 0.7830669454037056,
+            "upper": 0.9238301914662578,
+            "valid_replicates": 2000
+          },
+          "average_precision": {
+            "lower": 0.649942876944821,
+            "upper": 0.9118963625697345,
+            "valid_replicates": 2000
+          },
+          "sensitivity": {
+            "lower": 1.0,
+            "upper": 1.0,
+            "valid_replicates": 2000
+          },
+          "specificity": {
+            "lower": 0.07042253521126761,
+            "upper": 0.24140543364681283,
+            "valid_replicates": 2000
+          },
+          "ppv": {
+            "lower": 0.4017410714285715,
+            "upper": 0.5862151856763925,
+            "valid_replicates": 2000
+          },
+          "npv": {
+            "lower": 1.0,
+            "upper": 1.0,
+            "valid_replicates": 2000
+          },
+          "accuracy": {
+            "lower": 0.45,
+            "upper": 0.625,
+            "valid_replicates": 2000
+          }
+        }
+      }
+    },
+    "meniscus": {
+      "threshold": 0.20426116577253828,
+      "point_estimates": {
+        "roc_auc": 0.7709276018099548,
+        "average_precision": 0.6845703662417366,
+        "sensitivity": 0.9615384615384616,
+        "specificity": 0.23529411764705882,
+        "ppv": 0.49019607843137253,
+        "npv": 0.8888888888888888,
+        "accuracy": 0.55,
+        "tp": 50,
+        "tn": 16,
+        "fp": 52,
+        "fn": 2,
+        "positive_images": 52,
+        "negative_images": 68
+      },
+      "calibration_metrics": {
+        "negative_log_likelihood": 0.5808272230879725,
+        "brier_score": 0.19939148429095496,
+        "expected_calibration_error": 0.08128068668592715,
+        "examples": 120,
+        "positives": 52,
+        "bins": 10
+      },
+      "exam_grouped_bootstrap": {
+        "confidence_level": 0.95,
+        "seed": 44,
+        "requested_replicates": 2000,
+        "valid_class_replicates": 2000,
+        "sampling_unit": "exam_id",
+        "groups": 120,
+        "rows": 120,
+        "intervals": {
+          "roc_auc": {
+            "lower": 0.6859898620107012,
+            "upper": 0.8521494393561574,
+            "valid_replicates": 2000
+          },
+          "average_precision": {
+            "lower": 0.5592134007792227,
+            "upper": 0.8223818008011979,
+            "valid_replicates": 2000
+          },
+          "sensitivity": {
+            "lower": 0.9038461538461539,
+            "upper": 1.0,
+            "valid_replicates": 2000
+          },
+          "specificity": {
+            "lower": 0.14285714285714285,
+            "upper": 0.33737154500354344,
+            "valid_replicates": 2000
+          },
+          "ppv": {
+            "lower": 0.39358967985683047,
+            "upper": 0.5865657216494844,
+            "valid_replicates": 2000
+          },
+          "npv": {
+            "lower": 0.7198571428571431,
+            "upper": 1.0,
+            "valid_replicates": 2000
+          },
+          "accuracy": {
+            "lower": 0.4666666666666667,
+            "upper": 0.6333333333333333,
+            "valid_replicates": 2000
+          }
+        }
+      }
+    }
+  },
+  "predictions": {
+    "path": "/kaggle/working/mrnet_test/test_predictions.csv",
+    "sha256": "fe5e5997c7d4231b3a608030c4ac4cd80c87da79c0966488499f707876f5737c"
+  }
+}

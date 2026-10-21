@@ -1,0 +1,103 @@
+{
+  "endpoint": "slice_level_any_hemorrhage",
+  "test_access": "first locked-threshold evaluation",
+  "threshold": 0.2538610100746155,
+  "threshold_source": "calibration split",
+  "target_calibration_sensitivity": 0.9,
+  "test_images": 242,
+  "test_patients": 222,
+  "primary_metrics": {
+    "roc_auc": 0.8417158598976782,
+    "average_precision": 0.7771225762157327,
+    "sensitivity": 0.8831168831168831,
+    "specificity": 0.509090909090909,
+    "ppv": 0.4563758389261745,
+    "npv": 0.9032258064516129,
+    "accuracy": 0.628099173553719,
+    "tp": 68,
+    "tn": 84,
+    "fp": 81,
+    "fn": 9,
+    "positive_images": 77,
+    "negative_images": 165
+  },
+  "patient_bootstrap_95_ci": {
+    "roc_auc": {
+      "lower": 0.785510448061081,
+      "upper": 0.8914158064327609
+    },
+    "average_precision": {
+      "lower": 0.6855885578297866,
+      "upper": 0.8493670798997188
+    },
+    "sensitivity": {
+      "lower": 0.8067969810040705,
+      "upper": 0.9444444444444444
+    },
+    "specificity": {
+      "lower": 0.43636363636363634,
+      "upper": 0.586429917941894
+    },
+    "ppv": {
+      "lower": 0.37408364447682363,
+      "upper": 0.5384615384615384
+    },
+    "npv": {
+      "lower": 0.8404255319148937,
+      "upper": 0.9574468085106383
+    },
+    "accuracy": {
+      "lower": 0.5668016194331984,
+      "upper": 0.6880008547008546
+    }
+  },
+  "bootstrap_replicates_requested": 2000,
+  "bootstrap_replicates_valid": 2000,
+  "exploratory_subtype_metrics": {
+    "epidural": {
+      "roc_auc": 0.599023709902371,
+      "positive_images": 3,
+      "negative_images": 239,
+      "status": "exploratory; insufficient positives"
+    },
+    "intraparenchymal": {
+      "roc_auc": 0.9145642201834863,
+      "positive_images": 24,
+      "negative_images": 218,
+      "status": "exploratory"
+    },
+    "intraventricular": {
+      "roc_auc": 0.90640522875817,
+      "positive_images": 17,
+      "negative_images": 225,
+      "status": "exploratory; insufficient positives"
+    },
+    "subarachnoid": {
+      "roc_auc": 0.7569182389937107,
+      "positive_images": 30,
+      "negative_images": 212,
+      "status": "exploratory"
+    },
+    "subdural": {
+      "roc_auc": 0.8429261559696343,
+      "positive_images": 35,
+      "negative_images": 207,
+      "status": "exploratory"
+    }
+  },
+  "timing": {
+    "cohort_elapsed_seconds": 2.061402642000303,
+    "mean_seconds_per_image_at_batch_size": 0.008518192735538442,
+    "batch_size": 32,
+    "device": "cuda",
+    "timing_scope": "batched DICOM decode, preprocessing, transfer, and model inference; not single-study clinical latency"
+  },
+  "limitations": [
+    "Slice-level pilot rather than complete study-level evaluation.",
+    "Cohort was enriched to one-third positive before splitting.",
+    "PPV, NPV, accuracy, and average precision depend on this enriched prevalence.",
+    "Sigmoid scores are not calibrated population probabilities.",
+    "Subtype results are exploratory; epidural has very few positive examples."
+  ],
+  "model_checkpoint_sha256": "4a15c605bb1481de7f12a4881f9c9b5adb36d9386ecac0aa6eb3ae7c3ae805b1"
+}
