@@ -859,7 +859,7 @@
       "stat_triage/evaluation.py": "f08e4de8238cc079f5bde5d8bb3f535cb867e2f3806bb202b3253ba8f3499866",
       "stat_triage/ingestion.py": "d12816894c95516119b850f385c90af967dfee2726e82a97cb321737b888e20c",
       "stat_triage/rsna.py": "8c7616d2534a166e38047825ad9ceaba62cdc18c75b34eaa8e9fdf80cc5536f8",
-      "stat_triage/ct_study.py": "e4947bd7b52b90ef0bd6fb5270c4f59f9b5c7fe0bc957824e6ce3f416da6c484",
+      "stat_triage/ct_study.py": "f14766b728cd061febcc05819a896e5112519fa988b6ffa1daf09f73172a1fb4",
       "stat_triage/thresholds.py": "28e0b88d2cd45c7efd04f4eca3253e5b941d5fc7ea0af6b0e9f1864cc40bed3e",
       "stat_triage/selective.py": "bbf54580c5349f7fc7df0febdb9771ff5e4abde41811373e7ae33dca1d8803fc",
       "stat_triage/orchestration.py": "445c8bb350d54e89efc6021c50dffb884f946f31ec5b14f84da81f55d9c0737e",
@@ -916,6 +916,7 @@
       "scripts/demo_smoke.py": "308986dc66f34a7d118a6f1a312c007d91a30e09b4c09c1d5fbcd13597d21b30",
       "scripts/evaluate_rsna_study_pooling.py": "e050f492e26c0009097023d557abe908772c4877daf2351a29ad064cd79f5078",
       "scripts/lock_rsna_study_protocol.py": "20da343548084807a7b455349086ff4fe753885c3a8685bc814189b1f56b3fd6",
+      "scripts/evaluate_locked_rsna_studies.py": "ac1f51f4d181b7a77748c5d4552ccd652465888b582f31a0dd1aa82ca3988e7a",
       "scripts/build_rsna_study_cohort.py": "2bab9c358703b5a725379af4acc4dc30502dc61ebc14c43fe822260c5f4b8219",
       "scripts/validate_rsna_study_cohort.py": "5406024a3f1021bcfeb05416bcf017974aae0533ff852446d0650ddd049d5c8a",
       "scripts/predict_rsna_study_slices.py": "4128afe885921fab4d08846a46c1d5be2073e86f348c9b01da999b0ddb8abcf9"
@@ -923,7 +924,7 @@
   },
   "verification": {
     "python": "3.12.7",
-    "expected_tests": 140,
+    "expected_tests": 142,
     "commands": [
       ".\\.venv\\Scripts\\python.exe -m pip check",
       ".\\.venv\\Scripts\\python.exe -m scripts.validate_multimodal_evidence",

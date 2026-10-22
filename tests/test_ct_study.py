@@ -3,7 +3,8 @@ import pytest
 
 from stat_triage.ct_study import (
     StudyAggregationError, aggregate_study_predictions,
-    evaluate_study_pooling_protocol, lock_study_pooling_protocol,
+    evaluate_locked_study_protocol, evaluate_study_pooling_protocol,
+    lock_study_pooling_protocol,
 )
 
 
@@ -81,51 +82,42 @@ def test_development_lock_rejects_any_test_partition():
         lock_study_pooling_protocol(predictions, manifest, minimum_median_slices=4)
 
 
-def test_development_lock_never_loads_or_evaluates_test():
-    predictions, manifest = _cohort(4)
-    split_by_image = manifest.set_index("image_id")["split"]
-    predictions["split"] = predictions["image_id"].map(split_by_image)
-    development_predictions = predictions[predictions["split"] != "test"].copy()
-    development_manifest = manifest[manifest["split"] != "test"].copy()
-    report, calibration = lock_study_pooling_protocol(
-        development_predictions, development_manifest, methods=("mean", "max"),
-        minimum_median_slices=4,
-    )
-    assert report["status"] == "locked"
-    assert report["test_rows_present"] == 0
-    assert report["test_evaluated"] is False
-    assert set(calibration["split"]) == {"calibration"}
-
-
-def test_development_lock_rejects_any_test_partition():
+def test_final_evaluator_consumes_locked_rule_on_test_only():
     predictions, manifest = _cohort(4)
     predictions["split"] = predictions["image_id"].map(
         manifest.set_index("image_id")["split"]
     )
-    with pytest.raises(StudyAggregationError, match="exactly validation and calibration"):
-        lock_study_pooling_protocol(predictions, manifest, minimum_median_slices=4)
-
-
-def test_development_lock_never_loads_or_evaluates_test():
-    predictions, manifest = _cohort(4)
-    split_by_image = manifest.set_index("image_id")["split"]
-    predictions["split"] = predictions["image_id"].map(split_by_image)
-    development_predictions = predictions[predictions["split"] != "test"].copy()
-    development_manifest = manifest[manifest["split"] != "test"].copy()
-    report, calibration = lock_study_pooling_protocol(
-        development_predictions, development_manifest, methods=("mean", "max"),
+    dev_predictions = predictions[predictions["split"] != "test"].copy()
+    dev_manifest = manifest[manifest["split"] != "test"].copy()
+    locked, _ = lock_study_pooling_protocol(
+        dev_predictions, dev_manifest, methods=("mean", "max"),
         minimum_median_slices=4,
     )
-    assert report["status"] == "locked"
-    assert report["test_rows_present"] == 0
-    assert report["test_evaluated"] is False
-    assert set(calibration["split"]) == {"calibration"}
+    test_predictions = predictions[predictions["split"] == "test"].copy()
+    test_manifest = manifest[manifest["split"] == "test"].copy()
+    report, studies = evaluate_locked_study_protocol(
+        test_predictions, test_manifest, locked, minimum_median_slices=4,
+        bootstrap_replicates=20,
+    )
+    assert report["pooling_reselected"] is False
+    assert report["threshold_reselected"] is False
+    assert report["selected_method"] == locked["selected_method"]
+    assert report["threshold"] == locked["operating_point"]["threshold"]
+    assert len(studies) == 10
 
 
-def test_development_lock_rejects_any_test_partition():
+def test_final_evaluator_rejects_development_rows():
     predictions, manifest = _cohort(4)
     predictions["split"] = predictions["image_id"].map(
         manifest.set_index("image_id")["split"]
     )
-    with pytest.raises(StudyAggregationError, match="exactly validation and calibration"):
-        lock_study_pooling_protocol(predictions, manifest, minimum_median_slices=4)
+    locked = {"status": "locked", "test_evaluated": False, "test_rows_present": 0,
+              "selected_method": "mean", "top_k": None,
+              "operating_point": {"threshold": 0.5}}
+    with pytest.raises(StudyAggregationError, match="exactly the test partition"):
+        evaluate_locked_study_protocol(
+            predictions, manifest, locked, minimum_median_slices=4,
+            bootstrap_replicates=20,
+        )
+
+

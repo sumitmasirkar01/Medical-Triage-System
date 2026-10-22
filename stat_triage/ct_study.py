@@ -214,3 +214,58 @@ def lock_study_pooling_protocol(
         "test_evaluated": False,
     }
     return report, calibration.reset_index(drop=True)
+
+
+def evaluate_locked_study_protocol(
+    predictions: pd.DataFrame,
+    manifest: pd.DataFrame,
+    locked_protocol: dict[str, object],
+    *,
+    minimum_median_slices: int = 10,
+    bootstrap_replicates: int = 2000,
+    bootstrap_seed: int = 42,
+) -> tuple[dict[str, object], pd.DataFrame]:
+    """Evaluate test once using an already locked pooling rule and threshold."""
+
+    if locked_protocol.get("status") != "locked":
+        raise StudyAggregationError("Study protocol is not locked")
+    if locked_protocol.get("test_evaluated") is not False:
+        raise StudyAggregationError("Locked protocol must declare test_evaluated false")
+    if locked_protocol.get("test_rows_present") != 0:
+        raise StudyAggregationError("Locked protocol was contaminated by test rows")
+    if set(predictions.get("split", ())) != {"test"} or set(manifest.get("split", ())) != {"test"}:
+        raise StudyAggregationError("Final evaluation requires exactly the test partition")
+    method = locked_protocol.get("selected_method")
+    if method not in POOLING_METHODS:
+        raise StudyAggregationError("Locked protocol has an unsupported pooling method")
+    top_k = locked_protocol.get("top_k")
+    if method != "top_k_mean":
+        top_k = 3
+    if isinstance(top_k, bool) or not isinstance(top_k, int) or top_k < 1:
+        raise StudyAggregationError("Locked top_k must be a positive integer")
+    operating = locked_protocol.get("operating_point")
+    if not isinstance(operating, dict) or "threshold" not in operating:
+        raise StudyAggregationError("Locked protocol has no operating threshold")
+    threshold = float(operating["threshold"])
+    studies, audit = aggregate_study_predictions(
+        predictions, manifest, method=str(method), top_k=top_k,
+        minimum_median_slices=minimum_median_slices,
+    )
+    if set(studies["target_any"]) != {0, 1}:
+        raise StudyAggregationError("Test studies require both target classes")
+    studies["predicted_any"] = (studies["score_any"] >= threshold).astype(int)
+    metrics = binary_metrics(studies["target_any"], studies["score_any"], threshold)
+    bootstrap = grouped_bootstrap_confidence_intervals(
+        studies["target_any"], studies["score_any"], studies["patient_id"], threshold,
+        replicates=bootstrap_replicates, seed=bootstrap_seed, sampling_unit="patient_id",
+    )
+    report = {
+        "status": "complete", "endpoint": "study_level_any_hemorrhage",
+        "evaluation_partition": "test", "selected_method": method,
+        "top_k": locked_protocol.get("top_k"), "threshold": threshold,
+        "test_metrics": metrics.to_dict(),
+        "patient_grouped_bootstrap": bootstrap.to_dict(), "coverage": audit,
+        "pooling_reselected": False, "threshold_reselected": False,
+        "test_evaluated_once": True,
+    }
+    return report, studies.reset_index(drop=True)
