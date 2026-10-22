@@ -158,3 +158,59 @@ def evaluate_study_pooling_protocol(
         "test_not_used_for_selection": True,
     }
     return report, test
+
+
+def lock_study_pooling_protocol(
+    predictions: pd.DataFrame,
+    manifest: pd.DataFrame,
+    *,
+    methods: Iterable[str] = POOLING_METHODS,
+    top_k: int = 3,
+    target_sensitivity: float = 0.9,
+    minimum_median_slices: int = 10,
+) -> tuple[dict[str, object], pd.DataFrame]:
+    """Select pooling and threshold using development partitions only."""
+
+    prediction_splits = set(predictions["split"]) if "split" in predictions else set()
+    manifest_splits = set(manifest["split"]) if "split" in manifest else set()
+    expected = {"validation", "calibration"}
+    if prediction_splits != expected or manifest_splits != expected:
+        raise StudyAggregationError(
+            "Protocol locking requires exactly validation and calibration partitions"
+        )
+    candidates: dict[str, tuple[pd.DataFrame, dict[str, object], float]] = {}
+    for method in methods:
+        studies, audit = aggregate_study_predictions(
+            predictions, manifest, method=method, top_k=top_k,
+            minimum_median_slices=minimum_median_slices,
+        )
+        validation = studies[studies["split"] == "validation"]
+        if set(validation["target_any"]) != {0, 1}:
+            raise StudyAggregationError("Validation studies require both target classes")
+        auc = float(roc_auc_score(validation["target_any"], validation["score_any"]))
+        candidates[method] = (studies, audit, auc)
+    selected_method = sorted(candidates, key=lambda name: (-candidates[name][2], name))[0]
+    studies, audit, validation_auc = candidates[selected_method]
+    calibration = studies[studies["split"] == "calibration"].copy()
+    if set(calibration["target_any"]) != {0, 1}:
+        raise StudyAggregationError("Calibration studies require both target classes")
+    operating = select_sensitivity_threshold(
+        calibration["target_any"], calibration["score_any"], target_sensitivity
+    )
+    calibration["predicted_any"] = (
+        calibration["score_any"] >= operating.threshold
+    ).astype(int)
+    report = {
+        "status": "locked", "endpoint": "study_level_any_hemorrhage",
+        "selection_partition": "validation", "threshold_partition": "calibration",
+        "evaluation_partition": "test_not_loaded", "selected_method": selected_method,
+        "top_k": top_k if selected_method == "top_k_mean" else None,
+        "validation_auc_by_method": {
+            name: value[2] for name, value in candidates.items()
+        },
+        "validation_auc": validation_auc, "operating_point": operating.to_dict(),
+        "coverage": audit, "development_slices": len(predictions),
+        "development_studies": len(studies), "test_rows_present": 0,
+        "test_evaluated": False,
+    }
+    return report, calibration.reset_index(drop=True)

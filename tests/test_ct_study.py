@@ -3,7 +3,7 @@ import pytest
 
 from stat_triage.ct_study import (
     StudyAggregationError, aggregate_study_predictions,
-    evaluate_study_pooling_protocol,
+    evaluate_study_pooling_protocol, lock_study_pooling_protocol,
 )
 
 
@@ -54,3 +54,78 @@ def test_sparse_slice_pilot_is_rejected():
     predictions, manifest = _cohort(1)
     with pytest.raises(StudyAggregationError, match="Sparse study coverage"):
         aggregate_study_predictions(predictions, manifest, method="max")
+
+
+def test_development_lock_never_loads_or_evaluates_test():
+    predictions, manifest = _cohort(4)
+    split_by_image = manifest.set_index("image_id")["split"]
+    predictions["split"] = predictions["image_id"].map(split_by_image)
+    development_predictions = predictions[predictions["split"] != "test"].copy()
+    development_manifest = manifest[manifest["split"] != "test"].copy()
+    report, calibration = lock_study_pooling_protocol(
+        development_predictions, development_manifest, methods=("mean", "max"),
+        minimum_median_slices=4,
+    )
+    assert report["status"] == "locked"
+    assert report["test_rows_present"] == 0
+    assert report["test_evaluated"] is False
+    assert set(calibration["split"]) == {"calibration"}
+
+
+def test_development_lock_rejects_any_test_partition():
+    predictions, manifest = _cohort(4)
+    predictions["split"] = predictions["image_id"].map(
+        manifest.set_index("image_id")["split"]
+    )
+    with pytest.raises(StudyAggregationError, match="exactly validation and calibration"):
+        lock_study_pooling_protocol(predictions, manifest, minimum_median_slices=4)
+
+
+def test_development_lock_never_loads_or_evaluates_test():
+    predictions, manifest = _cohort(4)
+    split_by_image = manifest.set_index("image_id")["split"]
+    predictions["split"] = predictions["image_id"].map(split_by_image)
+    development_predictions = predictions[predictions["split"] != "test"].copy()
+    development_manifest = manifest[manifest["split"] != "test"].copy()
+    report, calibration = lock_study_pooling_protocol(
+        development_predictions, development_manifest, methods=("mean", "max"),
+        minimum_median_slices=4,
+    )
+    assert report["status"] == "locked"
+    assert report["test_rows_present"] == 0
+    assert report["test_evaluated"] is False
+    assert set(calibration["split"]) == {"calibration"}
+
+
+def test_development_lock_rejects_any_test_partition():
+    predictions, manifest = _cohort(4)
+    predictions["split"] = predictions["image_id"].map(
+        manifest.set_index("image_id")["split"]
+    )
+    with pytest.raises(StudyAggregationError, match="exactly validation and calibration"):
+        lock_study_pooling_protocol(predictions, manifest, minimum_median_slices=4)
+
+
+def test_development_lock_never_loads_or_evaluates_test():
+    predictions, manifest = _cohort(4)
+    split_by_image = manifest.set_index("image_id")["split"]
+    predictions["split"] = predictions["image_id"].map(split_by_image)
+    development_predictions = predictions[predictions["split"] != "test"].copy()
+    development_manifest = manifest[manifest["split"] != "test"].copy()
+    report, calibration = lock_study_pooling_protocol(
+        development_predictions, development_manifest, methods=("mean", "max"),
+        minimum_median_slices=4,
+    )
+    assert report["status"] == "locked"
+    assert report["test_rows_present"] == 0
+    assert report["test_evaluated"] is False
+    assert set(calibration["split"]) == {"calibration"}
+
+
+def test_development_lock_rejects_any_test_partition():
+    predictions, manifest = _cohort(4)
+    predictions["split"] = predictions["image_id"].map(
+        manifest.set_index("image_id")["split"]
+    )
+    with pytest.raises(StudyAggregationError, match="exactly validation and calibration"):
+        lock_study_pooling_protocol(predictions, manifest, minimum_median_slices=4)

@@ -84,6 +84,7 @@ SUPPORTED_SOURCE = (
     "scripts/create_demo_dicom.py",
     "scripts/demo_smoke.py",
     "scripts/evaluate_rsna_study_pooling.py",
+    "scripts/lock_rsna_study_protocol.py",
     "scripts/build_rsna_study_cohort.py",
     "scripts/validate_rsna_study_cohort.py",
     "scripts/predict_rsna_study_slices.py",
@@ -271,7 +272,7 @@ def build_manifest() -> dict:
         },
         "verification": {
             "python": "3.12.7",
-            "expected_tests": 138,
+            "expected_tests": 140,
             "commands": [
                 ".\\.venv\\Scripts\\python.exe -m pip check",
                 ".\\.venv\\Scripts\\python.exe -m scripts.validate_multimodal_evidence",
