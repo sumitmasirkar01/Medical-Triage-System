@@ -35,6 +35,20 @@ from .evaluation import (
     validate_evidence_bundle,
 )
 from .thresholds import OperatingPoint, select_sensitivity_threshold
+from .selective import (
+    ABSTAIN,
+    NEGATIVE,
+    POSITIVE,
+    AbstentionOperatingPoint,
+    GroupedSelectiveBootstrapResult,
+    SELECTIVE_BOOTSTRAP_METRICS,
+    SelectiveMetrics,
+    abstention_boundaries,
+    grouped_selective_bootstrap_confidence_intervals,
+    select_abstention_operating_point,
+    selective_metrics,
+    three_way_decisions,
+)
 
 from .rsna import (
     RSNA_LABELS,
@@ -108,6 +122,18 @@ __all__ = [
     "validate_evidence_bundle",
     "OperatingPoint",
     "select_sensitivity_threshold",
+    "ABSTAIN",
+    "NEGATIVE",
+    "POSITIVE",
+    "AbstentionOperatingPoint",
+    "GroupedSelectiveBootstrapResult",
+    "SELECTIVE_BOOTSTRAP_METRICS",
+    "SelectiveMetrics",
+    "abstention_boundaries",
+    "grouped_selective_bootstrap_confidence_intervals",
+    "select_abstention_operating_point",
+    "selective_metrics",
+    "three_way_decisions",
     "RSNA_LABELS",
     "RSNAEvidence",
     "RSNAInferenceAdapter",

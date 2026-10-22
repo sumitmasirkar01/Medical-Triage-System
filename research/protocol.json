@@ -18,5 +18,22 @@
     "minimum_median_slices_per_study": 10,
     "initial_pooling_candidates": ["max", "mean", "top_k_mean", "noisy_or"],
     "locked_test_use": "exactly_once_after_pooling_and_threshold_are_locked"
+  },
+  "phase_2_selective_prediction": {
+    "status": "framework_implemented_policy_not_yet_locked",
+    "decision_outputs": ["negative", "abstain_for_human_review", "positive"],
+    "margin_selection_partition": "development_data_only",
+    "evaluation_partition": "held_out_test_or_external_cohort",
+    "selection_rule": "smallest margin meeting prespecified minimum coverage and maximum automatic false-negative rate",
+    "primary_metrics": [
+      "coverage",
+      "abstention_rate",
+      "selective_sensitivity",
+      "selective_specificity",
+      "selective_accuracy",
+      "automatic_false_negative_rate_all_positives"
+    ],
+    "uncertainty": "patient- or exam-grouped percentile bootstrap confidence intervals",
+    "locked_test_policy": "margin and constraints must be locked before evaluation; prior test cohorts may only be reported as post-test exploratory analyses"
   }
 }

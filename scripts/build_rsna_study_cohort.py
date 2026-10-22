@@ -6,6 +6,7 @@ import argparse
 from concurrent.futures import ProcessPoolExecutor
 import json
 from pathlib import Path
+import warnings
 
 import pandas as pd
 import pydicom
@@ -15,6 +16,9 @@ from stat_triage.evaluation import sha256
 
 
 def read_header(path: str) -> dict[str, object]:
+    # RSNA's de-identified string identifiers are not valid numeric DICOM UIDs.
+    # They remain stable grouping identifiers, so suppress the per-file warning.
+    warnings.filterwarnings("ignore", category=UserWarning, module=r"pydicom.*")
     source = Path(path)
     ds = pydicom.dcmread(source, stop_before_pixels=True, specific_tags=[
         "PatientID", "StudyInstanceUID", "SeriesInstanceUID", "ImagePositionPatient",

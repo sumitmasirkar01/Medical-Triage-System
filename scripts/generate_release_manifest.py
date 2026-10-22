@@ -30,6 +30,7 @@ SUPPORTED_SOURCE = (
     "stat_triage/rsna.py",
     "stat_triage/ct_study.py",
     "stat_triage/thresholds.py",
+    "stat_triage/selective.py",
     "stat_triage/orchestration.py",
     "stat_triage/losses.py",
     "stat_triage/datasets/__init__.py",
@@ -269,7 +270,7 @@ def build_manifest() -> dict:
         },
         "verification": {
             "python": "3.12.7",
-            "expected_tests": 130,
+            "expected_tests": 136,
             "commands": [
                 ".\\.venv\\Scripts\\python.exe -m pip check",
                 ".\\.venv\\Scripts\\python.exe -m scripts.validate_multimodal_evidence",
