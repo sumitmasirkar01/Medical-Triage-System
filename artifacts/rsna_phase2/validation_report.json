@@ -1,0 +1,32 @@
+{
+  "status": "passed",
+  "endpoint": "study_level_any_hemorrhage",
+  "checkpoint_sha256": "4a15c605bb1481de7f12a4881f9c9b5adb36d9386ecac0aa6eb3ae7c3ae805b1",
+  "patients": 240,
+  "positive_studies": 92,
+  "selected_method": "mean",
+  "threshold": 0.20713453119969927,
+  "test_metrics": {
+    "roc_auc": 0.9078290246768508,
+    "average_precision": 0.8497554674620205,
+    "sensitivity": 0.9565217391304348,
+    "specificity": 0.6486486486486487,
+    "ppv": 0.6285714285714286,
+    "npv": 0.96,
+    "accuracy": 0.7666666666666667,
+    "tp": 88,
+    "tn": 96,
+    "fp": 52,
+    "fn": 4,
+    "positive_images": 92,
+    "negative_images": 148
+  },
+  "bootstrap_replicates": 2000,
+  "outer_bundle_sha256": {
+    "cohort": "a59179fbf557a29ae396b9d45d2e7b9f8b8ee649f7660b18fbf7933f982be3e2",
+    "development": "b2d9dd486b9ce4e194552619cb7a67e6de98454d939fec9cf375f2ba48ee6dad",
+    "locked_protocol": "875d2c71075decf710f3e314b348992a7674e7642e4e9d321bdb804ad5fce9e5",
+    "test_slices": "dffd3bfde2a3427cd46d38c9a1b32accc78841f16e60061a0eb29c363b5d07d3",
+    "final_evaluation": "1b94d27131496ee67dac07f397c85e9543d791674e118ed90bb7b0d14fd83e29"
+  }
+}

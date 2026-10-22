@@ -29,6 +29,7 @@ SUPPORTED_SOURCE = (
     "stat_triage/ingestion.py",
     "stat_triage/rsna.py",
     "stat_triage/ct_study.py",
+    "stat_triage/ct_phase2_evidence.py",
     "stat_triage/thresholds.py",
     "stat_triage/selective.py",
     "stat_triage/orchestration.py",
@@ -89,6 +90,8 @@ SUPPORTED_SOURCE = (
     "scripts/build_rsna_study_cohort.py",
     "scripts/validate_rsna_study_cohort.py",
     "scripts/predict_rsna_study_slices.py",
+    "scripts/validate_ct_phase2_evidence.py",
+    "artifacts/rsna_phase2/evidence_registry.json",
 )
 
 
@@ -130,6 +133,9 @@ def build_manifest() -> dict:
     mrnet_config = load_json(MRNET_BUNDLE / "mrnet_baseline" / "run_config.json")
     mrnet_locked = load_json(MRNET_BUNDLE / "mrnet_calibration" / "locked_calibration.json")
     mrnet_metrics = load_json(MRNET_BUNDLE / "mrnet_test" / "test_metrics.json")
+    ct_phase2_dir = ROOT / "artifacts" / "rsna_phase2"
+    ct_phase2 = load_json(ct_phase2_dir / "validation_report.json")
+    ct_phase2_registry = load_json(ct_phase2_dir / "evidence_registry.json")
     report = ROOT / "docs" / "STAT_Triage_RSNA_Pilot_Report.docx"
 
     return {
@@ -162,6 +168,30 @@ def build_manifest() -> dict:
                         "point_estimates": metrics["primary_metrics"],
                         "patient_bootstrap_95_ci": metrics["patient_bootstrap_95_ci"],
                     }
+                },
+                "phase_2_study_level": {
+                    "status": ct_phase2["status"],
+                    "endpoint": ct_phase2["endpoint"],
+                    "evaluation_level": "study",
+                    "patients": ct_phase2["patients"],
+                    "positive_studies": ct_phase2["positive_studies"],
+                    "selected_pooling": ct_phase2["selected_method"],
+                    "locked_threshold": ct_phase2["threshold"],
+                    "test_results": ct_phase2["test_metrics"],
+                    "bootstrap_replicates": ct_phase2["bootstrap_replicates"],
+                    "evidence_registry": declaration(
+                        ct_phase2_dir / "evidence_registry.json"
+                    ),
+                    "validation_report": declaration(
+                        ct_phase2_dir / "validation_report.json"
+                    ),
+                    "bundles": {
+                        role: declaration(ct_phase2_dir / values["file"])
+                        for role, values in ct_phase2_registry["bundles"].items()
+                    },
+                    "test_evaluated_once": True,
+                    "pooling_reselected": False,
+                    "threshold_reselected": False,
                 },
                 "limitations": metrics["limitations"],
             },
@@ -273,7 +303,7 @@ def build_manifest() -> dict:
         },
         "verification": {
             "python": "3.12.7",
-            "expected_tests": 142,
+            "expected_tests": 143,
             "commands": [
                 ".\\.venv\\Scripts\\python.exe -m pip check",
                 ".\\.venv\\Scripts\\python.exe -m scripts.validate_multimodal_evidence",

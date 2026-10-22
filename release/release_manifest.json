@@ -81,6 +81,71 @@
           }
         }
       },
+      "phase_2_study_level": {
+        "status": "passed",
+        "endpoint": "study_level_any_hemorrhage",
+        "evaluation_level": "study",
+        "patients": 240,
+        "positive_studies": 92,
+        "selected_pooling": "mean",
+        "locked_threshold": 0.20713453119969927,
+        "test_results": {
+          "roc_auc": 0.9078290246768508,
+          "average_precision": 0.8497554674620205,
+          "sensitivity": 0.9565217391304348,
+          "specificity": 0.6486486486486487,
+          "ppv": 0.6285714285714286,
+          "npv": 0.96,
+          "accuracy": 0.7666666666666667,
+          "tp": 88,
+          "tn": 96,
+          "fp": 52,
+          "fn": 4,
+          "positive_images": 92,
+          "negative_images": 148
+        },
+        "bootstrap_replicates": 2000,
+        "evidence_registry": {
+          "path": "artifacts/rsna_phase2/evidence_registry.json",
+          "bytes": 1119,
+          "sha256": "41ba017ee3783fb9e2e51ad2e6d650ad58362e92938d49c448eca8e6ad33fc3c"
+        },
+        "validation_report": {
+          "path": "artifacts/rsna_phase2/validation_report.json",
+          "bytes": 1180,
+          "sha256": "12435b82c6530ba9287fa4a03d6c0ed2ee1d4945080810de9aabda00ca708775"
+        },
+        "bundles": {
+          "cohort": {
+            "path": "artifacts/rsna_phase2/rsna_phase2_cohort_bundle.zip",
+            "bytes": 425614,
+            "sha256": "a59179fbf557a29ae396b9d45d2e7b9f8b8ee649f7660b18fbf7933f982be3e2"
+          },
+          "development": {
+            "path": "artifacts/rsna_phase2/rsna_phase2_development_bundle.zip",
+            "bytes": 2318029,
+            "sha256": "b2d9dd486b9ce4e194552619cb7a67e6de98454d939fec9cf375f2ba48ee6dad"
+          },
+          "locked_protocol": {
+            "path": "artifacts/rsna_phase2/rsna_phase2_locked_protocol_bundle.zip",
+            "bytes": 7270,
+            "sha256": "875d2c71075decf710f3e314b348992a7674e7642e4e9d321bdb804ad5fce9e5"
+          },
+          "test_slices": {
+            "path": "artifacts/rsna_phase2/rsna_phase2_test_slice_bundle.zip",
+            "bytes": 1171017,
+            "sha256": "dffd3bfde2a3427cd46d38c9a1b32accc78841f16e60061a0eb29c363b5d07d3"
+          },
+          "final_evaluation": {
+            "path": "artifacts/rsna_phase2/rsna_phase2_final_evidence_bundle.zip",
+            "bytes": 158847,
+            "sha256": "1b94d27131496ee67dac07f397c85e9543d791674e118ed90bb7b0d14fd83e29"
+          }
+        },
+        "test_evaluated_once": true,
+        "pooling_reselected": false,
+        "threshold_reselected": false
+      },
       "limitations": [
         "Slice-level pilot rather than complete study-level evaluation.",
         "Cohort was enriched to one-third positive before splitting.",
@@ -860,6 +925,7 @@
       "stat_triage/ingestion.py": "d12816894c95516119b850f385c90af967dfee2726e82a97cb321737b888e20c",
       "stat_triage/rsna.py": "8c7616d2534a166e38047825ad9ceaba62cdc18c75b34eaa8e9fdf80cc5536f8",
       "stat_triage/ct_study.py": "f14766b728cd061febcc05819a896e5112519fa988b6ffa1daf09f73172a1fb4",
+      "stat_triage/ct_phase2_evidence.py": "fb335c4441656308a4e3ee05e1dc009aa7eef851349e7332d5f6c2dc341260e4",
       "stat_triage/thresholds.py": "28e0b88d2cd45c7efd04f4eca3253e5b941d5fc7ea0af6b0e9f1864cc40bed3e",
       "stat_triage/selective.py": "bbf54580c5349f7fc7df0febdb9771ff5e4abde41811373e7ae33dca1d8803fc",
       "stat_triage/orchestration.py": "445c8bb350d54e89efc6021c50dffb884f946f31ec5b14f84da81f55d9c0737e",
@@ -919,12 +985,14 @@
       "scripts/evaluate_locked_rsna_studies.py": "ac1f51f4d181b7a77748c5d4552ccd652465888b582f31a0dd1aa82ca3988e7a",
       "scripts/build_rsna_study_cohort.py": "2bab9c358703b5a725379af4acc4dc30502dc61ebc14c43fe822260c5f4b8219",
       "scripts/validate_rsna_study_cohort.py": "5406024a3f1021bcfeb05416bcf017974aae0533ff852446d0650ddd049d5c8a",
-      "scripts/predict_rsna_study_slices.py": "4128afe885921fab4d08846a46c1d5be2073e86f348c9b01da999b0ddb8abcf9"
+      "scripts/predict_rsna_study_slices.py": "4128afe885921fab4d08846a46c1d5be2073e86f348c9b01da999b0ddb8abcf9",
+      "scripts/validate_ct_phase2_evidence.py": "bfb339b5a80ab9f05fa8ea724aea871c742fc35e24afe694614a3af8e65390d3",
+      "artifacts/rsna_phase2/evidence_registry.json": "41ba017ee3783fb9e2e51ad2e6d650ad58362e92938d49c448eca8e6ad33fc3c"
     }
   },
   "verification": {
     "python": "3.12.7",
-    "expected_tests": 142,
+    "expected_tests": 143,
     "commands": [
       ".\\.venv\\Scripts\\python.exe -m pip check",
       ".\\.venv\\Scripts\\python.exe -m scripts.validate_multimodal_evidence",

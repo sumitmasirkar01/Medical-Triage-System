@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "endpoint": "study_level_any_hemorrhage",
+  "checkpoint_sha256": "4a15c605bb1481de7f12a4881f9c9b5adb36d9386ecac0aa6eb3ae7c3ae805b1",
+  "bundles": {
+    "cohort": {
+      "file": "rsna_phase2_cohort_bundle.zip",
+      "bytes": 425614,
+      "sha256": "a59179fbf557a29ae396b9d45d2e7b9f8b8ee649f7660b18fbf7933f982be3e2"
+    },
+    "development": {
+      "file": "rsna_phase2_development_bundle.zip",
+      "bytes": 2318029,
+      "sha256": "b2d9dd486b9ce4e194552619cb7a67e6de98454d939fec9cf375f2ba48ee6dad"
+    },
+    "locked_protocol": {
+      "file": "rsna_phase2_locked_protocol_bundle.zip",
+      "bytes": 7270,
+      "sha256": "875d2c71075decf710f3e314b348992a7674e7642e4e9d321bdb804ad5fce9e5"
+    },
+    "test_slices": {
+      "file": "rsna_phase2_test_slice_bundle.zip",
+      "bytes": 1171017,
+      "sha256": "dffd3bfde2a3427cd46d38c9a1b32accc78841f16e60061a0eb29c363b5d07d3"
+    },
+    "final_evaluation": {
+      "file": "rsna_phase2_final_evidence_bundle.zip",
+      "bytes": 158847,
+      "sha256": "1b94d27131496ee67dac07f397c85e9543d791674e118ed90bb7b0d14fd83e29"
+    }
+  }
+}
