@@ -40,8 +40,14 @@ def main() -> None:
     paths = sorted(str(path) for path in args.images.glob("*.dcm"))
     if not paths:
         raise FileNotFoundError(f"No DICOM files under {args.images}")
+    print(f"Scanning {len(paths):,} DICOM headers with {args.workers} workers...", flush=True)
     with ProcessPoolExecutor(max_workers=args.workers) as pool:
-        headers = pd.DataFrame(pool.map(read_header, paths, chunksize=128))
+        indexed = []
+        for number, header in enumerate(pool.map(read_header, paths, chunksize=128), 1):
+            indexed.append(header)
+            if number % 10000 == 0 or number == len(paths):
+                print(f"Headers: {number:,}/{len(paths):,}", flush=True)
+        headers = pd.DataFrame(indexed)
     labels = load_rsna_label_matrix(args.labels)
     phase1 = pd.read_csv(args.phase1_manifest)
     cohort, summary = build_phase2_study_cohort(
