@@ -33,6 +33,7 @@ SUPPORTED_SOURCE = (
     "stat_triage/orchestration.py",
     "stat_triage/losses.py",
     "stat_triage/datasets/__init__.py",
+    "stat_triage/datasets/rsna_study.py",
     "stat_triage/datasets/nih_cxr14.py",
     "scripts/inventory_nih_cxr14.py",
     "scripts/build_nih_cxr14_manifest.py",
@@ -82,6 +83,8 @@ SUPPORTED_SOURCE = (
     "scripts/create_demo_dicom.py",
     "scripts/demo_smoke.py",
     "scripts/evaluate_rsna_study_pooling.py",
+    "scripts/build_rsna_study_cohort.py",
+    "scripts/predict_rsna_study_slices.py",
 )
 
 
@@ -266,7 +269,7 @@ def build_manifest() -> dict:
         },
         "verification": {
             "python": "3.12.7",
-            "expected_tests": 129,
+            "expected_tests": 130,
             "commands": [
                 ".\\.venv\\Scripts\\python.exe -m pip check",
                 ".\\.venv\\Scripts\\python.exe -m scripts.validate_multimodal_evidence",

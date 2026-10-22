@@ -44,7 +44,7 @@ install this project with `--no-deps`.
 .\.venv\Scripts\python.exe -m scripts.demo_smoke --dicom sample_dicoms\DEMO_CT.dcm
 ```
 
-Expected supported-suite result as of 2026-10-21: `126 passed`.
+Expected supported-suite result as of 2026-10-22: `130 passed`.
 
 ## Research experiment provenance
 
