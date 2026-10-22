@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "protocol_version": "2026-10-21.1",
+  "protocol_version": "2026-10-22.1",
   "status": "frozen",
   "primary_question": "Can a modality-aware routed triage system provide reproducible sensitivity-constrained operating points across head CT, chest X-ray, and knee MRI?",
   "modalities": ["head_ct", "chest_xray", "knee_mri"],
@@ -9,5 +9,14 @@
   "primary_metrics": ["roc_auc", "average_precision", "sensitivity", "specificity"],
   "calibration_metrics": ["negative_log_likelihood", "brier_score", "expected_calibration_error"],
   "uncertainty": "Confidence intervals use patient- or exam-grouped bootstrap sampling when identifiers are available.",
-  "reporting": "Every reported result must identify its cohort, evaluation unit, sample size, checkpoint hash, split hash, seed, and Git commit."
+  "reporting": "Every reported result must identify its cohort, evaluation unit, sample size, checkpoint hash, split hash, seed, and Git commit.",
+  "phase_2_head_ct": {
+    "endpoint": "study_level_any_hemorrhage",
+    "selection_partition": "validation",
+    "threshold_partition": "calibration",
+    "evaluation_partition": "test",
+    "minimum_median_slices_per_study": 10,
+    "initial_pooling_candidates": ["max", "mean", "top_k_mean", "noisy_or"],
+    "locked_test_use": "exactly_once_after_pooling_and_threshold_are_locked"
+  }
 }

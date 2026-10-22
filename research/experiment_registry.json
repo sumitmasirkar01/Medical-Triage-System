@@ -3,8 +3,8 @@
   "protocol": {
     "role": "research_protocol",
     "path": "research/protocol.json",
-    "bytes": 1025,
-    "sha256": "00a2fe78baac53691c84e80e97b304cde396b4cb6194c5a6b83cb7b5b2fe1810"
+    "bytes": 1415,
+    "sha256": "ef3e8b500465e1f98f90b950eca1de4cc90f7338757b6961494484885b8d6546"
   },
   "runs": []
 }

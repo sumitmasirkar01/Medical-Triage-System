@@ -850,8 +850,8 @@
       "pyproject.toml": "577c2c5fce12b87742659006e2ea8658f47d94e9ac12e5ca47c07ddbc8bba073",
       "requirements.txt": "eb460fbf59a6db949c1bd85c8e30062a1f2710a1d3887b681c2666dce850cb39",
       "requirements-dev.txt": "cd9f45ee163b59c46663fadd89437a9645ab399370d4c59dbf3faffbdb36e608",
-      "research/protocol.json": "00a2fe78baac53691c84e80e97b304cde396b4cb6194c5a6b83cb7b5b2fe1810",
-      "research/experiment_registry.json": "8c0dcf4091760846c9fab9f6eb174f4d650ce6ee69c121556ef4aef480ca9648",
+      "research/protocol.json": "ef3e8b500465e1f98f90b950eca1de4cc90f7338757b6961494484885b8d6546",
+      "research/experiment_registry.json": "b5d33f0f808c0e0e3f1832a95e532e05f96a59fa93963e14ac3e9f18cb77ab99",
       "stat_triage/__init__.py": "f9a12fda741d45918c62352d2d7143251a52c88d1779b519c35b861b96390c96",
       "stat_triage/contracts.py": "df24f500ee9565315848ad2284220ecf7357b923f2e409b3689708905e218acf",
       "stat_triage/calibration.py": "225a7d680f6961e6470a34c485cf45614e07190f26126584e0074c9189896b38",
@@ -859,6 +859,7 @@
       "stat_triage/evaluation.py": "f08e4de8238cc079f5bde5d8bb3f535cb867e2f3806bb202b3253ba8f3499866",
       "stat_triage/ingestion.py": "d12816894c95516119b850f385c90af967dfee2726e82a97cb321737b888e20c",
       "stat_triage/rsna.py": "8c7616d2534a166e38047825ad9ceaba62cdc18c75b34eaa8e9fdf80cc5536f8",
+      "stat_triage/ct_study.py": "6dc40257a91197b07b8aa081e8a251cb872c812fea1921f44cebb2d3fc1cf09e",
       "stat_triage/thresholds.py": "28e0b88d2cd45c7efd04f4eca3253e5b941d5fc7ea0af6b0e9f1864cc40bed3e",
       "stat_triage/orchestration.py": "445c8bb350d54e89efc6021c50dffb884f946f31ec5b14f84da81f55d9c0737e",
       "stat_triage/losses.py": "eb2856fe02d7adca64bff98727043a570dfc6ba0fc03d7b740cda42d359c3f09",
@@ -910,12 +911,13 @@
       "scripts/infer_multimodal.py": "9197016000d9601f8776c909d71b7bd485980d1e1e1b23985499064a0cb68dbe",
       "stat_triage/worklist.py": "de1b478fc71931a9e17a5ce663e973a26d096b8c34453f778b4625a4937f5f81",
       "scripts/create_demo_dicom.py": "f59ef598013afecaa72038e4546305364408f4a1e12d6142f03e1e31b58b53b3",
-      "scripts/demo_smoke.py": "308986dc66f34a7d118a6f1a312c007d91a30e09b4c09c1d5fbcd13597d21b30"
+      "scripts/demo_smoke.py": "308986dc66f34a7d118a6f1a312c007d91a30e09b4c09c1d5fbcd13597d21b30",
+      "scripts/evaluate_rsna_study_pooling.py": "e050f492e26c0009097023d557abe908772c4877daf2351a29ad064cd79f5078"
     }
   },
   "verification": {
     "python": "3.12.7",
-    "expected_tests": 126,
+    "expected_tests": 129,
     "commands": [
       ".\\.venv\\Scripts\\python.exe -m pip check",
       ".\\.venv\\Scripts\\python.exe -m scripts.validate_multimodal_evidence",
