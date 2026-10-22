@@ -865,7 +865,7 @@
       "stat_triage/orchestration.py": "445c8bb350d54e89efc6021c50dffb884f946f31ec5b14f84da81f55d9c0737e",
       "stat_triage/losses.py": "eb2856fe02d7adca64bff98727043a570dfc6ba0fc03d7b740cda42d359c3f09",
       "stat_triage/datasets/__init__.py": "46d22752ffdd52ff7ff92e0cee5e0bd7407a51ab8559547d23caf0e211a270b2",
-      "stat_triage/datasets/rsna_study.py": "ae033cea88ac858411741e2b8bc00f5a9e1f12f124d79e0e10f3e53085b38fea",
+      "stat_triage/datasets/rsna_study.py": "1ee1d40f91fbc8c070af1d521771abdbddf802b8cbf41fb4f7ddfa1194efe795",
       "stat_triage/datasets/nih_cxr14.py": "3a6b679c1d4a0ee069ebc4a57ac08c1cbdc677890ca203590abfcc00f782275e",
       "scripts/inventory_nih_cxr14.py": "d5bb08c5c825e9503f0a3d21a2c1d1abf0c70166d55569370fbee0b766072508",
       "scripts/build_nih_cxr14_manifest.py": "2487c4e5c291c9ba6a207b05cc2be13dffa27d2027f12408a4c88b86d0e33b19",
@@ -916,12 +916,13 @@
       "scripts/demo_smoke.py": "308986dc66f34a7d118a6f1a312c007d91a30e09b4c09c1d5fbcd13597d21b30",
       "scripts/evaluate_rsna_study_pooling.py": "e050f492e26c0009097023d557abe908772c4877daf2351a29ad064cd79f5078",
       "scripts/build_rsna_study_cohort.py": "2bab9c358703b5a725379af4acc4dc30502dc61ebc14c43fe822260c5f4b8219",
+      "scripts/validate_rsna_study_cohort.py": "5406024a3f1021bcfeb05416bcf017974aae0533ff852446d0650ddd049d5c8a",
       "scripts/predict_rsna_study_slices.py": "4128afe885921fab4d08846a46c1d5be2073e86f348c9b01da999b0ddb8abcf9"
     }
   },
   "verification": {
     "python": "3.12.7",
-    "expected_tests": 136,
+    "expected_tests": 138,
     "commands": [
       ".\\.venv\\Scripts\\python.exe -m pip check",
       ".\\.venv\\Scripts\\python.exe -m scripts.validate_multimodal_evidence",
