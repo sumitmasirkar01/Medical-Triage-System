@@ -50,11 +50,13 @@ SUPPORTED_SOURCE = (
     "stat_triage/cxr_training.py",
     "stat_triage/cxr_calibration.py",
     "stat_triage/cxr_evaluation.py",
+    "stat_triage/cxr_robustness.py",
     "stat_triage/cxr.py",
     "stat_triage/cxr_policy.py",
     "scripts/train_nih_densenet.py",
     "scripts/calibrate_nih_densenet.py",
     "scripts/evaluate_nih_densenet.py",
+    "scripts/evaluate_cxr_robustness.py",
     "scripts/cache_nih_images.py",
     "stat_triage/datasets/mrnet.py",
     "scripts/inventory_mrnet.py",
@@ -134,6 +136,9 @@ def build_manifest() -> dict:
         CXR_BUNDLE / "nih_densenet_calibration" / "locked_calibration.json"
     )
     cxr_metrics = load_json(CXR_BUNDLE / "nih_densenet_test" / "test_metrics.json")
+    cxr_robustness_dir = ROOT / "artifacts" / "chest_xray" / "robustness_analysis"
+    cxr_subgroups = load_json(cxr_robustness_dir / "locked_subgroups.json")
+    cxr_robustness = load_json(cxr_robustness_dir / "subgroup_robustness.json")
     mrnet_config = load_json(MRNET_BUNDLE / "mrnet_baseline" / "run_config.json")
     mrnet_locked = load_json(MRNET_BUNDLE / "mrnet_calibration" / "locked_calibration.json")
     mrnet_metrics = load_json(MRNET_BUNDLE / "mrnet_test" / "test_metrics.json")
@@ -265,6 +270,22 @@ def build_manifest() -> dict:
                     "patients": cxr_metrics["test_patients"],
                 },
                 "test_results": cxr_metrics["targets"],
+                "subgroup_robustness": {
+                    "analysis_status": cxr_robustness["analysis_status"],
+                    "definitions": cxr_subgroups["definitions"],
+                    "dimensions": cxr_robustness["dimensions"],
+                    "bootstrap_replicates": cxr_robustness["bootstrap_replicates"],
+                    "multiplicity_adjustment": cxr_robustness[
+                        "multiplicity_adjustment"
+                    ],
+                    "interpretation": cxr_robustness["interpretation"],
+                    "subgroup_lock": declaration(
+                        cxr_robustness_dir / "locked_subgroups.json"
+                    ),
+                    "report": declaration(
+                        cxr_robustness_dir / "subgroup_robustness.json"
+                    ),
+                },
                 "limitations": [
                     "Labels are report-derived and may contain label noise.",
                     "Only four selected findings are modeled.",
@@ -355,7 +376,7 @@ def build_manifest() -> dict:
         },
         "verification": {
             "python": "3.12.7",
-            "expected_tests": 147,
+            "expected_tests": 149,
             "commands": [
                 ".\\.venv\\Scripts\\python.exe -m pip check",
                 ".\\.venv\\Scripts\\python.exe -m scripts.validate_multimodal_evidence",

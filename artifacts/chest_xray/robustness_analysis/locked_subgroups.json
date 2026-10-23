@@ -1,0 +1,45 @@
+{
+  "status": "locked",
+  "selection_partition": "calibration",
+  "evaluation_partition": "test_not_loaded",
+  "definitions": {
+    "view": {
+      "column": "view",
+      "groups": [
+        "AP",
+        "PA"
+      ]
+    },
+    "recorded_sex": {
+      "column": "gender",
+      "groups": [
+        "F",
+        "M"
+      ]
+    },
+    "age": {
+      "column": "age",
+      "method": "calibration_tertiles_nearest",
+      "valid_range_years": [
+        0,
+        120
+      ],
+      "lower_cutpoint": 41,
+      "upper_cutpoint": 56,
+      "groups": [
+        "young_<=41",
+        "middle_42_to_56",
+        "older_>56"
+      ]
+    }
+  },
+  "calibration_images": 8831,
+  "calibration_patients": 2801,
+  "calibration_images_with_invalid_age": 1,
+  "test_rows_present": 0,
+  "test_evaluated": false,
+  "provenance": {
+    "manifest_sha256": "4617f87be669d3d41458c3e9fb4efb9710359d2c9f06876e3b3f002665d98574",
+    "locked_calibration_sha256": "9220f74a223932f17f625f68144466ed80b250d06c8dbcb6ecf0dea8d2de8375"
+  }
+}

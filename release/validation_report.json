@@ -1,7 +1,7 @@
 {
   "schema_version": "2.0",
   "status": "passed",
-  "generated_at": "2026-10-23T10:46:24.285586+00:00",
+  "generated_at": "2026-10-23T10:57:58.066106+00:00",
   "scope": {
     "system_type": "routed_multi_model_multimodal_imaging_triage",
     "modalities": [
@@ -17,9 +17,9 @@
     "name": "stat-triage-ai",
     "version": "0.1.0",
     "status": "research_demo",
-    "supported_source_files": 82,
+    "supported_source_files": 84,
     "report_sha256": "5c7345a7fc9fa26fd74d92152c36e268e49b0a0bf15bb7503799d05838b063ef",
-    "expected_tests": 147,
+    "expected_tests": 149,
     "checkpoint_sha256": "4a15c605bb1481de7f12a4881f9c9b5adb36d9386ecac0aa6eb3ae7c3ae805b1",
     "schema_version": "2.0",
     "modality_checkpoint_sha256": {
@@ -280,46 +280,46 @@
     "grouped_bootstrap_audit": {
       "confidence_level": 0.95,
       "seed": 42,
-      "requested_replicates": 100,
-      "valid_class_replicates": 100,
+      "requested_replicates": 2000,
+      "valid_class_replicates": 2000,
       "sampling_unit": "patient_id",
       "groups": 222,
       "rows": 242,
       "intervals": {
         "roc_auc": {
-          "lower": 0.7775597175345548,
-          "upper": 0.8854089304360797,
-          "valid_replicates": 100
+          "lower": 0.7876220599831416,
+          "upper": 0.8893493824019684,
+          "valid_replicates": 2000
         },
         "average_precision": {
-          "lower": 0.6935020576952501,
-          "upper": 0.841791918389946,
-          "valid_replicates": 100
+          "lower": 0.6939907227536977,
+          "upper": 0.8490225206905369,
+          "valid_replicates": 2000
         },
         "sensitivity": {
-          "lower": 0.8095928462709284,
-          "upper": 0.9540432098765432,
-          "valid_replicates": 100
+          "lower": 0.810126582278481,
+          "upper": 0.95,
+          "valid_replicates": 2000
         },
         "specificity": {
-          "lower": 0.44001571745562135,
-          "upper": 0.5849987183868762,
-          "valid_replicates": 100
+          "lower": 0.43125,
+          "upper": 0.58536986521181,
+          "valid_replicates": 2000
         },
         "ppv": {
-          "lower": 0.3779492390585122,
-          "upper": 0.5415,
-          "valid_replicates": 100
+          "lower": 0.3723939888164027,
+          "upper": 0.5333445945945945,
+          "valid_replicates": 2000
         },
         "npv": {
-          "lower": 0.8302466555183947,
-          "upper": 0.9588970588235293,
-          "valid_replicates": 100
+          "lower": 0.8414634146341463,
+          "upper": 0.9565334268349696,
+          "valid_replicates": 2000
         },
         "accuracy": {
-          "lower": 0.56937475009996,
-          "upper": 0.6880585864795178,
-          "valid_replicates": 100
+          "lower": 0.5619707695434223,
+          "upper": 0.690481234866828,
+          "valid_replicates": 2000
         }
       }
     },

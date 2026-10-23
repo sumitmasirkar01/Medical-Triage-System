@@ -15,7 +15,7 @@ def test_release_manifest_uses_locked_model_and_test_metrics():
     assert manifest["supported_scope"]["locked_threshold"] == 0.2538610100746155
     assert manifest["locked_test"]["images"] == 242
     assert manifest["locked_test"]["primary_metrics"]["roc_auc"] == 0.8417158598976782
-    assert manifest["verification"]["expected_tests"] == 147
+    assert manifest["verification"]["expected_tests"] == 149
     phase2 = manifest["modalities"]["head_ct"]["phase_2_study_level"]
     assert phase2["status"] == "passed"
     assert phase2["selected_pooling"] == "mean"
@@ -31,6 +31,11 @@ def test_release_manifest_uses_locked_model_and_test_metrics():
     assert manifest["modalities"]["chest_xray"]["checkpoint_sha256"] == (
         "609a353cf2d640ca7471e3952797b25ea4f5841d7f11fe7dfc8821dbfd9298bb"
     )
+    cxr_robustness = manifest["modalities"]["chest_xray"]["subgroup_robustness"]
+    assert cxr_robustness["analysis_status"] == "exploratory_subgroup_analysis"
+    assert set(cxr_robustness["dimensions"]) == {"view", "recorded_sex", "age"}
+    assert cxr_robustness["definitions"]["age"]["lower_cutpoint"] == 41
+    assert cxr_robustness["definitions"]["age"]["upper_cutpoint"] == 56
     assert manifest["modalities"]["knee_mri"]["checkpoint_sha256"] == (
         "610847b2e4b9f6779528ab820c5744ef161d363f0e0748c3a0b2084881c350cc"
     )
