@@ -251,6 +251,242 @@
             "bytes": 3194,
             "sha256": "df0ca45374a6ce56c41b5212db3d80f0307110f5965db238d97f4e58bff8868b"
           }
+        },
+        "slice_count_robustness": {
+          "analysis_status": "exploratory_subgroup_analysis",
+          "stratification_method": "calibration_tertiles_nearest",
+          "lower_cutpoint": 32,
+          "upper_cutpoint": 36,
+          "groups": {
+            "low_<=_32": {
+              "status": "reported_exploratory",
+              "studies": 112,
+              "positive_studies": 55,
+              "negative_studies": 57,
+              "slice_count": {
+                "minimum": 26,
+                "median": 32.0,
+                "maximum": 32
+              },
+              "metrics": {
+                "roc_auc": 0.9049441786283892,
+                "average_precision": 0.9032218748159057,
+                "sensitivity": 0.9636363636363636,
+                "specificity": 0.631578947368421,
+                "ppv": 0.7162162162162162,
+                "npv": 0.9473684210526315,
+                "accuracy": 0.7946428571428571,
+                "tp": 53,
+                "tn": 36,
+                "fp": 21,
+                "fn": 2,
+                "positive_images": 55,
+                "negative_images": 57
+              },
+              "patient_grouped_bootstrap": {
+                "confidence_level": 0.95,
+                "seed": 42,
+                "requested_replicates": 2000,
+                "valid_class_replicates": 2000,
+                "sampling_unit": "patient_id",
+                "groups": 112,
+                "rows": 112,
+                "intervals": {
+                  "roc_auc": {
+                    "lower": 0.8435887096774194,
+                    "upper": 0.9514634233239916,
+                    "valid_replicates": 2000
+                  },
+                  "average_precision": {
+                    "lower": 0.8287469363026839,
+                    "upper": 0.9556997249316709,
+                    "valid_replicates": 2000
+                  },
+                  "sensitivity": {
+                    "lower": 0.9074074074074074,
+                    "upper": 1.0,
+                    "valid_replicates": 2000
+                  },
+                  "specificity": {
+                    "lower": 0.5,
+                    "upper": 0.75,
+                    "valid_replicates": 2000
+                  },
+                  "ppv": {
+                    "lower": 0.6081081081081081,
+                    "upper": 0.8133333333333334,
+                    "valid_replicates": 2000
+                  },
+                  "npv": {
+                    "lower": 0.8683771929824563,
+                    "upper": 1.0,
+                    "valid_replicates": 2000
+                  },
+                  "accuracy": {
+                    "lower": 0.7142857142857143,
+                    "upper": 0.8660714285714286,
+                    "valid_replicates": 2000
+                  }
+                }
+              }
+            },
+            "medium_33_to_36": {
+              "status": "reported_exploratory",
+              "studies": 68,
+              "positive_studies": 18,
+              "negative_studies": 50,
+              "slice_count": {
+                "minimum": 33,
+                "median": 35.0,
+                "maximum": 36
+              },
+              "metrics": {
+                "roc_auc": 0.9477777777777777,
+                "average_precision": 0.8653485064812296,
+                "sensitivity": 0.9444444444444444,
+                "specificity": 0.72,
+                "ppv": 0.5483870967741935,
+                "npv": 0.972972972972973,
+                "accuracy": 0.7794117647058824,
+                "tp": 17,
+                "tn": 36,
+                "fp": 14,
+                "fn": 1,
+                "positive_images": 18,
+                "negative_images": 50
+              },
+              "patient_grouped_bootstrap": {
+                "confidence_level": 0.95,
+                "seed": 43,
+                "requested_replicates": 2000,
+                "valid_class_replicates": 2000,
+                "sampling_unit": "patient_id",
+                "groups": 68,
+                "rows": 68,
+                "intervals": {
+                  "roc_auc": {
+                    "lower": 0.8866666666666667,
+                    "upper": 0.9910714285714285,
+                    "valid_replicates": 2000
+                  },
+                  "average_precision": {
+                    "lower": 0.6979149134534197,
+                    "upper": 0.9795391887696943,
+                    "valid_replicates": 2000
+                  },
+                  "sensitivity": {
+                    "lower": 0.8095238095238095,
+                    "upper": 1.0,
+                    "valid_replicates": 2000
+                  },
+                  "specificity": {
+                    "lower": 0.5848663522012579,
+                    "upper": 0.8367346938775511,
+                    "valid_replicates": 2000
+                  },
+                  "ppv": {
+                    "lower": 0.36363636363636365,
+                    "upper": 0.71875,
+                    "valid_replicates": 2000
+                  },
+                  "npv": {
+                    "lower": 0.9090909090909091,
+                    "upper": 1.0,
+                    "valid_replicates": 2000
+                  },
+                  "accuracy": {
+                    "lower": 0.6764705882352942,
+                    "upper": 0.8676470588235294,
+                    "valid_replicates": 2000
+                  }
+                }
+              }
+            },
+            "high_>_36": {
+              "status": "reported_exploratory",
+              "studies": 60,
+              "positive_studies": 19,
+              "negative_studies": 41,
+              "slice_count": {
+                "minimum": 37,
+                "median": 40.0,
+                "maximum": 60
+              },
+              "metrics": {
+                "roc_auc": 0.8536585365853658,
+                "average_precision": 0.7021857606505606,
+                "sensitivity": 0.9473684210526315,
+                "specificity": 0.5853658536585366,
+                "ppv": 0.5142857142857142,
+                "npv": 0.96,
+                "accuracy": 0.7,
+                "tp": 18,
+                "tn": 24,
+                "fp": 17,
+                "fn": 1,
+                "positive_images": 19,
+                "negative_images": 41
+              },
+              "patient_grouped_bootstrap": {
+                "confidence_level": 0.95,
+                "seed": 44,
+                "requested_replicates": 2000,
+                "valid_class_replicates": 2000,
+                "sampling_unit": "patient_id",
+                "groups": 60,
+                "rows": 60,
+                "intervals": {
+                  "roc_auc": {
+                    "lower": 0.7462241327751198,
+                    "upper": 0.9403481563079776,
+                    "valid_replicates": 2000
+                  },
+                  "average_precision": {
+                    "lower": 0.5020840266488571,
+                    "upper": 0.8945987102725343,
+                    "valid_replicates": 2000
+                  },
+                  "sensitivity": {
+                    "lower": 0.8235294117647058,
+                    "upper": 1.0,
+                    "valid_replicates": 2000
+                  },
+                  "specificity": {
+                    "lower": 0.42857142857142855,
+                    "upper": 0.7317479674796745,
+                    "valid_replicates": 2000
+                  },
+                  "ppv": {
+                    "lower": 0.3548387096774194,
+                    "upper": 0.6774193548387096,
+                    "valid_replicates": 2000
+                  },
+                  "npv": {
+                    "lower": 0.8695652173913043,
+                    "upper": 1.0,
+                    "valid_replicates": 2000
+                  },
+                  "accuracy": {
+                    "lower": 0.5833333333333334,
+                    "upper": 0.8166666666666667,
+                    "valid_replicates": 2000
+                  }
+                }
+              }
+            }
+          },
+          "multiplicity_adjustment": "none",
+          "interpretation": "descriptive robustness analysis; no causal or fairness claims",
+          "strata_lock": {
+            "path": "artifacts/rsna_phase2/robustness_analysis/locked_slice_count_strata.json",
+            "bytes": 605,
+            "sha256": "28f93c156d964b61ee8c2b813ce40bd0b0e1de9d256bb47f858c823470e08636"
+          },
+          "report": {
+            "path": "artifacts/rsna_phase2/robustness_analysis/slice_count_robustness.json",
+            "bytes": 7370,
+            "sha256": "e23851439133ab1d8786f40883673f78928b8302f4d51bf923a78fa2edc1b011"
+          }
         }
       },
       "limitations": [
@@ -1034,6 +1270,7 @@
       "stat_triage/ct_study.py": "f14766b728cd061febcc05819a896e5112519fa988b6ffa1daf09f73172a1fb4",
       "stat_triage/ct_phase2_evidence.py": "fb335c4441656308a4e3ee05e1dc009aa7eef851349e7332d5f6c2dc341260e4",
       "stat_triage/ct_selective.py": "10951e14828603148bc0bc4c291de8f303be622635c33c9eb884ff9913bfb858",
+      "stat_triage/ct_robustness.py": "4ed0577f890584db781bafa4aeb8645b570107e350e7c168374c44a854925f51",
       "stat_triage/thresholds.py": "28e0b88d2cd45c7efd04f4eca3253e5b941d5fc7ea0af6b0e9f1864cc40bed3e",
       "stat_triage/selective.py": "bbf54580c5349f7fc7df0febdb9771ff5e4abde41811373e7ae33dca1d8803fc",
       "stat_triage/orchestration.py": "445c8bb350d54e89efc6021c50dffb884f946f31ec5b14f84da81f55d9c0737e",
@@ -1096,12 +1333,13 @@
       "scripts/predict_rsna_study_slices.py": "4128afe885921fab4d08846a46c1d5be2073e86f348c9b01da999b0ddb8abcf9",
       "scripts/validate_ct_phase2_evidence.py": "bfb339b5a80ab9f05fa8ea724aea871c742fc35e24afe694614a3af8e65390d3",
       "scripts/evaluate_ct_phase2_selective.py": "82055b4e125394f28f784b88e031c46a1633406d50bbb37dd0f6061e008fc8f2",
+      "scripts/evaluate_ct_phase2_robustness.py": "e995a2f7d2f1d31b898806335fd8e1aaecd6159c3aedf6337dd2b70e94e805b6",
       "artifacts/rsna_phase2/evidence_registry.json": "41ba017ee3783fb9e2e51ad2e6d650ad58362e92938d49c448eca8e6ad33fc3c"
     }
   },
   "verification": {
     "python": "3.12.7",
-    "expected_tests": 145,
+    "expected_tests": 147,
     "commands": [
       ".\\.venv\\Scripts\\python.exe -m pip check",
       ".\\.venv\\Scripts\\python.exe -m scripts.validate_multimodal_evidence",

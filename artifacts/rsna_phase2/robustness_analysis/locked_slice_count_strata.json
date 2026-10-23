@@ -1,0 +1,20 @@
+{
+  "status": "locked",
+  "selection_partition": "calibration",
+  "evaluation_partition": "test_not_loaded",
+  "method": "calibration_tertiles_nearest",
+  "lower_cutpoint": 32,
+  "upper_cutpoint": 36,
+  "labels": [
+    "low_<=_32",
+    "medium_33_to_36",
+    "high_>_36"
+  ],
+  "calibration_studies": 240,
+  "test_rows_present": 0,
+  "test_evaluated": false,
+  "provenance": {
+    "calibration_predictions_sha256": "028c4188e0b9ac5d5de5fae8208a0d1551aea6951e739c641444e471458d6770",
+    "study_protocol_sha256": "44e6704566fff734a6da7449cd443b13b373f7c30152869bd59f5b1e03e8e66f"
+  }
+}

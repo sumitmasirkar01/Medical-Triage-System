@@ -31,6 +31,7 @@ SUPPORTED_SOURCE = (
     "stat_triage/ct_study.py",
     "stat_triage/ct_phase2_evidence.py",
     "stat_triage/ct_selective.py",
+    "stat_triage/ct_robustness.py",
     "stat_triage/thresholds.py",
     "stat_triage/selective.py",
     "stat_triage/orchestration.py",
@@ -93,6 +94,7 @@ SUPPORTED_SOURCE = (
     "scripts/predict_rsna_study_slices.py",
     "scripts/validate_ct_phase2_evidence.py",
     "scripts/evaluate_ct_phase2_selective.py",
+    "scripts/evaluate_ct_phase2_robustness.py",
     "artifacts/rsna_phase2/evidence_registry.json",
 )
 
@@ -141,6 +143,9 @@ def build_manifest() -> dict:
     ct_selective_dir = ct_phase2_dir / "selective_analysis"
     ct_selective_policy = load_json(ct_selective_dir / "locked_selective_policy.json")
     ct_selective = load_json(ct_selective_dir / "selective_test_metrics.json")
+    ct_robustness_dir = ct_phase2_dir / "robustness_analysis"
+    ct_strata = load_json(ct_robustness_dir / "locked_slice_count_strata.json")
+    ct_robustness = load_json(ct_robustness_dir / "slice_count_robustness.json")
     report = ROOT / "docs" / "STAT_Triage_RSNA_Pilot_Report.docx"
 
     return {
@@ -220,6 +225,23 @@ def build_manifest() -> dict:
                         ),
                         "report": declaration(
                             ct_selective_dir / "selective_test_metrics.json"
+                        ),
+                    },
+                    "slice_count_robustness": {
+                        "analysis_status": ct_robustness["analysis_status"],
+                        "stratification_method": ct_strata["method"],
+                        "lower_cutpoint": ct_strata["lower_cutpoint"],
+                        "upper_cutpoint": ct_strata["upper_cutpoint"],
+                        "groups": ct_robustness["groups"],
+                        "multiplicity_adjustment": ct_robustness[
+                            "multiplicity_adjustment"
+                        ],
+                        "interpretation": ct_robustness["interpretation"],
+                        "strata_lock": declaration(
+                            ct_robustness_dir / "locked_slice_count_strata.json"
+                        ),
+                        "report": declaration(
+                            ct_robustness_dir / "slice_count_robustness.json"
                         ),
                     },
                 },
@@ -333,7 +355,7 @@ def build_manifest() -> dict:
         },
         "verification": {
             "python": "3.12.7",
-            "expected_tests": 145,
+            "expected_tests": 147,
             "commands": [
                 ".\\.venv\\Scripts\\python.exe -m pip check",
                 ".\\.venv\\Scripts\\python.exe -m scripts.validate_multimodal_evidence",
