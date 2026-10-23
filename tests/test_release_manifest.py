@@ -15,7 +15,7 @@ def test_release_manifest_uses_locked_model_and_test_metrics():
     assert manifest["supported_scope"]["locked_threshold"] == 0.2538610100746155
     assert manifest["locked_test"]["images"] == 242
     assert manifest["locked_test"]["primary_metrics"]["roc_auc"] == 0.8417158598976782
-    assert manifest["verification"]["expected_tests"] == 149
+    assert manifest["verification"]["expected_tests"] == 151
     phase2 = manifest["modalities"]["head_ct"]["phase_2_study_level"]
     assert phase2["status"] == "passed"
     assert phase2["selected_pooling"] == "mean"
@@ -39,3 +39,9 @@ def test_release_manifest_uses_locked_model_and_test_metrics():
     assert manifest["modalities"]["knee_mri"]["checkpoint_sha256"] == (
         "610847b2e4b9f6779528ab820c5744ef161d363f0e0748c3a0b2084881c350cc"
     )
+    mrnet_robustness = manifest["modalities"]["knee_mri"]["threshold_robustness"]
+    assert mrnet_robustness["analysis_status"] == (
+        "prespecified_threshold_robustness"
+    )
+    assert mrnet_robustness["multipliers"] == [0.8, 0.9, 1.0, 1.1, 1.2]
+    assert set(mrnet_robustness["targets"]) == {"abnormal", "acl", "meniscus"}

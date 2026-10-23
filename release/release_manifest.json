@@ -3078,6 +3078,1061 @@
           }
         }
       },
+      "threshold_robustness": {
+        "analysis_status": "prespecified_threshold_robustness",
+        "method": "multiplicative_threshold_perturbation",
+        "multipliers": [
+          0.8,
+          0.9,
+          1.0,
+          1.1,
+          1.2
+        ],
+        "targets": {
+          "abnormal": {
+            "exams": 120,
+            "positive_exams": 95,
+            "negative_exams": 25,
+            "locked_threshold": 0.6246190829679077,
+            "profiles": [
+              {
+                "multiplier": 0.8,
+                "threshold": 0.49969526637432615,
+                "changed_decisions_from_locked": 6,
+                "changed_decision_fraction": 0.05,
+                "metrics": {
+                  "roc_auc": 0.7385263157894737,
+                  "average_precision": 0.9011565114261051,
+                  "sensitivity": 1.0,
+                  "specificity": 0.12,
+                  "ppv": 0.811965811965812,
+                  "npv": 1.0,
+                  "accuracy": 0.8166666666666667,
+                  "tp": 95,
+                  "tn": 3,
+                  "fp": 22,
+                  "fn": 0,
+                  "positive_images": 95,
+                  "negative_images": 25
+                },
+                "exam_grouped_bootstrap": {
+                  "confidence_level": 0.95,
+                  "seed": 42,
+                  "requested_replicates": 2000,
+                  "valid_class_replicates": 2000,
+                  "sampling_unit": "exam_id",
+                  "groups": 120,
+                  "rows": 120,
+                  "intervals": {
+                    "roc_auc": {
+                      "lower": 0.6039572831423896,
+                      "upper": 0.8508917057119246,
+                      "valid_replicates": 2000
+                    },
+                    "average_precision": {
+                      "lower": 0.8261978840962025,
+                      "upper": 0.963165999374414,
+                      "valid_replicates": 2000
+                    },
+                    "sensitivity": {
+                      "lower": 1.0,
+                      "upper": 1.0,
+                      "valid_replicates": 2000
+                    },
+                    "specificity": {
+                      "lower": 0.0,
+                      "upper": 0.26092677345537724,
+                      "valid_replicates": 2000
+                    },
+                    "ppv": {
+                      "lower": 0.7394957983193278,
+                      "upper": 0.8813808574277167,
+                      "valid_replicates": 2000
+                    },
+                    "npv": {
+                      "lower": 1.0,
+                      "upper": 1.0,
+                      "valid_replicates": 1903
+                    },
+                    "accuracy": {
+                      "lower": 0.7416666666666667,
+                      "upper": 0.8833333333333333,
+                      "valid_replicates": 2000
+                    }
+                  }
+                }
+              },
+              {
+                "multiplier": 0.9,
+                "threshold": 0.5621571746711169,
+                "changed_decisions_from_locked": 3,
+                "changed_decision_fraction": 0.025,
+                "metrics": {
+                  "roc_auc": 0.7385263157894737,
+                  "average_precision": 0.9011565114261051,
+                  "sensitivity": 0.9894736842105263,
+                  "specificity": 0.2,
+                  "ppv": 0.8245614035087719,
+                  "npv": 0.8333333333333334,
+                  "accuracy": 0.825,
+                  "tp": 94,
+                  "tn": 5,
+                  "fp": 20,
+                  "fn": 1,
+                  "positive_images": 95,
+                  "negative_images": 25
+                },
+                "exam_grouped_bootstrap": {
+                  "confidence_level": 0.95,
+                  "seed": 43,
+                  "requested_replicates": 2000,
+                  "valid_class_replicates": 2000,
+                  "sampling_unit": "exam_id",
+                  "groups": 120,
+                  "rows": 120,
+                  "intervals": {
+                    "roc_auc": {
+                      "lower": 0.6113507524221811,
+                      "upper": 0.8525353929041218,
+                      "valid_replicates": 2000
+                    },
+                    "average_precision": {
+                      "lower": 0.8320882908046816,
+                      "upper": 0.9607284057460106,
+                      "valid_replicates": 2000
+                    },
+                    "sensitivity": {
+                      "lower": 0.9595959595959596,
+                      "upper": 1.0,
+                      "valid_replicates": 2000
+                    },
+                    "specificity": {
+                      "lower": 0.047619047619047616,
+                      "upper": 0.3684210526315789,
+                      "valid_replicates": 2000
+                    },
+                    "ppv": {
+                      "lower": 0.7478260869565218,
+                      "upper": 0.8918918918918919,
+                      "valid_replicates": 2000
+                    },
+                    "npv": {
+                      "lower": 0.42857142857142855,
+                      "upper": 1.0,
+                      "valid_replicates": 1994
+                    },
+                    "accuracy": {
+                      "lower": 0.75,
+                      "upper": 0.8916666666666667,
+                      "valid_replicates": 2000
+                    }
+                  }
+                }
+              },
+              {
+                "multiplier": 1.0,
+                "threshold": 0.6246190829679077,
+                "changed_decisions_from_locked": 0,
+                "changed_decision_fraction": 0.0,
+                "metrics": {
+                  "roc_auc": 0.7385263157894737,
+                  "average_precision": 0.9011565114261051,
+                  "sensitivity": 0.9789473684210527,
+                  "specificity": 0.28,
+                  "ppv": 0.8378378378378378,
+                  "npv": 0.7777777777777778,
+                  "accuracy": 0.8333333333333334,
+                  "tp": 93,
+                  "tn": 7,
+                  "fp": 18,
+                  "fn": 2,
+                  "positive_images": 95,
+                  "negative_images": 25
+                },
+                "exam_grouped_bootstrap": {
+                  "confidence_level": 0.95,
+                  "seed": 44,
+                  "requested_replicates": 2000,
+                  "valid_class_replicates": 2000,
+                  "sampling_unit": "exam_id",
+                  "groups": 120,
+                  "rows": 120,
+                  "intervals": {
+                    "roc_auc": {
+                      "lower": 0.6119947368421053,
+                      "upper": 0.8529882168455168,
+                      "valid_replicates": 2000
+                    },
+                    "average_precision": {
+                      "lower": 0.8281993960211692,
+                      "upper": 0.9608911195409687,
+                      "valid_replicates": 2000
+                    },
+                    "sensitivity": {
+                      "lower": 0.9468085106382979,
+                      "upper": 1.0,
+                      "valid_replicates": 2000
+                    },
+                    "specificity": {
+                      "lower": 0.10714285714285714,
+                      "upper": 0.4666666666666667,
+                      "valid_replicates": 2000
+                    },
+                    "ppv": {
+                      "lower": 0.7678571428571429,
+                      "upper": 0.9009009009009009,
+                      "valid_replicates": 2000
+                    },
+                    "npv": {
+                      "lower": 0.4444444444444444,
+                      "upper": 1.0,
+                      "valid_replicates": 1999
+                    },
+                    "accuracy": {
+                      "lower": 0.7666666666666667,
+                      "upper": 0.8916666666666667,
+                      "valid_replicates": 2000
+                    }
+                  }
+                }
+              },
+              {
+                "multiplier": 1.1,
+                "threshold": 0.6870809912646985,
+                "changed_decisions_from_locked": 2,
+                "changed_decision_fraction": 0.016666666666666666,
+                "metrics": {
+                  "roc_auc": 0.7385263157894737,
+                  "average_precision": 0.9011565114261051,
+                  "sensitivity": 0.968421052631579,
+                  "specificity": 0.32,
+                  "ppv": 0.8440366972477065,
+                  "npv": 0.7272727272727273,
+                  "accuracy": 0.8333333333333334,
+                  "tp": 92,
+                  "tn": 8,
+                  "fp": 17,
+                  "fn": 3,
+                  "positive_images": 95,
+                  "negative_images": 25
+                },
+                "exam_grouped_bootstrap": {
+                  "confidence_level": 0.95,
+                  "seed": 45,
+                  "requested_replicates": 2000,
+                  "valid_class_replicates": 2000,
+                  "sampling_unit": "exam_id",
+                  "groups": 120,
+                  "rows": 120,
+                  "intervals": {
+                    "roc_auc": {
+                      "lower": 0.6180314759132493,
+                      "upper": 0.8507071817474721,
+                      "valid_replicates": 2000
+                    },
+                    "average_precision": {
+                      "lower": 0.8280404100475034,
+                      "upper": 0.9591884445756714,
+                      "valid_replicates": 2000
+                    },
+                    "sensitivity": {
+                      "lower": 0.9263157894736842,
+                      "upper": 1.0,
+                      "valid_replicates": 2000
+                    },
+                    "specificity": {
+                      "lower": 0.14801587301587324,
+                      "upper": 0.5,
+                      "valid_replicates": 2000
+                    },
+                    "ppv": {
+                      "lower": 0.7735634648370499,
+                      "upper": 0.9082777314428689,
+                      "valid_replicates": 2000
+                    },
+                    "npv": {
+                      "lower": 0.4444444444444444,
+                      "upper": 1.0,
+                      "valid_replicates": 2000
+                    },
+                    "accuracy": {
+                      "lower": 0.7666666666666667,
+                      "upper": 0.9,
+                      "valid_replicates": 2000
+                    }
+                  }
+                }
+              },
+              {
+                "multiplier": 1.2,
+                "threshold": 0.7495428995614892,
+                "changed_decisions_from_locked": 6,
+                "changed_decision_fraction": 0.05,
+                "metrics": {
+                  "roc_auc": 0.7385263157894737,
+                  "average_precision": 0.9011565114261051,
+                  "sensitivity": 0.9473684210526315,
+                  "specificity": 0.4,
+                  "ppv": 0.8571428571428571,
+                  "npv": 0.6666666666666666,
+                  "accuracy": 0.8333333333333334,
+                  "tp": 90,
+                  "tn": 10,
+                  "fp": 15,
+                  "fn": 5,
+                  "positive_images": 95,
+                  "negative_images": 25
+                },
+                "exam_grouped_bootstrap": {
+                  "confidence_level": 0.95,
+                  "seed": 46,
+                  "requested_replicates": 2000,
+                  "valid_class_replicates": 2000,
+                  "sampling_unit": "exam_id",
+                  "groups": 120,
+                  "rows": 120,
+                  "intervals": {
+                    "roc_auc": {
+                      "lower": 0.612241557834263,
+                      "upper": 0.8533473163344907,
+                      "valid_replicates": 2000
+                    },
+                    "average_precision": {
+                      "lower": 0.8272542857279993,
+                      "upper": 0.9602374838866162,
+                      "valid_replicates": 2000
+                    },
+                    "sensitivity": {
+                      "lower": 0.8979591836734694,
+                      "upper": 0.9892501715854496,
+                      "valid_replicates": 2000
+                    },
+                    "specificity": {
+                      "lower": 0.20833333333333334,
+                      "upper": 0.6086956521739131,
+                      "valid_replicates": 2000
+                    },
+                    "ppv": {
+                      "lower": 0.79,
+                      "upper": 0.9230769230769231,
+                      "valid_replicates": 2000
+                    },
+                    "npv": {
+                      "lower": 0.4166666666666667,
+                      "upper": 0.9166666666666666,
+                      "valid_replicates": 2000
+                    },
+                    "accuracy": {
+                      "lower": 0.7666666666666667,
+                      "upper": 0.9,
+                      "valid_replicates": 2000
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "acl": {
+            "exams": 120,
+            "positive_exams": 54,
+            "negative_exams": 66,
+            "locked_threshold": 0.056712984052332584,
+            "profiles": [
+              {
+                "multiplier": 0.8,
+                "threshold": 0.04537038724186607,
+                "changed_decisions_from_locked": 4,
+                "changed_decision_fraction": 0.03333333333333333,
+                "metrics": {
+                  "roc_auc": 0.8571829405162739,
+                  "average_precision": 0.7722474245263908,
+                  "sensitivity": 1.0,
+                  "specificity": 0.09090909090909091,
+                  "ppv": 0.47368421052631576,
+                  "npv": 1.0,
+                  "accuracy": 0.5,
+                  "tp": 54,
+                  "tn": 6,
+                  "fp": 60,
+                  "fn": 0,
+                  "positive_images": 54,
+                  "negative_images": 66
+                },
+                "exam_grouped_bootstrap": {
+                  "confidence_level": 0.95,
+                  "seed": 47,
+                  "requested_replicates": 2000,
+                  "valid_class_replicates": 2000,
+                  "sampling_unit": "exam_id",
+                  "groups": 120,
+                  "rows": 120,
+                  "intervals": {
+                    "roc_auc": {
+                      "lower": 0.7852762293665199,
+                      "upper": 0.9224437776298384,
+                      "valid_replicates": 2000
+                    },
+                    "average_precision": {
+                      "lower": 0.6520884860646775,
+                      "upper": 0.9067180182234286,
+                      "valid_replicates": 2000
+                    },
+                    "sensitivity": {
+                      "lower": 1.0,
+                      "upper": 1.0,
+                      "valid_replicates": 2000
+                    },
+                    "specificity": {
+                      "lower": 0.030303030303030304,
+                      "upper": 0.16901408450704225,
+                      "valid_replicates": 2000
+                    },
+                    "ppv": {
+                      "lower": 0.3813353082345883,
+                      "upper": 0.5641025641025641,
+                      "valid_replicates": 2000
+                    },
+                    "npv": {
+                      "lower": 1.0,
+                      "upper": 1.0,
+                      "valid_replicates": 1996
+                    },
+                    "accuracy": {
+                      "lower": 0.4083333333333333,
+                      "upper": 0.5833333333333334,
+                      "valid_replicates": 2000
+                    }
+                  }
+                }
+              },
+              {
+                "multiplier": 0.9,
+                "threshold": 0.05104168564709933,
+                "changed_decisions_from_locked": 2,
+                "changed_decision_fraction": 0.016666666666666666,
+                "metrics": {
+                  "roc_auc": 0.8571829405162739,
+                  "average_precision": 0.7722474245263908,
+                  "sensitivity": 1.0,
+                  "specificity": 0.12121212121212122,
+                  "ppv": 0.48214285714285715,
+                  "npv": 1.0,
+                  "accuracy": 0.5166666666666667,
+                  "tp": 54,
+                  "tn": 8,
+                  "fp": 58,
+                  "fn": 0,
+                  "positive_images": 54,
+                  "negative_images": 66
+                },
+                "exam_grouped_bootstrap": {
+                  "confidence_level": 0.95,
+                  "seed": 48,
+                  "requested_replicates": 2000,
+                  "valid_class_replicates": 2000,
+                  "sampling_unit": "exam_id",
+                  "groups": 120,
+                  "rows": 120,
+                  "intervals": {
+                    "roc_auc": {
+                      "lower": 0.783428678615105,
+                      "upper": 0.9223154172974147,
+                      "valid_replicates": 2000
+                    },
+                    "average_precision": {
+                      "lower": 0.6506118115067143,
+                      "upper": 0.9057913890907665,
+                      "valid_replicates": 2000
+                    },
+                    "sensitivity": {
+                      "lower": 1.0,
+                      "upper": 1.0,
+                      "valid_replicates": 2000
+                    },
+                    "specificity": {
+                      "lower": 0.047619047619047616,
+                      "upper": 0.20290421195652172,
+                      "valid_replicates": 2000
+                    },
+                    "ppv": {
+                      "lower": 0.3893805309734513,
+                      "upper": 0.5739130434782609,
+                      "valid_replicates": 2000
+                    },
+                    "npv": {
+                      "lower": 1.0,
+                      "upper": 1.0,
+                      "valid_replicates": 2000
+                    },
+                    "accuracy": {
+                      "lower": 0.425,
+                      "upper": 0.6002083333333321,
+                      "valid_replicates": 2000
+                    }
+                  }
+                }
+              },
+              {
+                "multiplier": 1.0,
+                "threshold": 0.056712984052332584,
+                "changed_decisions_from_locked": 0,
+                "changed_decision_fraction": 0.0,
+                "metrics": {
+                  "roc_auc": 0.8571829405162739,
+                  "average_precision": 0.7722474245263908,
+                  "sensitivity": 1.0,
+                  "specificity": 0.15151515151515152,
+                  "ppv": 0.4909090909090909,
+                  "npv": 1.0,
+                  "accuracy": 0.5333333333333333,
+                  "tp": 54,
+                  "tn": 10,
+                  "fp": 56,
+                  "fn": 0,
+                  "positive_images": 54,
+                  "negative_images": 66
+                },
+                "exam_grouped_bootstrap": {
+                  "confidence_level": 0.95,
+                  "seed": 49,
+                  "requested_replicates": 2000,
+                  "valid_class_replicates": 2000,
+                  "sampling_unit": "exam_id",
+                  "groups": 120,
+                  "rows": 120,
+                  "intervals": {
+                    "roc_auc": {
+                      "lower": 0.7866478675645342,
+                      "upper": 0.9204292143662711,
+                      "valid_replicates": 2000
+                    },
+                    "average_precision": {
+                      "lower": 0.6463696360295551,
+                      "upper": 0.9032851277050048,
+                      "valid_replicates": 2000
+                    },
+                    "sensitivity": {
+                      "lower": 1.0,
+                      "upper": 1.0,
+                      "valid_replicates": 2000
+                    },
+                    "specificity": {
+                      "lower": 0.06779088410444344,
+                      "upper": 0.23945070422535203,
+                      "valid_replicates": 2000
+                    },
+                    "ppv": {
+                      "lower": 0.3963963963963964,
+                      "upper": 0.5858755827505826,
+                      "valid_replicates": 2000
+                    },
+                    "npv": {
+                      "lower": 1.0,
+                      "upper": 1.0,
+                      "valid_replicates": 2000
+                    },
+                    "accuracy": {
+                      "lower": 0.44166666666666665,
+                      "upper": 0.625,
+                      "valid_replicates": 2000
+                    }
+                  }
+                }
+              },
+              {
+                "multiplier": 1.1,
+                "threshold": 0.062384282457565846,
+                "changed_decisions_from_locked": 4,
+                "changed_decision_fraction": 0.03333333333333333,
+                "metrics": {
+                  "roc_auc": 0.8571829405162739,
+                  "average_precision": 0.7722474245263908,
+                  "sensitivity": 1.0,
+                  "specificity": 0.21212121212121213,
+                  "ppv": 0.5094339622641509,
+                  "npv": 1.0,
+                  "accuracy": 0.5666666666666667,
+                  "tp": 54,
+                  "tn": 14,
+                  "fp": 52,
+                  "fn": 0,
+                  "positive_images": 54,
+                  "negative_images": 66
+                },
+                "exam_grouped_bootstrap": {
+                  "confidence_level": 0.95,
+                  "seed": 50,
+                  "requested_replicates": 2000,
+                  "valid_class_replicates": 2000,
+                  "sampling_unit": "exam_id",
+                  "groups": 120,
+                  "rows": 120,
+                  "intervals": {
+                    "roc_auc": {
+                      "lower": 0.7839326408885232,
+                      "upper": 0.920636950432347,
+                      "valid_replicates": 2000
+                    },
+                    "average_precision": {
+                      "lower": 0.6528992384625739,
+                      "upper": 0.9032111763314271,
+                      "valid_replicates": 2000
+                    },
+                    "sensitivity": {
+                      "lower": 1.0,
+                      "upper": 1.0,
+                      "valid_replicates": 2000
+                    },
+                    "specificity": {
+                      "lower": 0.11764705882352941,
+                      "upper": 0.31252332089552226,
+                      "valid_replicates": 2000
+                    },
+                    "ppv": {
+                      "lower": 0.4166482300884956,
+                      "upper": 0.6018956456456455,
+                      "valid_replicates": 2000
+                    },
+                    "npv": {
+                      "lower": 1.0,
+                      "upper": 1.0,
+                      "valid_replicates": 2000
+                    },
+                    "accuracy": {
+                      "lower": 0.475,
+                      "upper": 0.65,
+                      "valid_replicates": 2000
+                    }
+                  }
+                }
+              },
+              {
+                "multiplier": 1.2,
+                "threshold": 0.0680555808627991,
+                "changed_decisions_from_locked": 6,
+                "changed_decision_fraction": 0.05,
+                "metrics": {
+                  "roc_auc": 0.8571829405162739,
+                  "average_precision": 0.7722474245263908,
+                  "sensitivity": 1.0,
+                  "specificity": 0.24242424242424243,
+                  "ppv": 0.5192307692307693,
+                  "npv": 1.0,
+                  "accuracy": 0.5833333333333334,
+                  "tp": 54,
+                  "tn": 16,
+                  "fp": 50,
+                  "fn": 0,
+                  "positive_images": 54,
+                  "negative_images": 66
+                },
+                "exam_grouped_bootstrap": {
+                  "confidence_level": 0.95,
+                  "seed": 51,
+                  "requested_replicates": 2000,
+                  "valid_class_replicates": 2000,
+                  "sampling_unit": "exam_id",
+                  "groups": 120,
+                  "rows": 120,
+                  "intervals": {
+                    "roc_auc": {
+                      "lower": 0.7825705466391228,
+                      "upper": 0.9214136363636363,
+                      "valid_replicates": 2000
+                    },
+                    "average_precision": {
+                      "lower": 0.6496280971514253,
+                      "upper": 0.9065137467605384,
+                      "valid_replicates": 2000
+                    },
+                    "sensitivity": {
+                      "lower": 1.0,
+                      "upper": 1.0,
+                      "valid_replicates": 2000
+                    },
+                    "specificity": {
+                      "lower": 0.14280684104627775,
+                      "upper": 0.3478425559947298,
+                      "valid_replicates": 2000
+                    },
+                    "ppv": {
+                      "lower": 0.4270833333333333,
+                      "upper": 0.6138613861386139,
+                      "valid_replicates": 2000
+                    },
+                    "npv": {
+                      "lower": 1.0,
+                      "upper": 1.0,
+                      "valid_replicates": 2000
+                    },
+                    "accuracy": {
+                      "lower": 0.49166666666666664,
+                      "upper": 0.6666666666666666,
+                      "valid_replicates": 2000
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "meniscus": {
+            "exams": 120,
+            "positive_exams": 52,
+            "negative_exams": 68,
+            "locked_threshold": 0.20426116577253828,
+            "profiles": [
+              {
+                "multiplier": 0.8,
+                "threshold": 0.16340893261803063,
+                "changed_decisions_from_locked": 5,
+                "changed_decision_fraction": 0.041666666666666664,
+                "metrics": {
+                  "roc_auc": 0.7709276018099548,
+                  "average_precision": 0.6845703662417366,
+                  "sensitivity": 0.9807692307692307,
+                  "specificity": 0.17647058823529413,
+                  "ppv": 0.4766355140186916,
+                  "npv": 0.9230769230769231,
+                  "accuracy": 0.525,
+                  "tp": 51,
+                  "tn": 12,
+                  "fp": 56,
+                  "fn": 1,
+                  "positive_images": 52,
+                  "negative_images": 68
+                },
+                "exam_grouped_bootstrap": {
+                  "confidence_level": 0.95,
+                  "seed": 52,
+                  "requested_replicates": 2000,
+                  "valid_class_replicates": 2000,
+                  "sampling_unit": "exam_id",
+                  "groups": 120,
+                  "rows": 120,
+                  "intervals": {
+                    "roc_auc": {
+                      "lower": 0.6815883441158846,
+                      "upper": 0.851116070590444,
+                      "valid_replicates": 2000
+                    },
+                    "average_precision": {
+                      "lower": 0.5569521274692252,
+                      "upper": 0.8187732264818894,
+                      "valid_replicates": 2000
+                    },
+                    "sensitivity": {
+                      "lower": 0.9387436224489797,
+                      "upper": 1.0,
+                      "valid_replicates": 2000
+                    },
+                    "specificity": {
+                      "lower": 0.09375,
+                      "upper": 0.27029317453046253,
+                      "valid_replicates": 2000
+                    },
+                    "ppv": {
+                      "lower": 0.37957285115303996,
+                      "upper": 0.5741090146750523,
+                      "valid_replicates": 2000
+                    },
+                    "npv": {
+                      "lower": 0.75,
+                      "upper": 1.0,
+                      "valid_replicates": 2000
+                    },
+                    "accuracy": {
+                      "lower": 0.43333333333333335,
+                      "upper": 0.6166666666666667,
+                      "valid_replicates": 2000
+                    }
+                  }
+                }
+              },
+              {
+                "multiplier": 0.9,
+                "threshold": 0.18383504919528446,
+                "changed_decisions_from_locked": 3,
+                "changed_decision_fraction": 0.025,
+                "metrics": {
+                  "roc_auc": 0.7709276018099548,
+                  "average_precision": 0.6845703662417366,
+                  "sensitivity": 0.9807692307692307,
+                  "specificity": 0.20588235294117646,
+                  "ppv": 0.4857142857142857,
+                  "npv": 0.9333333333333333,
+                  "accuracy": 0.5416666666666666,
+                  "tp": 51,
+                  "tn": 14,
+                  "fp": 54,
+                  "fn": 1,
+                  "positive_images": 52,
+                  "negative_images": 68
+                },
+                "exam_grouped_bootstrap": {
+                  "confidence_level": 0.95,
+                  "seed": 53,
+                  "requested_replicates": 2000,
+                  "valid_class_replicates": 2000,
+                  "sampling_unit": "exam_id",
+                  "groups": 120,
+                  "rows": 120,
+                  "intervals": {
+                    "roc_auc": {
+                      "lower": 0.6876654463531401,
+                      "upper": 0.853183791514381,
+                      "valid_replicates": 2000
+                    },
+                    "average_precision": {
+                      "lower": 0.5523694503043218,
+                      "upper": 0.8122353523766163,
+                      "valid_replicates": 2000
+                    },
+                    "sensitivity": {
+                      "lower": 0.9361702127659575,
+                      "upper": 1.0,
+                      "valid_replicates": 2000
+                    },
+                    "specificity": {
+                      "lower": 0.11107305936073066,
+                      "upper": 0.3037974683544304,
+                      "valid_replicates": 2000
+                    },
+                    "ppv": {
+                      "lower": 0.39129446640316207,
+                      "upper": 0.5769329896907216,
+                      "valid_replicates": 2000
+                    },
+                    "npv": {
+                      "lower": 0.7777777777777778,
+                      "upper": 1.0,
+                      "valid_replicates": 2000
+                    },
+                    "accuracy": {
+                      "lower": 0.45,
+                      "upper": 0.625,
+                      "valid_replicates": 2000
+                    }
+                  }
+                }
+              },
+              {
+                "multiplier": 1.0,
+                "threshold": 0.20426116577253828,
+                "changed_decisions_from_locked": 0,
+                "changed_decision_fraction": 0.0,
+                "metrics": {
+                  "roc_auc": 0.7709276018099548,
+                  "average_precision": 0.6845703662417366,
+                  "sensitivity": 0.9615384615384616,
+                  "specificity": 0.23529411764705882,
+                  "ppv": 0.49019607843137253,
+                  "npv": 0.8888888888888888,
+                  "accuracy": 0.55,
+                  "tp": 50,
+                  "tn": 16,
+                  "fp": 52,
+                  "fn": 2,
+                  "positive_images": 52,
+                  "negative_images": 68
+                },
+                "exam_grouped_bootstrap": {
+                  "confidence_level": 0.95,
+                  "seed": 54,
+                  "requested_replicates": 2000,
+                  "valid_class_replicates": 2000,
+                  "sampling_unit": "exam_id",
+                  "groups": 120,
+                  "rows": 120,
+                  "intervals": {
+                    "roc_auc": {
+                      "lower": 0.685468247787736,
+                      "upper": 0.8523815268599096,
+                      "valid_replicates": 2000
+                    },
+                    "average_precision": {
+                      "lower": 0.555222882875171,
+                      "upper": 0.811754671572815,
+                      "valid_replicates": 2000
+                    },
+                    "sensitivity": {
+                      "lower": 0.8979591836734694,
+                      "upper": 1.0,
+                      "valid_replicates": 2000
+                    },
+                    "specificity": {
+                      "lower": 0.13748715753424662,
+                      "upper": 0.3333333333333333,
+                      "valid_replicates": 2000
+                    },
+                    "ppv": {
+                      "lower": 0.393931334622824,
+                      "upper": 0.5841584158415841,
+                      "valid_replicates": 2000
+                    },
+                    "npv": {
+                      "lower": 0.7272727272727273,
+                      "upper": 1.0,
+                      "valid_replicates": 2000
+                    },
+                    "accuracy": {
+                      "lower": 0.4583333333333333,
+                      "upper": 0.6335416666666654,
+                      "valid_replicates": 2000
+                    }
+                  }
+                }
+              },
+              {
+                "multiplier": 1.1,
+                "threshold": 0.22468728234979213,
+                "changed_decisions_from_locked": 1,
+                "changed_decision_fraction": 0.008333333333333333,
+                "metrics": {
+                  "roc_auc": 0.7709276018099548,
+                  "average_precision": 0.6845703662417366,
+                  "sensitivity": 0.9615384615384616,
+                  "specificity": 0.25,
+                  "ppv": 0.49504950495049505,
+                  "npv": 0.8947368421052632,
+                  "accuracy": 0.5583333333333333,
+                  "tp": 50,
+                  "tn": 17,
+                  "fp": 51,
+                  "fn": 2,
+                  "positive_images": 52,
+                  "negative_images": 68
+                },
+                "exam_grouped_bootstrap": {
+                  "confidence_level": 0.95,
+                  "seed": 55,
+                  "requested_replicates": 2000,
+                  "valid_class_replicates": 2000,
+                  "sampling_unit": "exam_id",
+                  "groups": 120,
+                  "rows": 120,
+                  "intervals": {
+                    "roc_auc": {
+                      "lower": 0.6800648305862456,
+                      "upper": 0.8506953983516483,
+                      "valid_replicates": 2000
+                    },
+                    "average_precision": {
+                      "lower": 0.5501157287428873,
+                      "upper": 0.8149380263236565,
+                      "valid_replicates": 2000
+                    },
+                    "sensitivity": {
+                      "lower": 0.9,
+                      "upper": 1.0,
+                      "valid_replicates": 2000
+                    },
+                    "specificity": {
+                      "lower": 0.15384615384615385,
+                      "upper": 0.356188845401174,
+                      "valid_replicates": 2000
+                    },
+                    "ppv": {
+                      "lower": 0.4036270012592194,
+                      "upper": 0.5959595959595959,
+                      "valid_replicates": 2000
+                    },
+                    "npv": {
+                      "lower": 0.7367543859649124,
+                      "upper": 1.0,
+                      "valid_replicates": 2000
+                    },
+                    "accuracy": {
+                      "lower": 0.475,
+                      "upper": 0.65,
+                      "valid_replicates": 2000
+                    }
+                  }
+                }
+              },
+              {
+                "multiplier": 1.2,
+                "threshold": 0.24511339892704592,
+                "changed_decisions_from_locked": 5,
+                "changed_decision_fraction": 0.041666666666666664,
+                "metrics": {
+                  "roc_auc": 0.7709276018099548,
+                  "average_precision": 0.6845703662417366,
+                  "sensitivity": 0.9615384615384616,
+                  "specificity": 0.3088235294117647,
+                  "ppv": 0.5154639175257731,
+                  "npv": 0.9130434782608695,
+                  "accuracy": 0.5916666666666667,
+                  "tp": 50,
+                  "tn": 21,
+                  "fp": 47,
+                  "fn": 2,
+                  "positive_images": 52,
+                  "negative_images": 68
+                },
+                "exam_grouped_bootstrap": {
+                  "confidence_level": 0.95,
+                  "seed": 56,
+                  "requested_replicates": 2000,
+                  "valid_class_replicates": 2000,
+                  "sampling_unit": "exam_id",
+                  "groups": 120,
+                  "rows": 120,
+                  "intervals": {
+                    "roc_auc": {
+                      "lower": 0.687429856792456,
+                      "upper": 0.8495637205549894,
+                      "valid_replicates": 2000
+                    },
+                    "average_precision": {
+                      "lower": 0.5505674928462092,
+                      "upper": 0.8133306750684017,
+                      "valid_replicates": 2000
+                    },
+                    "sensitivity": {
+                      "lower": 0.9024390243902439,
+                      "upper": 1.0,
+                      "valid_replicates": 2000
+                    },
+                    "specificity": {
+                      "lower": 0.19696969696969696,
+                      "upper": 0.4166666666666667,
+                      "valid_replicates": 2000
+                    },
+                    "ppv": {
+                      "lower": 0.4134510869565217,
+                      "upper": 0.6105544200306591,
+                      "valid_replicates": 2000
+                    },
+                    "npv": {
+                      "lower": 0.7777777777777778,
+                      "upper": 1.0,
+                      "valid_replicates": 2000
+                    },
+                    "accuracy": {
+                      "lower": 0.5,
+                      "upper": 0.675,
+                      "valid_replicates": 2000
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "bootstrap_replicates": 2000,
+        "multiplicity_adjustment": "none",
+        "interpretation": "operating-point sensitivity analysis; confidence intervals are wide and exam independence cannot be verified because patient identifiers are unavailable",
+        "perturbation_lock": {
+          "path": "artifacts/mrnet_robustness/locked_threshold_perturbations.json",
+          "bytes": 2220,
+          "sha256": "58c930e97208bb441e73c7feb21a02c47f000e6fb68f42d20535780f7a8383d7"
+        },
+        "report": {
+          "path": "artifacts/mrnet_robustness/threshold_robustness.json",
+          "bytes": 37428,
+          "sha256": "14b5a5702c90b94d6095084b777d95daf4931972361e1d623fe3ccd1718b91b5"
+        }
+      },
       "limitations": [
         "The official validation partition is locked as the test set.",
         "Patient identifiers are unavailable, so patient independence cannot be verified.",
@@ -3324,7 +4379,9 @@
       "stat_triage/mrnet_calibration.py": "51fe381ed1b6108ceda417e6e99e27ec44ee52fda780689e98f3ca3bc41c6da1",
       "scripts/calibrate_mrnet_multiplane.py": "d9c7ecbbf30517c502706e4b56e703b34f1f2cb9d9d962e33e18ccee75a410e0",
       "stat_triage/mrnet_evaluation.py": "a7521f4b9aca2442d977e5ce8b638af1e91fc6d1e49bcab73d45c57f26dac9de",
+      "stat_triage/mrnet_robustness.py": "6ddf5d383a47cfcc1e476e41b1976a693e6c6710bb5cd97e2a8c51ba5f41e7d2",
       "scripts/evaluate_mrnet_multiplane.py": "feac33d93d784bf15cfcce80e427d4a1141a4eebfdb3f6329313b13590bcd859",
+      "scripts/evaluate_mrnet_robustness.py": "0496ee5d5bb2553ebe070dfde5aacec0e822de5b66737c6ce073c919b459b778",
       "stat_triage/mrnet.py": "6834b724921304d586610898e5846b55b6cfc0f2fbc288ce214392278f31dcbd",
       "stat_triage/multimodal.py": "0a7794084a4a3fb769f7ecd2a5564f95b36be7064209f0cc95dcf98473d3c12b",
       "stat_triage/multimodal_worklist.py": "34af4e61ef1b198d3232acae202b799f641a0f628f7f5ec854fbfdf58260f571",
@@ -3356,7 +4413,7 @@
   },
   "verification": {
     "python": "3.12.7",
-    "expected_tests": 149,
+    "expected_tests": 151,
     "commands": [
       ".\\.venv\\Scripts\\python.exe -m pip check",
       ".\\.venv\\Scripts\\python.exe -m scripts.validate_multimodal_evidence",

@@ -1,0 +1,95 @@
+{
+  "status": "locked",
+  "selection_partition": "calibration",
+  "evaluation_partition": "test_not_loaded",
+  "method": "multiplicative_threshold_perturbation",
+  "multipliers": [
+    0.8,
+    0.9,
+    1.0,
+    1.1,
+    1.2
+  ],
+  "targets": {
+    "abnormal": {
+      "locked_threshold": 0.6246190829679077,
+      "perturbations": [
+        {
+          "multiplier": 0.8,
+          "threshold": 0.49969526637432615
+        },
+        {
+          "multiplier": 0.9,
+          "threshold": 0.5621571746711169
+        },
+        {
+          "multiplier": 1.0,
+          "threshold": 0.6246190829679077
+        },
+        {
+          "multiplier": 1.1,
+          "threshold": 0.6870809912646985
+        },
+        {
+          "multiplier": 1.2,
+          "threshold": 0.7495428995614892
+        }
+      ]
+    },
+    "acl": {
+      "locked_threshold": 0.056712984052332584,
+      "perturbations": [
+        {
+          "multiplier": 0.8,
+          "threshold": 0.04537038724186607
+        },
+        {
+          "multiplier": 0.9,
+          "threshold": 0.05104168564709933
+        },
+        {
+          "multiplier": 1.0,
+          "threshold": 0.056712984052332584
+        },
+        {
+          "multiplier": 1.1,
+          "threshold": 0.062384282457565846
+        },
+        {
+          "multiplier": 1.2,
+          "threshold": 0.0680555808627991
+        }
+      ]
+    },
+    "meniscus": {
+      "locked_threshold": 0.20426116577253828,
+      "perturbations": [
+        {
+          "multiplier": 0.8,
+          "threshold": 0.16340893261803063
+        },
+        {
+          "multiplier": 0.9,
+          "threshold": 0.18383504919528446
+        },
+        {
+          "multiplier": 1.0,
+          "threshold": 0.20426116577253828
+        },
+        {
+          "multiplier": 1.1,
+          "threshold": 0.22468728234979213
+        },
+        {
+          "multiplier": 1.2,
+          "threshold": 0.24511339892704592
+        }
+      ]
+    }
+  },
+  "test_rows_present": 0,
+  "test_evaluated": false,
+  "provenance": {
+    "locked_calibration_sha256": "1cc8ceae0a101e4c65bae5069be0312376243e4b38912714caeec1850cfb6d3e"
+  }
+}

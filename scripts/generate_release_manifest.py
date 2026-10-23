@@ -70,7 +70,9 @@ SUPPORTED_SOURCE = (
     "stat_triage/mrnet_calibration.py",
     "scripts/calibrate_mrnet_multiplane.py",
     "stat_triage/mrnet_evaluation.py",
+    "stat_triage/mrnet_robustness.py",
     "scripts/evaluate_mrnet_multiplane.py",
+    "scripts/evaluate_mrnet_robustness.py",
     "stat_triage/mrnet.py",
     "stat_triage/multimodal.py",
     "stat_triage/multimodal_worklist.py",
@@ -142,6 +144,13 @@ def build_manifest() -> dict:
     mrnet_config = load_json(MRNET_BUNDLE / "mrnet_baseline" / "run_config.json")
     mrnet_locked = load_json(MRNET_BUNDLE / "mrnet_calibration" / "locked_calibration.json")
     mrnet_metrics = load_json(MRNET_BUNDLE / "mrnet_test" / "test_metrics.json")
+    mrnet_robustness_dir = ROOT / "artifacts" / "mrnet_robustness"
+    mrnet_perturbations = load_json(
+        mrnet_robustness_dir / "locked_threshold_perturbations.json"
+    )
+    mrnet_robustness = load_json(
+        mrnet_robustness_dir / "threshold_robustness.json"
+    )
     ct_phase2_dir = ROOT / "artifacts" / "rsna_phase2"
     ct_phase2 = load_json(ct_phase2_dir / "validation_report.json")
     ct_phase2_registry = load_json(ct_phase2_dir / "evidence_registry.json")
@@ -312,6 +321,25 @@ def build_manifest() -> dict:
                     "patient_identifiers_available": False,
                 },
                 "test_results": mrnet_metrics["targets"],
+                "threshold_robustness": {
+                    "analysis_status": mrnet_robustness["analysis_status"],
+                    "method": mrnet_perturbations["method"],
+                    "multipliers": mrnet_perturbations["multipliers"],
+                    "targets": mrnet_robustness["targets"],
+                    "bootstrap_replicates": mrnet_robustness[
+                        "bootstrap_replicates"
+                    ],
+                    "multiplicity_adjustment": mrnet_robustness[
+                        "multiplicity_adjustment"
+                    ],
+                    "interpretation": mrnet_robustness["interpretation"],
+                    "perturbation_lock": declaration(
+                        mrnet_robustness_dir / "locked_threshold_perturbations.json"
+                    ),
+                    "report": declaration(
+                        mrnet_robustness_dir / "threshold_robustness.json"
+                    ),
+                },
                 "limitations": [
                     "The official validation partition is locked as the test set.",
                     "Patient identifiers are unavailable, so patient independence cannot be verified.",
@@ -376,7 +404,7 @@ def build_manifest() -> dict:
         },
         "verification": {
             "python": "3.12.7",
-            "expected_tests": 149,
+            "expected_tests": 151,
             "commands": [
                 ".\\.venv\\Scripts\\python.exe -m pip check",
                 ".\\.venv\\Scripts\\python.exe -m scripts.validate_multimodal_evidence",
