@@ -4343,7 +4343,7 @@
       "stat_triage/ct_robustness.py": "4ed0577f890584db781bafa4aeb8645b570107e350e7c168374c44a854925f51",
       "stat_triage/thresholds.py": "28e0b88d2cd45c7efd04f4eca3253e5b941d5fc7ea0af6b0e9f1864cc40bed3e",
       "stat_triage/selective.py": "bbf54580c5349f7fc7df0febdb9771ff5e4abde41811373e7ae33dca1d8803fc",
-      "stat_triage/orchestration.py": "445c8bb350d54e89efc6021c50dffb884f946f31ec5b14f84da81f55d9c0737e",
+      "stat_triage/orchestration.py": "0651fe5b986f08a9be7df286ae14b1ce5453c6e4642b1a6157d3949b672f1d05",
       "stat_triage/losses.py": "eb2856fe02d7adca64bff98727043a570dfc6ba0fc03d7b740cda42d359c3f09",
       "stat_triage/datasets/__init__.py": "46d22752ffdd52ff7ff92e0cee5e0bd7407a51ab8559547d23caf0e211a270b2",
       "stat_triage/datasets/rsna_study.py": "1ee1d40f91fbc8c070af1d521771abdbddf802b8cbf41fb4f7ddfa1194efe795",
@@ -4414,7 +4414,7 @@
   },
   "verification": {
     "python": "3.12.7",
-    "expected_tests": 153,
+    "expected_tests": 155,
     "commands": [
       ".\\.venv\\Scripts\\python.exe -m pip check",
       ".\\.venv\\Scripts\\python.exe -m scripts.validate_multimodal_evidence",

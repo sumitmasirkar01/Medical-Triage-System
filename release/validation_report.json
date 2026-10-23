@@ -1,7 +1,7 @@
 {
   "schema_version": "2.0",
   "status": "passed",
-  "generated_at": "2026-10-23T11:32:14.936853+00:00",
+  "generated_at": "2026-10-23T11:37:30.168802+00:00",
   "scope": {
     "system_type": "routed_multi_model_multimodal_imaging_triage",
     "modalities": [
@@ -19,13 +19,38 @@
     "status": "research_demo",
     "supported_source_files": 87,
     "report_sha256": "5c7345a7fc9fa26fd74d92152c36e268e49b0a0bf15bb7503799d05838b063ef",
-    "expected_tests": 153,
+    "expected_tests": 155,
     "checkpoint_sha256": "4a15c605bb1481de7f12a4881f9c9b5adb36d9386ecac0aa6eb3ae7c3ae805b1",
     "schema_version": "2.0",
     "modality_checkpoint_sha256": {
       "head_ct": "4a15c605bb1481de7f12a4881f9c9b5adb36d9386ecac0aa6eb3ae7c3ae805b1",
       "chest_xray": "609a353cf2d640ca7471e3952797b25ea4f5841d7f11fe7dfc8821dbfd9298bb",
       "knee_mri": "610847b2e4b9f6779528ab820c5744ef161d363f0e0748c3a0b2084881c350cc"
+    },
+    "phase2_artifact_validation": {
+      "status": "passed",
+      "verified_analyses": {
+        "head_ct.selective_prediction": {
+          "analysis_status": "post_test_exploratory",
+          "lock_sha256": "bf16f51d4b645f7e3fe695752f29159117390f3aef474ef30b1ebbbd6caee309",
+          "report_sha256": "df0ca45374a6ce56c41b5212db3d80f0307110f5965db238d97f4e58bff8868b"
+        },
+        "head_ct.slice_count_robustness": {
+          "analysis_status": "exploratory_subgroup_analysis",
+          "lock_sha256": "28f93c156d964b61ee8c2b813ce40bd0b0e1de9d256bb47f858c823470e08636",
+          "report_sha256": "e23851439133ab1d8786f40883673f78928b8302f4d51bf923a78fa2edc1b011"
+        },
+        "chest_xray.subgroup_robustness": {
+          "analysis_status": "exploratory_subgroup_analysis",
+          "lock_sha256": "107410ff5f4d2146ed71022990f82facb4ee5cc93cf5cbebc0cd33e4ce8b3a9b",
+          "report_sha256": "a67038b1a4adb775258d741093e0e869698ec184c148be741184eb93092180e4"
+        },
+        "knee_mri.threshold_robustness": {
+          "analysis_status": "post_test_exploratory",
+          "lock_sha256": "4e1db69d892c90651f87a462c91e2be9219b53f2ab2bd60f68a26d2088075835",
+          "report_sha256": "9dd5b7fa24f24ace594b7641dc99b44fb337f5b58fb60b5790f90aaaa50773f6"
+        }
+      }
     }
   },
   "multimodal_validation": {

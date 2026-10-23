@@ -45,6 +45,121 @@ def _safe_project_path(root: Path, relative: str) -> Path:
     return candidate
 
 
+def _validate_artifact_declaration(
+    root: Path, declaration: object, label: str
+) -> Path:
+    if not isinstance(declaration, dict):
+        raise ReleaseValidationError(f"Invalid artifact declaration: {label}")
+    artifact = _safe_project_path(root, str(declaration.get("path", "")))
+    if (
+        not artifact.is_file()
+        or artifact.stat().st_size != declaration.get("bytes")
+        or sha256(artifact) != declaration.get("sha256")
+    ):
+        raise ReleaseValidationError(
+            f"Artifact size or SHA-256 mismatch for {label}: {artifact}"
+        )
+    return artifact
+
+
+def validate_phase2_release_artifacts(
+    manifest: dict[str, Any], project_root: str | Path
+) -> dict[str, object]:
+    """Verify every Phase 2 declaration, lock/report pair, and source provenance."""
+
+    root = Path(project_root).resolve()
+    modalities = manifest.get("modalities")
+    if not isinstance(modalities, dict):
+        raise ReleaseValidationError("release manifest has no modality declarations")
+
+    head = modalities.get("head_ct", {}).get("phase_2_study_level", {})
+    for name in ("evidence_registry", "validation_report"):
+        _validate_artifact_declaration(root, head.get(name), f"head_ct.{name}")
+    bundles = head.get("bundles")
+    if not isinstance(bundles, dict) or set(bundles) != {
+        "cohort", "development", "locked_protocol", "test_slices", "final_evaluation"
+    }:
+        raise ReleaseValidationError("head CT Phase 2 bundle declarations are incomplete")
+    for name, declaration in bundles.items():
+        _validate_artifact_declaration(root, declaration, f"head_ct.bundle.{name}")
+
+    lock_pairs = (
+        (
+            "head_ct.selective_prediction",
+            head.get("selective_prediction", {}),
+            "policy", "report", None,
+        ),
+        (
+            "head_ct.slice_count_robustness",
+            head.get("slice_count_robustness", {}),
+            "strata_lock", "report", "stratification",
+        ),
+        (
+            "chest_xray.subgroup_robustness",
+            modalities.get("chest_xray", {}).get("subgroup_robustness", {}),
+            "subgroup_lock", "report", "subgroup_lock",
+        ),
+        (
+            "knee_mri.threshold_robustness",
+            modalities.get("knee_mri", {}).get("threshold_robustness", {}),
+            "perturbation_lock", "report", "perturbation_lock",
+        ),
+    )
+    verified: dict[str, object] = {}
+    for label, section, lock_key, report_key, embedded_key in lock_pairs:
+        if not isinstance(section, dict):
+            raise ReleaseValidationError(f"Missing Phase 2 section: {label}")
+        lock_path = _validate_artifact_declaration(
+            root, section.get(lock_key), f"{label}.{lock_key}"
+        )
+        report_path = _validate_artifact_declaration(
+            root, section.get(report_key), f"{label}.{report_key}"
+        )
+        locked = _read_json(lock_path)
+        report = _read_json(report_path)
+        if embedded_key is None:
+            if report.get("provenance", {}).get("selective_policy_sha256") != sha256(
+                lock_path
+            ):
+                raise ReleaseValidationError(f"Lock/report mismatch for {label}")
+        elif report.get(embedded_key) != locked:
+            raise ReleaseValidationError(f"Lock/report mismatch for {label}")
+        if report.get("analysis_status") != section.get("analysis_status"):
+            raise ReleaseValidationError(f"Analysis-status mismatch for {label}")
+        verified[label] = {
+            "analysis_status": report.get("analysis_status"),
+            "lock_sha256": sha256(lock_path),
+            "report_sha256": sha256(report_path),
+        }
+
+    cxr_report = _read_json(
+        root / "artifacts/chest_xray/robustness_analysis/subgroup_robustness.json"
+    )
+    cxr_sources = {
+        "manifest_sha256": root / "artifacts/chest_xray/nih_cxr14_locked_test_bundle/nih_cxr14_manifest_split.csv",
+        "locked_calibration_sha256": root / "artifacts/chest_xray/nih_cxr14_locked_test_bundle/nih_densenet_calibration/locked_calibration.json",
+        "test_predictions_sha256": root / "artifacts/chest_xray/nih_cxr14_locked_test_bundle/nih_densenet_test/test_predictions.csv",
+    }
+    mrnet_report = _read_json(
+        root / "artifacts/mrnet_robustness/threshold_robustness.json"
+    )
+    mrnet_sources = {
+        "locked_calibration_sha256": root / "artifacts/mrnet_baseline/mrnet_calibration/locked_calibration.json",
+        "test_predictions_sha256": root / "artifacts/mrnet_baseline/mrnet_test/test_predictions.csv",
+    }
+    for label, report, sources in (
+        ("chest_xray", cxr_report, cxr_sources),
+        ("knee_mri", mrnet_report, mrnet_sources),
+    ):
+        provenance = report.get("provenance", {})
+        for key, source in sources.items():
+            if provenance.get(key) != sha256(source):
+                raise ReleaseValidationError(
+                    f"Source provenance mismatch for {label}.{key}"
+                )
+    return {"status": "passed", "verified_analyses": verified}
+
+
 def validate_project_release_manifest(
     release_manifest_path: str | Path,
     project_root: str | Path,
@@ -104,6 +219,7 @@ def validate_project_release_manifest(
     }
     if set(modality_checkpoints) != {"head_ct", "chest_xray", "knee_mri"}:
         raise ReleaseValidationError("release manifest does not declare three modalities")
+    phase2 = validate_phase2_release_artifacts(manifest, root)
 
     return {
         "name": manifest.get("release", {}).get("name"),
@@ -115,6 +231,7 @@ def validate_project_release_manifest(
         "checkpoint_sha256": manifest.get("supported_scope", {}).get("checkpoint_sha256"),
         "schema_version": manifest.get("schema_version"),
         "modality_checkpoint_sha256": modality_checkpoints,
+        "phase2_artifact_validation": phase2,
     }
 
 

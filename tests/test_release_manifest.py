@@ -1,6 +1,14 @@
 """Release summary must remain traceable to the locked evidence bundle."""
 
-from scripts.generate_release_manifest import build_manifest
+from pathlib import Path
+
+import pytest
+
+from scripts.generate_release_manifest import ROOT, build_manifest
+from stat_triage.orchestration import (
+    ReleaseValidationError,
+    validate_phase2_release_artifacts,
+)
 
 
 def test_release_manifest_uses_locked_model_and_test_metrics():
@@ -15,7 +23,7 @@ def test_release_manifest_uses_locked_model_and_test_metrics():
     assert manifest["supported_scope"]["locked_threshold"] == 0.2538610100746155
     assert manifest["locked_test"]["images"] == 242
     assert manifest["locked_test"]["primary_metrics"]["roc_auc"] == 0.8417158598976782
-    assert manifest["verification"]["expected_tests"] == 153
+    assert manifest["verification"]["expected_tests"] == 155
     phase2 = manifest["modalities"]["head_ct"]["phase_2_study_level"]
     assert phase2["status"] == "passed"
     assert phase2["selected_pooling"] == "mean"
@@ -43,3 +51,18 @@ def test_release_manifest_uses_locked_model_and_test_metrics():
     assert mrnet_robustness["analysis_status"] == "post_test_exploratory"
     assert mrnet_robustness["multipliers"] == [0.8, 0.9, 1.0, 1.1, 1.2]
     assert set(mrnet_robustness["targets"]) == {"abnormal", "acl", "meniscus"}
+
+
+def test_all_phase2_release_artifacts_validate():
+    result = validate_phase2_release_artifacts(build_manifest(), ROOT)
+    assert result["status"] == "passed"
+    assert len(result["verified_analyses"]) == 4
+
+
+def test_phase2_release_validation_rejects_bad_declaration():
+    manifest = build_manifest()
+    manifest["modalities"]["knee_mri"]["threshold_robustness"]["report"][
+        "sha256"
+    ] = "0" * 64
+    with pytest.raises(ReleaseValidationError, match="SHA-256 mismatch"):
+        validate_phase2_release_artifacts(manifest, Path(ROOT))

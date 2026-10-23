@@ -405,7 +405,7 @@ def build_manifest() -> dict:
         },
         "verification": {
             "python": "3.12.7",
-            "expected_tests": 153,
+            "expected_tests": 155,
             "commands": [
                 ".\\.venv\\Scripts\\python.exe -m pip check",
                 ".\\.venv\\Scripts\\python.exe -m scripts.validate_multimodal_evidence",
