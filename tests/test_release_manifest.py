@@ -40,8 +40,6 @@ def test_release_manifest_uses_locked_model_and_test_metrics():
         "610847b2e4b9f6779528ab820c5744ef161d363f0e0748c3a0b2084881c350cc"
     )
     mrnet_robustness = manifest["modalities"]["knee_mri"]["threshold_robustness"]
-    assert mrnet_robustness["analysis_status"] == (
-        "prespecified_threshold_robustness"
-    )
+    assert mrnet_robustness["analysis_status"] == "post_test_exploratory"
     assert mrnet_robustness["multipliers"] == [0.8, 0.9, 1.0, 1.1, 1.2]
     assert set(mrnet_robustness["targets"]) == {"abnormal", "acl", "meniscus"}

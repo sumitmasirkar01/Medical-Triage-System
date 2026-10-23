@@ -34,8 +34,10 @@ def test_mrnet_threshold_grid_is_locked_before_test_evaluation():
         _predictions(), lock, bootstrap_replicates=20
     )
     assert lock["test_rows_present"] == 0
+    assert lock["analysis_status"] == "post_test_exploratory"
     assert lock["multipliers"] == [0.8, 0.9, 1.0, 1.1, 1.2]
     assert set(report["targets"]) == set(MRNET_TARGETS)
+    assert report["analysis_status"] == "post_test_exploratory"
     assert all(len(result["profiles"]) == 5 for result in report["targets"].values())
     assert all(
         next(profile for profile in result["profiles"] if profile["multiplier"] == 1.0)[

@@ -1,5 +1,7 @@
 {
   "status": "locked",
+  "analysis_status": "post_test_exploratory",
+  "classification_reason": "the perturbation analysis was designed after the locked MRNet test results were known; locking the grid before mechanical evaluation does not make the analysis prospective",
   "selection_partition": "calibration",
   "evaluation_partition": "test_not_loaded",
   "method": "multiplicative_threshold_perturbation",

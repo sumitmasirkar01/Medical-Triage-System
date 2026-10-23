@@ -1,4 +1,4 @@
-"""Operating-point robustness analysis for the locked Stanford MRNet model."""
+"""Post-test operating-point robustness for the locked Stanford MRNet model."""
 
 from __future__ import annotations
 
@@ -21,7 +21,7 @@ def lock_threshold_perturbations(
     *,
     multipliers: Sequence[float] = (0.8, 0.9, 1.0, 1.1, 1.2),
 ) -> dict[str, object]:
-    """Define threshold perturbations without loading held-out test predictions."""
+    """Record a post-test exploratory grid before its mechanical evaluation."""
 
     if locked_calibration.get("status") != "locked":
         raise MRNetRobustnessError("Calibration artifact is not locked")
@@ -57,6 +57,12 @@ def lock_threshold_perturbations(
         }
     return {
         "status": "locked",
+        "analysis_status": "post_test_exploratory",
+        "classification_reason": (
+            "the perturbation analysis was designed after the locked MRNet test "
+            "results were known; locking the grid before mechanical evaluation does "
+            "not make the analysis prospective"
+        ),
         "selection_partition": "calibration",
         "evaluation_partition": "test_not_loaded",
         "method": "multiplicative_threshold_perturbation",
@@ -140,7 +146,7 @@ def evaluate_threshold_robustness(
 
     return {
         "status": "complete",
-        "analysis_status": "prespecified_threshold_robustness",
+        "analysis_status": "post_test_exploratory",
         "perturbation_lock": dict(perturbation_lock),
         "test_exams": int(len(test_predictions)),
         "sampling_unit": "exam_id",

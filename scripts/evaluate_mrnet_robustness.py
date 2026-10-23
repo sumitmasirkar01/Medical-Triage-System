@@ -1,4 +1,4 @@
-"""Run calibration-locked MRNet operating-point robustness analysis."""
+"""Run post-test exploratory MRNet operating-point robustness analysis."""
 
 from __future__ import annotations
 

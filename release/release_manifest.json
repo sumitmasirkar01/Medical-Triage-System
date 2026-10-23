@@ -3079,7 +3079,7 @@
         }
       },
       "threshold_robustness": {
-        "analysis_status": "prespecified_threshold_robustness",
+        "analysis_status": "post_test_exploratory",
         "method": "multiplicative_threshold_perturbation",
         "multipliers": [
           0.8,
@@ -4124,13 +4124,13 @@
         "interpretation": "operating-point sensitivity analysis; confidence intervals are wide and exam independence cannot be verified because patient identifiers are unavailable",
         "perturbation_lock": {
           "path": "artifacts/mrnet_robustness/locked_threshold_perturbations.json",
-          "bytes": 2220,
-          "sha256": "58c930e97208bb441e73c7feb21a02c47f000e6fb68f42d20535780f7a8383d7"
+          "bytes": 2470,
+          "sha256": "4e1db69d892c90651f87a462c91e2be9219b53f2ab2bd60f68a26d2088075835"
         },
         "report": {
           "path": "artifacts/mrnet_robustness/threshold_robustness.json",
-          "bytes": 37428,
-          "sha256": "14b5a5702c90b94d6095084b777d95daf4931972361e1d623fe3ccd1718b91b5"
+          "bytes": 37670,
+          "sha256": "9dd5b7fa24f24ace594b7641dc99b44fb337f5b58fb60b5790f90aaaa50773f6"
         }
       },
       "limitations": [
@@ -4379,9 +4379,9 @@
       "stat_triage/mrnet_calibration.py": "51fe381ed1b6108ceda417e6e99e27ec44ee52fda780689e98f3ca3bc41c6da1",
       "scripts/calibrate_mrnet_multiplane.py": "d9c7ecbbf30517c502706e4b56e703b34f1f2cb9d9d962e33e18ccee75a410e0",
       "stat_triage/mrnet_evaluation.py": "a7521f4b9aca2442d977e5ce8b638af1e91fc6d1e49bcab73d45c57f26dac9de",
-      "stat_triage/mrnet_robustness.py": "6ddf5d383a47cfcc1e476e41b1976a693e6c6710bb5cd97e2a8c51ba5f41e7d2",
+      "stat_triage/mrnet_robustness.py": "a350cc5f8c5736236a8956fba2f0d4cbb9f74933699b5f3e4fdddb277f2a7b55",
       "scripts/evaluate_mrnet_multiplane.py": "feac33d93d784bf15cfcce80e427d4a1141a4eebfdb3f6329313b13590bcd859",
-      "scripts/evaluate_mrnet_robustness.py": "0496ee5d5bb2553ebe070dfde5aacec0e822de5b66737c6ce073c919b459b778",
+      "scripts/evaluate_mrnet_robustness.py": "58bab5494a57fbe3b9b55f6f3ea00e263d7dd26577139e51898874298874ce5c",
       "stat_triage/mrnet.py": "6834b724921304d586610898e5846b55b6cfc0f2fbc288ce214392278f31dcbd",
       "stat_triage/multimodal.py": "0a7794084a4a3fb769f7ecd2a5564f95b36be7064209f0cc95dcf98473d3c12b",
       "stat_triage/multimodal_worklist.py": "34af4e61ef1b198d3232acae202b799f641a0f628f7f5ec854fbfdf58260f571",
