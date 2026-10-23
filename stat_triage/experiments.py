@@ -78,6 +78,7 @@ def build_run_record(
     config: str | Path,
     artifacts: Iterable[tuple[str, str | Path]],
     code_commit: str | None = None,
+    created_at: str | None = None,
 ) -> dict[str, object]:
     root = Path(project_root).resolve()
     if not RUN_ID_PATTERN.fullmatch(run_id):
@@ -91,15 +92,25 @@ def build_run_record(
     if len(roles) != len(set(roles)):
         raise ExperimentRegistryError("Artifact roles must be unique")
     protocol = _declaration(root, protocol_path, "research_protocol")
+    resolved_commit = code_commit or current_git_commit(root)
+    if not re.fullmatch(r"[0-9a-f]{40}", resolved_commit):
+        raise ExperimentRegistryError("code_commit must be a full lowercase Git commit")
+    resolved_created_at = created_at or datetime.now(timezone.utc).isoformat()
+    try:
+        timestamp = datetime.fromisoformat(resolved_created_at)
+    except ValueError as exc:
+        raise ExperimentRegistryError("created_at must be an ISO-8601 timestamp") from exc
+    if timestamp.tzinfo is None or timestamp.utcoffset() is None:
+        raise ExperimentRegistryError("created_at must include a timezone")
     return {
         "run_id": run_id,
         "status": "complete",
-        "created_at": datetime.now(timezone.utc).isoformat(),
+        "created_at": resolved_created_at,
         "modality": modality.value,
         "purpose": purpose.strip(),
         "dataset_id": dataset_id.strip(),
         "seed": seed,
-        "code_commit": code_commit or current_git_commit(root),
+        "code_commit": resolved_commit,
         "protocol": protocol,
         "split_manifest": _declaration(root, split_manifest, "split_manifest"),
         "config": _declaration(root, config, "run_config"),
@@ -143,6 +154,22 @@ def validate_experiment_registry(path: str | Path, project_root: str | Path) -> 
         identifiers.add(run["run_id"])
         if run.get("modality") not in {item.value for item in Modality}:
             raise ExperimentRegistryError(f"Invalid modality for {run['run_id']}")
+        if not re.fullmatch(r"[0-9a-f]{40}", str(run.get("code_commit", ""))):
+            raise ExperimentRegistryError(f"Invalid Git commit for {run['run_id']}")
+        try:
+            created_at = datetime.fromisoformat(str(run.get("created_at", "")))
+        except ValueError as exc:
+            raise ExperimentRegistryError(
+                f"Invalid created_at for {run['run_id']}"
+            ) from exc
+        if created_at.tzinfo is None or created_at.utcoffset() is None:
+            raise ExperimentRegistryError(
+                f"created_at lacks timezone for {run['run_id']}"
+            )
+        if run.get("protocol") != registry.get("protocol"):
+            raise ExperimentRegistryError(
+                f"Protocol declaration mismatch for {run['run_id']}"
+            )
         declarations.extend([run.get("protocol"), run.get("split_manifest"), run.get("config")])
         declarations.extend(run.get("artifacts", []))
     for declaration in declarations:

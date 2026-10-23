@@ -82,6 +82,7 @@ SUPPORTED_SOURCE = (
     "scripts/validate_multimodal_evidence.py",
     "scripts/validate_release.py",
     "scripts/experiment_registry.py",
+    "scripts/rebuild_experiment_registry.py",
     "scripts/multimodal_smoke.py",
     "stat_triage/results.py",
     "scripts/generate_multimodal_results.py",
@@ -404,7 +405,7 @@ def build_manifest() -> dict:
         },
         "verification": {
             "python": "3.12.7",
-            "expected_tests": 151,
+            "expected_tests": 153,
             "commands": [
                 ".\\.venv\\Scripts\\python.exe -m pip check",
                 ".\\.venv\\Scripts\\python.exe -m scripts.validate_multimodal_evidence",

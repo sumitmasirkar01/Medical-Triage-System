@@ -3,8 +3,339 @@
   "protocol": {
     "role": "research_protocol",
     "path": "research/protocol.json",
-    "bytes": 1415,
-    "sha256": "ef3e8b500465e1f98f90b950eca1de4cc90f7338757b6961494484885b8d6546"
+    "bytes": 2304,
+    "sha256": "ffb3f921c61c2e0fe5ac7384a41be8e98112c3171736b45a7b00f28352a8fdef"
   },
-  "runs": []
+  "runs": [
+    {
+      "run_id": "head-ct-phase1-locked-evaluation",
+      "status": "complete",
+      "created_at": "2026-10-21T16:41:33+05:30",
+      "modality": "head_ct",
+      "purpose": "locked slice-level baseline evaluation",
+      "dataset_id": "rsna-ich-2019-phase1-pilot",
+      "seed": 42,
+      "code_commit": "5ae9adfb8d33ea9cf48bf155bc0e497a4f4c19f4",
+      "protocol": {
+        "role": "research_protocol",
+        "path": "research/protocol.json",
+        "bytes": 2304,
+        "sha256": "ffb3f921c61c2e0fe5ac7384a41be8e98112c3171736b45a7b00f28352a8fdef"
+      },
+      "split_manifest": {
+        "role": "split_manifest",
+        "path": "artifacts/rsna_baseline/rsna_baseline_bundle/rsna_pilot_manifest_split.csv",
+        "bytes": 523819,
+        "sha256": "4335d70dded5351bd3d43e0dc72f036cc74957baa0e30e2b61dc771b7f4d7783"
+      },
+      "config": {
+        "role": "run_config",
+        "path": "artifacts/rsna_baseline/rsna_baseline_bundle/run_config.json",
+        "bytes": 1513,
+        "sha256": "5811f31090c38de0183d848ce605dcdcb827eabd68ea5d40fbbb60c0910ef255"
+      },
+      "artifacts": [
+        {
+          "role": "checkpoint",
+          "path": "artifacts/rsna_baseline/rsna_baseline_bundle/best_efficientnet_b0.pt",
+          "bytes": 16365573,
+          "sha256": "4a15c605bb1481de7f12a4881f9c9b5adb36d9386ecac0aa6eb3ae7c3ae805b1"
+        },
+        {
+          "role": "operating_point",
+          "path": "artifacts/rsna_baseline/rsna_baseline_bundle/operating_point.json",
+          "bytes": 940,
+          "sha256": "24b5a0a2b93f485b3740f1ce0a83aa721ef14326682bdc1d71fc6ee621e8b010"
+        },
+        {
+          "role": "test_metrics",
+          "path": "artifacts/rsna_baseline/rsna_baseline_bundle/test_metrics.json",
+          "bytes": 3083,
+          "sha256": "a0fb02479f9f3e50896c8cdc8f65e700a32c2b47aec05b6bc509502ec9b66590"
+        }
+      ]
+    },
+    {
+      "run_id": "chest-xray-locked-evaluation",
+      "status": "complete",
+      "created_at": "2026-10-21T16:41:33+05:30",
+      "modality": "chest_xray",
+      "purpose": "locked four-target image-level baseline evaluation",
+      "dataset_id": "nih-chestxray14",
+      "seed": 42,
+      "code_commit": "5ae9adfb8d33ea9cf48bf155bc0e497a4f4c19f4",
+      "protocol": {
+        "role": "research_protocol",
+        "path": "research/protocol.json",
+        "bytes": 2304,
+        "sha256": "ffb3f921c61c2e0fe5ac7384a41be8e98112c3171736b45a7b00f28352a8fdef"
+      },
+      "split_manifest": {
+        "role": "split_manifest",
+        "path": "artifacts/chest_xray/nih_cxr14_locked_test_bundle/nih_cxr14_manifest_split.csv",
+        "bytes": 18390243,
+        "sha256": "4617f87be669d3d41458c3e9fb4efb9710359d2c9f06876e3b3f002665d98574"
+      },
+      "config": {
+        "role": "run_config",
+        "path": "artifacts/chest_xray/nih_cxr14_locked_test_bundle/nih_densenet_calibration/locked_calibration.json",
+        "bytes": 5853,
+        "sha256": "9220f74a223932f17f625f68144466ed80b250d06c8dbcb6ecf0dea8d2de8375"
+      },
+      "artifacts": [
+        {
+          "role": "checkpoint",
+          "path": "artifacts/chest_xray/nih_cxr14_locked_test_bundle/nih_densenet/best_densenet121.pt",
+          "bytes": 28444310,
+          "sha256": "609a353cf2d640ca7471e3952797b25ea4f5841d7f11fe7dfc8821dbfd9298bb"
+        },
+        {
+          "role": "test_metrics",
+          "path": "artifacts/chest_xray/nih_cxr14_locked_test_bundle/nih_densenet_test/test_metrics.json",
+          "bytes": 9642,
+          "sha256": "93d48cca3fa4f74f58294dccd0d3518cd9232c53887a68c2351c23dc429a9293"
+        }
+      ]
+    },
+    {
+      "run_id": "knee-mri-locked-evaluation",
+      "status": "complete",
+      "created_at": "2026-10-21T16:41:33+05:30",
+      "modality": "knee_mri",
+      "purpose": "locked three-target exam-level baseline evaluation",
+      "dataset_id": "stanford-mrnet-v1",
+      "seed": 42,
+      "code_commit": "5ae9adfb8d33ea9cf48bf155bc0e497a4f4c19f4",
+      "protocol": {
+        "role": "research_protocol",
+        "path": "research/protocol.json",
+        "bytes": 2304,
+        "sha256": "ffb3f921c61c2e0fe5ac7384a41be8e98112c3171736b45a7b00f28352a8fdef"
+      },
+      "split_manifest": {
+        "role": "split_manifest",
+        "path": "artifacts/mrnet_baseline/mrnet_manifest/mrnet_manifest_split.csv",
+        "bytes": 388714,
+        "sha256": "517d69f88ad8e9bd5b714d70cfa047c60c31242b0507569495de2876c4472f11"
+      },
+      "config": {
+        "role": "run_config",
+        "path": "artifacts/mrnet_baseline/mrnet_baseline/run_config.json",
+        "bytes": 975,
+        "sha256": "30598187e4b8eda380d88ecddb472521be1ccd2ac87d94795f3b0aa5814cf247"
+      },
+      "artifacts": [
+        {
+          "role": "checkpoint",
+          "path": "artifacts/mrnet_baseline/mrnet_baseline/best_mrnet_resnet18.pt",
+          "bytes": 46366559,
+          "sha256": "610847b2e4b9f6779528ab820c5744ef161d363f0e0748c3a0b2084881c350cc"
+        },
+        {
+          "role": "locked_calibration",
+          "path": "artifacts/mrnet_baseline/mrnet_calibration/locked_calibration.json",
+          "bytes": 4449,
+          "sha256": "1cc8ceae0a101e4c65bae5069be0312376243e4b38912714caeec1850cfb6d3e"
+        },
+        {
+          "role": "test_metrics",
+          "path": "artifacts/mrnet_baseline/mrnet_test/test_metrics.json",
+          "bytes": 7152,
+          "sha256": "b2ee7a088f5d809fbd0c3fbc2cbedfa4b93774d2c668933dd23bfc47652ddee1"
+        }
+      ]
+    },
+    {
+      "run_id": "head-ct-phase2-study-evaluation",
+      "status": "complete",
+      "created_at": "2026-10-23T03:36:33+05:30",
+      "modality": "head_ct",
+      "purpose": "locked study-level pooling and test evaluation",
+      "dataset_id": "rsna-ich-2019-phase2-study-cohort",
+      "seed": 42,
+      "code_commit": "5e8830cc8bacc8d65d6d6e140495e42e9c3b9601",
+      "protocol": {
+        "role": "research_protocol",
+        "path": "research/protocol.json",
+        "bytes": 2304,
+        "sha256": "ffb3f921c61c2e0fe5ac7384a41be8e98112c3171736b45a7b00f28352a8fdef"
+      },
+      "split_manifest": {
+        "role": "split_manifest",
+        "path": "artifacts/rsna_phase2/rsna_phase2_cohort_bundle.zip",
+        "bytes": 425614,
+        "sha256": "a59179fbf557a29ae396b9d45d2e7b9f8b8ee649f7660b18fbf7933f982be3e2"
+      },
+      "config": {
+        "role": "run_config",
+        "path": "artifacts/rsna_phase2/rsna_phase2_locked_protocol_bundle.zip",
+        "bytes": 7270,
+        "sha256": "875d2c71075decf710f3e314b348992a7674e7642e4e9d321bdb804ad5fce9e5"
+      },
+      "artifacts": [
+        {
+          "role": "evidence_registry",
+          "path": "artifacts/rsna_phase2/evidence_registry.json",
+          "bytes": 1119,
+          "sha256": "41ba017ee3783fb9e2e51ad2e6d650ad58362e92938d49c448eca8e6ad33fc3c"
+        },
+        {
+          "role": "validation_report",
+          "path": "artifacts/rsna_phase2/validation_report.json",
+          "bytes": 1180,
+          "sha256": "12435b82c6530ba9287fa4a03d6c0ed2ee1d4945080810de9aabda00ca708775"
+        },
+        {
+          "role": "final_evaluation",
+          "path": "artifacts/rsna_phase2/rsna_phase2_final_evidence_bundle.zip",
+          "bytes": 158847,
+          "sha256": "1b94d27131496ee67dac07f397c85e9543d791674e118ed90bb7b0d14fd83e29"
+        }
+      ]
+    },
+    {
+      "run_id": "head-ct-selective-post-test-exploratory",
+      "status": "complete",
+      "created_at": "2026-10-23T16:11:30+05:30",
+      "modality": "head_ct",
+      "purpose": "post-test exploratory selective-prediction analysis",
+      "dataset_id": "rsna-ich-2019-phase2-study-cohort",
+      "seed": 42,
+      "code_commit": "f65352fa4922f282041772fd3a2a9209bd329b9c",
+      "protocol": {
+        "role": "research_protocol",
+        "path": "research/protocol.json",
+        "bytes": 2304,
+        "sha256": "ffb3f921c61c2e0fe5ac7384a41be8e98112c3171736b45a7b00f28352a8fdef"
+      },
+      "split_manifest": {
+        "role": "split_manifest",
+        "path": "artifacts/rsna_phase2/rsna_phase2_cohort_bundle.zip",
+        "bytes": 425614,
+        "sha256": "a59179fbf557a29ae396b9d45d2e7b9f8b8ee649f7660b18fbf7933f982be3e2"
+      },
+      "config": {
+        "role": "run_config",
+        "path": "artifacts/rsna_phase2/selective_analysis/locked_selective_policy.json",
+        "bytes": 1794,
+        "sha256": "bf16f51d4b645f7e3fe695752f29159117390f3aef474ef30b1ebbbd6caee309"
+      },
+      "artifacts": [
+        {
+          "role": "report",
+          "path": "artifacts/rsna_phase2/selective_analysis/selective_test_metrics.json",
+          "bytes": 3194,
+          "sha256": "df0ca45374a6ce56c41b5212db3d80f0307110f5965db238d97f4e58bff8868b"
+        }
+      ]
+    },
+    {
+      "run_id": "head-ct-study-size-exploratory",
+      "status": "complete",
+      "created_at": "2026-10-23T16:16:39+05:30",
+      "modality": "head_ct",
+      "purpose": "exploratory study-size robustness analysis",
+      "dataset_id": "rsna-ich-2019-phase2-study-cohort",
+      "seed": 42,
+      "code_commit": "ac87335c3692971f62c371b25a3216c241c00664",
+      "protocol": {
+        "role": "research_protocol",
+        "path": "research/protocol.json",
+        "bytes": 2304,
+        "sha256": "ffb3f921c61c2e0fe5ac7384a41be8e98112c3171736b45a7b00f28352a8fdef"
+      },
+      "split_manifest": {
+        "role": "split_manifest",
+        "path": "artifacts/rsna_phase2/rsna_phase2_cohort_bundle.zip",
+        "bytes": 425614,
+        "sha256": "a59179fbf557a29ae396b9d45d2e7b9f8b8ee649f7660b18fbf7933f982be3e2"
+      },
+      "config": {
+        "role": "run_config",
+        "path": "artifacts/rsna_phase2/robustness_analysis/locked_slice_count_strata.json",
+        "bytes": 605,
+        "sha256": "28f93c156d964b61ee8c2b813ce40bd0b0e1de9d256bb47f858c823470e08636"
+      },
+      "artifacts": [
+        {
+          "role": "report",
+          "path": "artifacts/rsna_phase2/robustness_analysis/slice_count_robustness.json",
+          "bytes": 7370,
+          "sha256": "e23851439133ab1d8786f40883673f78928b8302f4d51bf923a78fa2edc1b011"
+        }
+      ]
+    },
+    {
+      "run_id": "chest-xray-subgroup-exploratory",
+      "status": "complete",
+      "created_at": "2026-10-23T16:28:46+05:30",
+      "modality": "chest_xray",
+      "purpose": "exploratory view, recorded-sex, and age robustness analysis",
+      "dataset_id": "nih-chestxray14",
+      "seed": 42,
+      "code_commit": "784e56082db849540b626482b03e0b89d26a013f",
+      "protocol": {
+        "role": "research_protocol",
+        "path": "research/protocol.json",
+        "bytes": 2304,
+        "sha256": "ffb3f921c61c2e0fe5ac7384a41be8e98112c3171736b45a7b00f28352a8fdef"
+      },
+      "split_manifest": {
+        "role": "split_manifest",
+        "path": "artifacts/chest_xray/nih_cxr14_locked_test_bundle/nih_cxr14_manifest_split.csv",
+        "bytes": 18390243,
+        "sha256": "4617f87be669d3d41458c3e9fb4efb9710359d2c9f06876e3b3f002665d98574"
+      },
+      "config": {
+        "role": "run_config",
+        "path": "artifacts/chest_xray/robustness_analysis/locked_subgroups.json",
+        "bytes": 1058,
+        "sha256": "107410ff5f4d2146ed71022990f82facb4ee5cc93cf5cbebc0cd33e4ce8b3a9b"
+      },
+      "artifacts": [
+        {
+          "role": "report",
+          "path": "artifacts/chest_xray/robustness_analysis/subgroup_robustness.json",
+          "bytes": 73822,
+          "sha256": "a67038b1a4adb775258d741093e0e869698ec184c148be741184eb93092180e4"
+        }
+      ]
+    },
+    {
+      "run_id": "knee-mri-threshold-post-test-exploratory",
+      "status": "complete",
+      "created_at": "2026-10-23T16:50:51+05:30",
+      "modality": "knee_mri",
+      "purpose": "post-test exploratory threshold robustness analysis",
+      "dataset_id": "stanford-mrnet-v1",
+      "seed": 42,
+      "code_commit": "356da4b11eca2d80797067c075396e083c2173f9",
+      "protocol": {
+        "role": "research_protocol",
+        "path": "research/protocol.json",
+        "bytes": 2304,
+        "sha256": "ffb3f921c61c2e0fe5ac7384a41be8e98112c3171736b45a7b00f28352a8fdef"
+      },
+      "split_manifest": {
+        "role": "split_manifest",
+        "path": "artifacts/mrnet_baseline/mrnet_manifest/mrnet_manifest_split.csv",
+        "bytes": 388714,
+        "sha256": "517d69f88ad8e9bd5b714d70cfa047c60c31242b0507569495de2876c4472f11"
+      },
+      "config": {
+        "role": "run_config",
+        "path": "artifacts/mrnet_robustness/locked_threshold_perturbations.json",
+        "bytes": 2470,
+        "sha256": "4e1db69d892c90651f87a462c91e2be9219b53f2ab2bd60f68a26d2088075835"
+      },
+      "artifacts": [
+        {
+          "role": "report",
+          "path": "artifacts/mrnet_robustness/threshold_robustness.json",
+          "bytes": 37670,
+          "sha256": "9dd5b7fa24f24ace594b7641dc99b44fb337f5b58fb60b5790f90aaaa50773f6"
+        }
+      ]
+    }
+  ]
 }

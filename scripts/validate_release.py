@@ -11,12 +11,16 @@ from stat_triage.artifacts import (
     validate_multimodal_evidence_registry,
 )
 from stat_triage.orchestration import evaluate_rsna_release
+from stat_triage.experiments import validate_experiment_registry
+from stat_triage.experiments import validate_experiment_registry
 
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_BUNDLE = ROOT / "artifacts" / "rsna_baseline" / "rsna_baseline_bundle"
 DEFAULT_RELEASE = ROOT / "release" / "release_manifest.json"
 DEFAULT_OUTPUT = ROOT / "release" / "validation_report.json"
+DEFAULT_EXPERIMENT_REGISTRY = ROOT / "research" / "experiment_registry.json"
+DEFAULT_EXPERIMENT_REGISTRY = ROOT / "research" / "experiment_registry.json"
 
 
 def build_validation_report(
@@ -41,6 +45,8 @@ def build_validation_report(
         project_root=ROOT,
         recompute_metrics=True,
     )
+    experiments = validate_experiment_registry(DEFAULT_EXPERIMENT_REGISTRY, ROOT)
+    experiments = validate_experiment_registry(DEFAULT_EXPERIMENT_REGISTRY, ROOT)
     head_ct_detail = {
         key: value
         for key, value in head_ct.items()
@@ -59,6 +65,16 @@ def build_validation_report(
         },
         "release_manifest_validation": head_ct["release_manifest_validation"],
         "multimodal_validation": multimodal,
+        "experiment_registry_validation": {
+            "status": "passed",
+            "registered_runs": len(experiments["runs"]),
+            "run_ids": [run["run_id"] for run in experiments["runs"]],
+        },
+        "experiment_registry_validation": {
+            "status": "passed",
+            "registered_runs": len(experiments["runs"]),
+            "run_ids": [run["run_id"] for run in experiments["runs"]],
+        },
         "head_ct_deep_validation": head_ct_detail,
     }
 
