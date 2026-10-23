@@ -17,6 +17,7 @@ from stat_triage.experiments import (
 ROOT = Path(__file__).resolve().parents[1]
 REGISTRY = ROOT / "research" / "experiment_registry.json"
 PROTOCOL = ROOT / "research" / "protocol.json"
+AMENDMENT = ROOT / "research" / "protocol_amendment_phase2.json"
 
 
 RUNS = (
@@ -135,7 +136,7 @@ RUNS = (
 
 
 def rebuild(destination: Path = REGISTRY) -> dict[str, object]:
-    initialize_registry(destination, PROTOCOL, ROOT)
+    initialize_registry(destination, PROTOCOL, ROOT, amendments=(AMENDMENT,))
     for specification in RUNS:
         register_run(
             destination,

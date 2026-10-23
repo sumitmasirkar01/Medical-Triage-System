@@ -72,6 +72,29 @@ def test_registry_rejects_run_protocol_mismatch(tmp_path):
         register_run(registry, record, tmp_path)
 
 
+def test_registry_validates_protocol_amendments(tmp_path):
+    protocol = tmp_path / "protocol.json"
+    amendment = tmp_path / "amendment.json"
+    protocol.write_text('{"version":"1"}', encoding="utf-8")
+    amendment.write_text('{"amends":"1"}', encoding="utf-8")
+    registry = tmp_path / "registry.json"
+    initialize_registry(registry, protocol, tmp_path, amendments=(amendment,))
+    validated = validate_experiment_registry(registry, tmp_path)
+    assert len(validated["amendments"]) == 1
+
+
+def test_registry_detects_protocol_amendment_tampering(tmp_path):
+    protocol = tmp_path / "protocol.json"
+    amendment = tmp_path / "amendment.json"
+    protocol.write_text('{"version":"1"}', encoding="utf-8")
+    amendment.write_text('{"amends":"1"}', encoding="utf-8")
+    registry = tmp_path / "registry.json"
+    initialize_registry(registry, protocol, tmp_path, amendments=(amendment,))
+    amendment.write_text('{"amends":"2"}', encoding="utf-8")
+    with pytest.raises(ExperimentRegistryError, match="changed"):
+        validate_experiment_registry(registry, tmp_path)
+
+
 def test_registry_rejects_invalid_historical_metadata(tmp_path):
     registry, record, _ = _setup(tmp_path)
     record["code_commit"] = "short"

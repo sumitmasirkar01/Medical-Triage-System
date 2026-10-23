@@ -6,6 +6,14 @@
     "bytes": 2304,
     "sha256": "ffb3f921c61c2e0fe5ac7384a41be8e98112c3171736b45a7b00f28352a8fdef"
   },
+  "amendments": [
+    {
+      "role": "research_protocol_amendment",
+      "path": "research/protocol_amendment_phase2.json",
+      "bytes": 1724,
+      "sha256": "304ca7c359553b6bc4bdbf3da6152c0d779f321e0ca44215ed7a8227ac81fe7a"
+    }
+  ],
   "runs": [
     {
       "run_id": "head-ct-phase1-locked-evaluation",

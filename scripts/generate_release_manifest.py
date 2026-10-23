@@ -20,6 +20,7 @@ SUPPORTED_SOURCE = (
     "requirements.txt",
     "requirements-dev.txt",
     "research/protocol.json",
+    "research/protocol_amendment_phase2.json",
     "research/experiment_registry.json",
     "stat_triage/__init__.py",
     "stat_triage/contracts.py",
@@ -83,6 +84,7 @@ SUPPORTED_SOURCE = (
     "scripts/validate_release.py",
     "scripts/experiment_registry.py",
     "scripts/rebuild_experiment_registry.py",
+    "docs/PROTOCOL_AMENDMENT_PHASE2.md",
     "scripts/multimodal_smoke.py",
     "stat_triage/results.py",
     "scripts/generate_multimodal_results.py",
@@ -405,7 +407,7 @@ def build_manifest() -> dict:
         },
         "verification": {
             "python": "3.12.7",
-            "expected_tests": 155,
+            "expected_tests": 157,
             "commands": [
                 ".\\.venv\\Scripts\\python.exe -m pip check",
                 ".\\.venv\\Scripts\\python.exe -m scripts.validate_multimodal_evidence",

@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "amendment_id": "phase2-evidence-classification-2026-10-23",
+  "amends": "research/protocol.json",
+  "status": "frozen",
+  "effective_date": "2026-10-23",
+  "reason": "Reconcile the evidence hierarchy with the actual Git and test-access chronology before manuscript preparation.",
+  "evidence_hierarchy": {
+    "retrospective_locked_baselines": [
+      "head-ct-phase1-locked-evaluation",
+      "chest-xray-locked-evaluation",
+      "knee-mri-locked-evaluation"
+    ],
+    "prospectively_specified_confirmatory": [
+      "head-ct-phase2-study-evaluation"
+    ],
+    "exploratory": [
+      "head-ct-study-size-exploratory",
+      "chest-xray-subgroup-exploratory"
+    ],
+    "post_test_exploratory": [
+      "head-ct-selective-post-test-exploratory",
+      "knee-mri-threshold-post-test-exploratory"
+    ]
+  },
+  "chronology": {
+    "multimodal_baseline_archive_commit": "5ae9adfb8d33ea9cf48bf155bc0e497a4f4c19f4",
+    "formal_protocol_first_commit": "393a2e43df6101ed097292aa00dfac490836c196",
+    "ct_phase2_protocol_commit": "2222bf9a22ddc424b6909345169a45309deef3bb",
+    "ct_phase2_final_evidence_commit": "5e8830cc8bacc8d65d6d6e140495e42e9c3b9601"
+  },
+  "reporting_rules": [
+    "Do not describe the three archived multimodal baselines as prospectively preregistered.",
+    "Reserve confirmatory language for the CT Phase 2 study-level endpoint and its locked pooling and threshold protocol.",
+    "Report exploratory analyses descriptively without multiplicity-adjusted inferential claims.",
+    "Do not use post-test exploratory findings to claim prospective operating characteristics.",
+    "Keep all clinical-use claims prohibited pending external and prospective validation."
+  ]
+}

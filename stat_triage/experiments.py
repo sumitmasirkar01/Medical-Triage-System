@@ -118,10 +118,25 @@ def build_run_record(
     }
 
 
-def initialize_registry(path: str | Path, protocol_path: str | Path, project_root: str | Path) -> None:
+def initialize_registry(
+    path: str | Path,
+    protocol_path: str | Path,
+    project_root: str | Path,
+    *,
+    amendments: Iterable[str | Path] = (),
+) -> None:
     destination = Path(path)
     protocol = _declaration(Path(project_root).resolve(), protocol_path, "research_protocol")
-    payload = {"schema_version": SCHEMA_VERSION, "protocol": protocol, "runs": []}
+    amendment_declarations = [
+        _declaration(Path(project_root).resolve(), amendment, "research_protocol_amendment")
+        for amendment in amendments
+    ]
+    payload = {
+        "schema_version": SCHEMA_VERSION,
+        "protocol": protocol,
+        "amendments": amendment_declarations,
+        "runs": [],
+    }
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
 
@@ -144,7 +159,10 @@ def validate_experiment_registry(path: str | Path, project_root: str | Path) -> 
     registry = _read_object(Path(path))
     if registry.get("schema_version") != SCHEMA_VERSION or not isinstance(registry.get("runs"), list):
         raise ExperimentRegistryError("Unsupported experiment registry schema")
-    declarations = [registry.get("protocol")]
+    amendments = registry.get("amendments", [])
+    if not isinstance(amendments, list):
+        raise ExperimentRegistryError("Protocol amendments must be a list")
+    declarations = [registry.get("protocol"), *amendments]
     identifiers: set[str] = set()
     for run in registry["runs"]:
         if not isinstance(run, dict) or not RUN_ID_PATTERN.fullmatch(str(run.get("run_id", ""))):
