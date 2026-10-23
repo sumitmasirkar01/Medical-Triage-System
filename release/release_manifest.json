@@ -4390,7 +4390,7 @@
       "stat_triage/experiments.py": "1bde43faa803c016b4542d5bdd34cc33f4f44d144214bf4c3a4fea1b43d1f2ac",
       "artifacts/multimodal_registry.json": "2723795a4fcc4b084528ba121487a1f2109baf2a9b3c15fc91989ca7b71cb16e",
       "scripts/validate_multimodal_evidence.py": "2810755791c2e4be340ff9e79926ee82589a23f15bef276ae760640f2ac6db63",
-      "scripts/validate_release.py": "e42fa141e814c335282b5c13730b4159de025a3eceff77dfb57e1b3b050f5137",
+      "scripts/validate_release.py": "b85e1236a1bf774acc2b925265b6071e912c0501f36875f340f502229165fd7d",
       "scripts/experiment_registry.py": "4837e72218c5a686a4bab9f2778701e69da04d877738ac49f2caedef0ed2e42b",
       "scripts/rebuild_experiment_registry.py": "c6f1d55dd08d5af0dada35373033c05c3a5789c981baa5f6de9331b3d1815eb7",
       "docs/PROTOCOL_AMENDMENT_PHASE2.md": "e4becc2bf5f4ec7e10d3320ecf1e105da0c39ccec0753275ad4c31ca6eec4d58",
@@ -4416,7 +4416,7 @@
   },
   "verification": {
     "python": "3.12.7",
-    "expected_tests": 163,
+    "expected_tests": 164,
     "commands": [
       ".\\.venv\\Scripts\\python.exe -m pip check",
       ".\\.venv\\Scripts\\python.exe -m scripts.validate_multimodal_evidence",

@@ -2,6 +2,7 @@
 
 from pathlib import Path
 
+import scripts.validate_release as release_validator
 from scripts.validate_release import build_validation_report
 from stat_triage.orchestration import (
     evaluate_rsna_release,
@@ -12,6 +13,40 @@ from stat_triage.orchestration import (
 ROOT = Path(__file__).resolve().parents[1]
 BUNDLE = ROOT / "artifacts" / "rsna_baseline" / "rsna_baseline_bundle"
 RELEASE = ROOT / "release" / "release_manifest.json"
+
+
+def test_release_builder_validates_experiment_registry_once(monkeypatch):
+    calls = []
+
+    monkeypatch.setattr(
+        release_validator,
+        "evaluate_rsna_release",
+        lambda *args, **kwargs: {
+            "schema_version": "2.0",
+            "status": "passed",
+            "generated_at": "2026-10-23T00:00:00+00:00",
+            "release_manifest_validation": {"status": "passed"},
+        },
+    )
+    monkeypatch.setattr(
+        release_validator,
+        "validate_multimodal_evidence_registry",
+        lambda *args, **kwargs: {"status": "passed"},
+    )
+
+    def validate_once(*args, **kwargs):
+        calls.append((args, kwargs))
+        return {"runs": [{"run_id": "run-1"}]}
+
+    monkeypatch.setattr(release_validator, "validate_experiment_registry", validate_once)
+    report = release_validator.build_validation_report()
+
+    assert len(calls) == 1
+    assert report["experiment_registry_validation"] == {
+        "status": "passed",
+        "registered_runs": 1,
+        "run_ids": ["run-1"],
+    }
 
 
 def test_release_manifest_sources_and_report_are_intact():
