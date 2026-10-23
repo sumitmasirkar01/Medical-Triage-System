@@ -5,14 +5,18 @@ from __future__ import annotations
 import pandas as pd
 import streamlit as st
 
-from stat_triage.ingestion import DICOMIngestionError, ingest_dicom_bytes
+from stat_triage.ingestion import (
+    DICOMIngestionError,
+    MAX_DICOM_UPLOAD_BYTES,
+    ingest_dicom_bytes,
+)
 from stat_triage.rsna import DEFAULT_BUNDLE_DIR, RSNAInferenceAdapter
 from stat_triage.worklist import PriorityZone, WorklistService
 
 
 st.set_page_config(
     page_title="STAT-Triage RSNA Worklist",
-    page_icon="CT",
+    page_icon=":material/radiology:",
     layout="wide",
 )
 
@@ -29,11 +33,7 @@ def get_worklist() -> WorklistService:
 
 
 def zone_badge(zone: PriorityZone) -> str:
-    return {
-        PriorityZone.RED: "🔴 RED",
-        PriorityZone.YELLOW: "🟡 YELLOW",
-        PriorityZone.GREEN: "🟢 GREEN",
-    }[zone]
+    return zone.value
 
 
 def rows_frame(rows) -> pd.DataFrame:
@@ -55,7 +55,7 @@ def rows_frame(rows) -> pd.DataFrame:
 
 
 def render_header(adapter: RSNAInferenceAdapter, active_count: int) -> None:
-    st.title("STAT-Triage · RSNA Head CT Worklist")
+    st.title("STAT-Triage · RSNA head CT worklist")
     st.caption(
         "Research demonstration · slice-level intracranial hemorrhage screening · "
         "not for clinical use"
@@ -74,7 +74,12 @@ def render_ingestion(adapter: RSNAInferenceAdapter, worklist: WorklistService) -
         "session; the score is not a population-calibrated probability."
     )
     with st.form("dicom_ingestion", clear_on_submit=True):
-        uploaded = st.file_uploader("CT DICOM file", type=["dcm", "dicom"])
+        uploaded = st.file_uploader(
+            "CT DICOM file",
+            type=["dcm", "dicom"],
+            max_upload_size=MAX_DICOM_UPLOAD_BYTES // (1024 * 1024),
+            help="Single-frame CT DICOM, maximum 32 MiB.",
+        )
         submitted = st.form_submit_button("Run inference and enqueue", type="primary")
 
     if submitted:
@@ -234,8 +239,10 @@ def main() -> None:
             }
         )
         st.warning(
-            "Current validation is slice-level and based on a deliberately enriched "
-            "2,400-slice pilot. Study-level and prospective performance are unknown."
+            "This interface runs the slice-level pilot only. A separate locked retrospective "
+            "study-level evaluation on 240 held-out patients achieved ROC-AUC 0.9078; the "
+            "interface does not implement that study aggregation. Prospective performance "
+            "remains unknown."
         )
 
 

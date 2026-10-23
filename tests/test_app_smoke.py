@@ -26,6 +26,7 @@ def test_streamlit_app_executes_supported_workflow(tmp_path):
         "Model provenance",
     ]
     assert len(rendered.file_uploader) == 1
+    assert rendered.file_uploader[0].max_upload_size_mb == 32
     assert rendered.button[0].label == "Run inference and enqueue"
     assert any("No active cases" in item.value for item in rendered.info)
 

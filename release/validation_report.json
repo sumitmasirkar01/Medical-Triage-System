@@ -1,7 +1,7 @@
 {
   "schema_version": "2.0",
   "status": "passed",
-  "generated_at": "2026-10-23T13:34:55.105486+00:00",
+  "generated_at": "2026-10-23T13:46:09.880820+00:00",
   "scope": {
     "system_type": "routed_multi_model_multimodal_imaging_triage",
     "modalities": [

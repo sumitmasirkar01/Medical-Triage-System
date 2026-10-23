@@ -1,6 +1,6 @@
 # Codebase inventory
 
-Updated: 2026-10-21.
+Updated: 2026-10-23.
 
 ## Supported
 
@@ -18,8 +18,10 @@ Updated: 2026-10-21.
 | `stat_triage/ingestion.py` | Upload parsing, input validation, and evidence-to-worklist boundary |
 | `stat_triage/worklist.py` | Deterministic priority policy, overrides, completion, and audit history |
 | `artifacts/rsna_baseline/` | Locked pilot checkpoint, predictions, configuration, metrics, and manifest |
-| `artifacts/nih_cxr14/` | Locked Chest X-ray checkpoint, calibration, predictions, and metrics |
-| `artifacts/mrnet/` | Locked knee MRI checkpoint, calibration, predictions, and metrics |
+| `artifacts/chest_xray/` | Locked Chest X-ray checkpoint, calibration, predictions, metrics, and exploratory robustness analysis |
+| `artifacts/mrnet_baseline/` | Locked knee MRI checkpoint, calibration, predictions, and metrics |
+| `artifacts/mrnet_robustness/` | Post-test exploratory knee MRI threshold analysis |
+| `artifacts/rsna_phase2/` | Locked study-level CT evidence bundles and exploratory robustness analyses |
 | `artifacts/multimodal_registry.json` | Hash-pinned registry joining all three evidence bundles |
 | `docs/STAT_Triage_RSNA_Pilot_Report.docx` | Visually reviewed report generated from the locked bundle |
 | `docs/DATASET_CONTRACTS.md` | Dataset labels, semantics, and implementation constraints |
@@ -27,6 +29,7 @@ Updated: 2026-10-21.
 | `tests/test_worklist_service.py` | Aging, ordering, override, completion, and audit regressions |
 | `tests/test_app_smoke.py` | Headless Streamlit render and supported-surface smoke test |
 | `tests/test_ingestion.py` | Valid, empty, malformed, and wrong-modality upload regressions |
+| `tests/test_multimodal_worklist.py` | Modality-safe zone routing, FIFO ordering, and override regressions |
 | `scripts/create_demo_dicom.py` | Complete de-identified DICOM fixture generator |
 | `scripts/demo_smoke.py` | Repeatable inference and worklist-action rehearsal |
 | `scripts/generate_release_manifest.py` | Deterministic evidence and source release summary |

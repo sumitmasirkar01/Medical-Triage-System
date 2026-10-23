@@ -17,8 +17,18 @@ epidural, intraparenchymal, intraventricular, subarachnoid, subdural, any
 ```
 
 The first locked test produced an `any` hemorrhage ROC-AUC of 0.8417 and
-sensitivity of 0.8831 at the calibration-selected threshold. These are pilot,
-slice-level results and do not establish study-level or clinical performance.
+sensitivity of 0.8831 at the calibration-selected threshold. A subsequent locked
+retrospective study-level evaluation, on a patient-disjoint cohort of 240 held-out
+patients, produced ROC-AUC 0.9078 (95% patient-bootstrap CI 0.8679–0.9411) and
+sensitivity 0.9565 at the previously locked study threshold. Neither result
+establishes prospective or clinical performance.
+
+The NIH ChestX-ray14 adapter has a locked official-test evaluation across four
+targets and 2,797 patients. The Stanford MRNet adapter has a locked official-valid
+evaluation treated as test across three targets and 120 exams; patient identifiers
+are unavailable for that dataset. These modalities use separate endpoints,
+thresholds, and evaluation units, so their scores and metrics must not be ranked
+against each other as if they were a common probability scale.
 
 The locked evidence bundles are under `artifacts/`. Dataset semantics and
 limitations are documented in `docs/DATASET_CONTRACTS.md`. The frozen research
@@ -42,8 +52,9 @@ docs/STAT_Triage_RSNA_Pilot_Report.docx
 
 ## Tests
 
-The active suite covers the RSNA adapter, upload boundary, supported worklist,
-and Streamlit render contract:
+The active suite covers all three adapters, evidence bundles, upload boundaries,
+modality-safe worklist behavior, release provenance, and the Streamlit render
+contract:
 
 ```powershell
 .\.venv\Scripts\python.exe -m pytest -q
@@ -55,9 +66,12 @@ and Streamlit render contract:
 .\.venv\Scripts\python.exe -m streamlit run app.py
 ```
 
-The app accepts one CT DICOM instance at a time, runs the verified slice-level
-adapter, and adds its evidence to the session-local worklist. It provides explicit
-override and completion controls with audit history.
+The app accepts one single-frame CT DICOM instance up to 32 MiB, runs the verified
+slice-level adapter, and adds its evidence to the session-local worklist. It
+provides explicit override and completion controls with audit history. The
+three-modality backend is exercised through `scripts/infer_multimodal.py` and
+`scripts/multimodal_smoke.py`; the graphical interface remains intentionally
+CT-only.
 
 Generate a complete de-identified fixture and rehearse the workflow with:
 

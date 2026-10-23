@@ -32,7 +32,8 @@ presented as diagnostic performance.
 1. Open **Model provenance** and point out the six labels, preprocessing, threshold,
    epoch, and checkpoint hash.
 2. Upload a CT DICOM in **Add DICOM**. Confirm that unsupported modalities and
-   malformed files produce an actionable error without entering the worklist.
+   malformed, multi-frame, oversized, or over-dimensioned files produce an
+   actionable error without entering the worklist.
 3. Open **Active worklist** and inspect the six scores. State that these are
    slice-level model outputs and are not population-calibrated probabilities.
 4. Apply an override with an actor ID and reason. Confirm the effective zone changes

@@ -1,6 +1,6 @@
 # Evidence registry
 
-Last verified: 2026-10-20
+Last verified: 2026-10-23
 
 ## Supported release 0.1.0
 
@@ -18,11 +18,17 @@ Last verified: 2026-10-20
 | Artifact integrity | `artifacts/rsna_baseline/rsna_baseline_bundle/bundle_manifest.json` | All nine declared files are checked for byte count and SHA-256 |
 | Release scope and deliverables | `release/release_manifest.json` | Generated deterministically by `scripts/generate_release_manifest.py` |
 | Unified release validation | `release/validation_report.json` | `scripts/validate_release.py` recomputes all three locked modality results and retains the deeper CT split, threshold, calibration, and grouped-bootstrap audit |
+| Study-level head CT evaluation | `artifacts/rsna_phase2/rsna_phase2_final_evidence_bundle.zip` | `stat_triage.ct_phase2_evidence` verifies the locked pooling rule, threshold, test predictions, grouped bootstrap, and evidence hashes |
+| Chest X-ray locked test | `artifacts/chest_xray/nih_cxr14_locked_test_bundle/` | `stat_triage.cxr` verifies the checkpoint, frozen calibration, per-target thresholds, predictions, and patient-grouped intervals |
+| Knee MRI locked test | `artifacts/mrnet_baseline/` | `stat_triage.mrnet` verifies the three-plane checkpoint, frozen calibration, exam predictions, and exam-grouped intervals |
+| Cross-modality registry | `artifacts/multimodal_registry.json` | `scripts.validate_multimodal_evidence` verifies all bundle hashes and recomputes the locked metrics without pooling unlike evaluation units |
+| Experiment provenance | `research/experiment_registry.json` | `scripts.experiment_registry validate` verifies eight evidence-producing runs, commit IDs, protocols, and artifact hashes |
+| Phase 2 evidence hierarchy | `research/protocol_amendment_phase2.json` | Separates the confirmatory CT study evaluation from exploratory and post-test exploratory analyses |
 
-This registry covers the slice-level RSNA pilot only. Chest X-ray, knee MRI, and
-study-level Head CT must receive separate rows and evidence bundles after passing
-their modality gates. Checkpoint metadata alone is never accepted as performance
-evidence.
+Checkpoint metadata alone is never accepted as performance evidence. Each claim
+above is tied to saved predictions, locked protocol artifacts, and reproducible
+validation code. Metrics across slice, image, study, and exam endpoints are
+reported separately and are not treated as directly comparable.
 
 ## Shared training objective
 
@@ -31,12 +37,12 @@ registered clipped Asymmetric Loss ablation. Both average over annotated target
 cells. Masked labels contribute no loss or gradient, allowing uncertainty and
 missing-label policies to remain explicit in each dataset manifest.
 
-## Chest X-ray work in progress
+## Chest X-ray cohort provenance
 
 The downloaded NIH inventory, split manifest, and split summary are stored in
 `artifacts/chest_xray/`. The manifest SHA-256 is
 `4617f87be669d3d41458c3e9fb4efb9710359d2c9f06876e3b3f002665d98574`.
-This is cohort evidence only; no CXR model-performance claim exists yet.
-The preprocessing audit and preview in the same directory validate six training
-images across AP/PA views and the four selected findings; they do not validate
-diagnostic performance.
+The inventory and preprocessing preview are engineering evidence only. The
+separate locked test bundle contains the model-performance evidence for 25,596
+official-test images from 2,797 patients, with frozen per-target calibration and
+2,000-replicate patient-grouped confidence intervals.
