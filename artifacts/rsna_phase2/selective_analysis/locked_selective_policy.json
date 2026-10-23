@@ -1,0 +1,48 @@
+{
+  "status": "locked",
+  "endpoint": "study_level_any_hemorrhage",
+  "selection_partition": "calibration",
+  "evaluation_partition": "test_not_loaded",
+  "threshold": 0.20713453119969927,
+  "margin_fraction": 0.155,
+  "negative_boundary": 0.17502867886374587,
+  "positive_boundary": 0.3300286788637459,
+  "minimum_coverage": 0.5,
+  "maximum_automatic_false_negative_rate": 0.05,
+  "selection_rule": "smallest_margin_meeting_coverage_and_automatic_false_negative_constraints",
+  "calibration_metrics": {
+    "total": 240,
+    "automatic": 151,
+    "abstained": 89,
+    "coverage": 0.6291666666666667,
+    "abstention_rate": 0.37083333333333335,
+    "automatic_positive": 67,
+    "automatic_negative": 84,
+    "tp": 62,
+    "tn": 80,
+    "fp": 5,
+    "fn": 4,
+    "selective_sensitivity": 0.9393939393939394,
+    "selective_specificity": 0.9411764705882353,
+    "selective_ppv": 0.9253731343283582,
+    "selective_npv": 0.9523809523809523,
+    "selective_accuracy": 0.9403973509933775,
+    "positive_abstention_rate": 0.2826086956521739,
+    "negative_abstention_rate": 0.42567567567567566,
+    "automatic_false_negative_rate_all_positives": 0.043478260869565216
+  },
+  "calibration_studies": 240,
+  "test_rows_present": 0,
+  "test_evaluated": false,
+  "analysis_status": "post_test_exploratory",
+  "prespecified_primary_policy": {
+    "minimum_coverage": 0.8,
+    "maximum_automatic_false_negative_rate": 0.05,
+    "feasible": false,
+    "failure": "no candidate abstention margin satisfies the locked constraints"
+  },
+  "provenance": {
+    "study_protocol_sha256": "44e6704566fff734a6da7449cd443b13b373f7c30152869bd59f5b1e03e8e66f",
+    "calibration_predictions_sha256": "028c4188e0b9ac5d5de5fae8208a0d1551aea6951e739c641444e471458d6770"
+  }
+}

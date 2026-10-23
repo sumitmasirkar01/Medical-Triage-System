@@ -15,11 +15,14 @@ def test_release_manifest_uses_locked_model_and_test_metrics():
     assert manifest["supported_scope"]["locked_threshold"] == 0.2538610100746155
     assert manifest["locked_test"]["images"] == 242
     assert manifest["locked_test"]["primary_metrics"]["roc_auc"] == 0.8417158598976782
-    assert manifest["verification"]["expected_tests"] == 143
+    assert manifest["verification"]["expected_tests"] == 145
     phase2 = manifest["modalities"]["head_ct"]["phase_2_study_level"]
     assert phase2["status"] == "passed"
     assert phase2["selected_pooling"] == "mean"
     assert phase2["test_evaluated_once"] is True
+    selective = phase2["selective_prediction"]
+    assert selective["analysis_status"] == "post_test_exploratory"
+    assert selective["prespecified_primary_policy"]["feasible"] is False
     assert manifest["modalities"]["chest_xray"]["checkpoint_sha256"] == (
         "609a353cf2d640ca7471e3952797b25ea4f5841d7f11fe7dfc8821dbfd9298bb"
     )

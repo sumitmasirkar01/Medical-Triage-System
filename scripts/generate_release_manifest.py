@@ -30,6 +30,7 @@ SUPPORTED_SOURCE = (
     "stat_triage/rsna.py",
     "stat_triage/ct_study.py",
     "stat_triage/ct_phase2_evidence.py",
+    "stat_triage/ct_selective.py",
     "stat_triage/thresholds.py",
     "stat_triage/selective.py",
     "stat_triage/orchestration.py",
@@ -91,6 +92,7 @@ SUPPORTED_SOURCE = (
     "scripts/validate_rsna_study_cohort.py",
     "scripts/predict_rsna_study_slices.py",
     "scripts/validate_ct_phase2_evidence.py",
+    "scripts/evaluate_ct_phase2_selective.py",
     "artifacts/rsna_phase2/evidence_registry.json",
 )
 
@@ -136,6 +138,9 @@ def build_manifest() -> dict:
     ct_phase2_dir = ROOT / "artifacts" / "rsna_phase2"
     ct_phase2 = load_json(ct_phase2_dir / "validation_report.json")
     ct_phase2_registry = load_json(ct_phase2_dir / "evidence_registry.json")
+    ct_selective_dir = ct_phase2_dir / "selective_analysis"
+    ct_selective_policy = load_json(ct_selective_dir / "locked_selective_policy.json")
+    ct_selective = load_json(ct_selective_dir / "selective_test_metrics.json")
     report = ROOT / "docs" / "STAT_Triage_RSNA_Pilot_Report.docx"
 
     return {
@@ -192,6 +197,31 @@ def build_manifest() -> dict:
                     "test_evaluated_once": True,
                     "pooling_reselected": False,
                     "threshold_reselected": False,
+                    "selective_prediction": {
+                        "analysis_status": ct_selective["analysis_status"],
+                        "prespecified_primary_policy": ct_selective[
+                            "prespecified_primary_policy"
+                        ],
+                        "exploratory_policy": {
+                            "minimum_coverage": ct_selective_policy["minimum_coverage"],
+                            "maximum_automatic_false_negative_rate": ct_selective_policy[
+                                "maximum_automatic_false_negative_rate"
+                            ],
+                            "margin_fraction": ct_selective["margin_fraction"],
+                            "negative_boundary": ct_selective["negative_boundary"],
+                            "positive_boundary": ct_selective["positive_boundary"],
+                        },
+                        "test_metrics": ct_selective["test_metrics"],
+                        "patient_grouped_bootstrap": ct_selective[
+                            "patient_grouped_bootstrap"
+                        ],
+                        "policy": declaration(
+                            ct_selective_dir / "locked_selective_policy.json"
+                        ),
+                        "report": declaration(
+                            ct_selective_dir / "selective_test_metrics.json"
+                        ),
+                    },
                 },
                 "limitations": metrics["limitations"],
             },
@@ -303,7 +333,7 @@ def build_manifest() -> dict:
         },
         "verification": {
             "python": "3.12.7",
-            "expected_tests": 143,
+            "expected_tests": 145,
             "commands": [
                 ".\\.venv\\Scripts\\python.exe -m pip check",
                 ".\\.venv\\Scripts\\python.exe -m scripts.validate_multimodal_evidence",

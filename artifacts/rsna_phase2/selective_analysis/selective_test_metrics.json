@@ -1,0 +1,104 @@
+{
+  "status": "complete",
+  "endpoint": "study_level_any_hemorrhage",
+  "evaluation_partition": "test",
+  "threshold": 0.20713453119969927,
+  "margin_fraction": 0.155,
+  "negative_boundary": 0.17502867886374587,
+  "positive_boundary": 0.3300286788637459,
+  "test_metrics": {
+    "total": 240,
+    "automatic": 136,
+    "abstained": 104,
+    "coverage": 0.5666666666666667,
+    "abstention_rate": 0.43333333333333335,
+    "automatic_positive": 68,
+    "automatic_negative": 68,
+    "tp": 57,
+    "tn": 68,
+    "fp": 11,
+    "fn": 0,
+    "selective_sensitivity": 1.0,
+    "selective_specificity": 0.8607594936708861,
+    "selective_ppv": 0.8382352941176471,
+    "selective_npv": 1.0,
+    "selective_accuracy": 0.9191176470588235,
+    "positive_abstention_rate": 0.3804347826086957,
+    "negative_abstention_rate": 0.46621621621621623,
+    "automatic_false_negative_rate_all_positives": 0.0
+  },
+  "patient_grouped_bootstrap": {
+    "confidence_level": 0.95,
+    "seed": 42,
+    "requested_replicates": 2000,
+    "sampling_unit": "patient_id",
+    "groups": 240,
+    "rows": 240,
+    "intervals": {
+      "coverage": {
+        "lower": 0.5041666666666667,
+        "upper": 0.6291666666666667,
+        "valid_replicates": 2000
+      },
+      "abstention_rate": {
+        "lower": 0.37083333333333335,
+        "upper": 0.49583333333333335,
+        "valid_replicates": 2000
+      },
+      "selective_sensitivity": {
+        "lower": 1.0,
+        "upper": 1.0,
+        "valid_replicates": 2000
+      },
+      "selective_specificity": {
+        "lower": 0.7765926157697121,
+        "upper": 0.9315146326276462,
+        "valid_replicates": 2000
+      },
+      "selective_ppv": {
+        "lower": 0.7460250201775626,
+        "upper": 0.9210526315789473,
+        "valid_replicates": 2000
+      },
+      "selective_npv": {
+        "lower": 1.0,
+        "upper": 1.0,
+        "valid_replicates": 2000
+      },
+      "selective_accuracy": {
+        "lower": 0.8702290076335878,
+        "upper": 0.9618320610687023,
+        "valid_replicates": 2000
+      },
+      "positive_abstention_rate": {
+        "lower": 0.2790641771019678,
+        "upper": 0.47438118811881175,
+        "valid_replicates": 2000
+      },
+      "negative_abstention_rate": {
+        "lower": 0.3841317240227197,
+        "upper": 0.5472972972972973,
+        "valid_replicates": 2000
+      },
+      "automatic_false_negative_rate_all_positives": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "valid_replicates": 2000
+      }
+    }
+  },
+  "margin_reselected": false,
+  "threshold_reselected": false,
+  "test_evaluated_once": true,
+  "analysis_status": "post_test_exploratory",
+  "prespecified_primary_policy": {
+    "minimum_coverage": 0.8,
+    "maximum_automatic_false_negative_rate": 0.05,
+    "feasible": false,
+    "failure": "no candidate abstention margin satisfies the locked constraints"
+  },
+  "provenance": {
+    "selective_policy_sha256": "bf16f51d4b645f7e3fe695752f29159117390f3aef474ef30b1ebbbd6caee309",
+    "study_test_predictions_sha256": "f156c12e8fffb0570ecd60ffcdbc7f94bd73e948fcd683458f52d5ee84785815"
+  }
+}
