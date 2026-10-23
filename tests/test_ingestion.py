@@ -7,6 +7,7 @@ from pydicom.dataset import FileDataset, FileMetaDataset
 from pydicom.uid import ExplicitVRLittleEndian, generate_uid
 import pytest
 
+import stat_triage.ingestion as ingestion
 from stat_triage.ingestion import DICOMIngestionError, ingest_dicom_bytes
 from stat_triage.rsna import DEFAULT_BUNDLE_DIR, RSNAInferenceAdapter
 from stat_triage.worklist import WorklistService
@@ -68,3 +69,9 @@ def test_non_ct_upload_is_rejected_before_enqueue(adapter):
     with pytest.raises(DICOMIngestionError, match="Expected a CT"):
         ingest_dicom_bytes(dicom_bytes("CR"), "chest.dcm", adapter, worklist)
     assert worklist.active_worklist() == ()
+
+
+def test_oversized_upload_is_rejected_before_dicom_parsing(adapter, monkeypatch):
+    monkeypatch.setattr(ingestion, "MAX_DICOM_UPLOAD_BYTES", 16)
+    with pytest.raises(DICOMIngestionError, match="upload limit"):
+        ingest_dicom_bytes(b"x" * 17, "oversized.dcm", adapter, WorklistService())

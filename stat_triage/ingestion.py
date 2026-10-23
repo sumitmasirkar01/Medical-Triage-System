@@ -16,6 +16,9 @@ class DICOMIngestionError(ValueError):
     """User-facing failure while reading or validating an uploaded DICOM."""
 
 
+MAX_DICOM_UPLOAD_BYTES = 32 * 1024 * 1024
+
+
 def ingest_dicom_bytes(
     payload: bytes,
     filename: str,
@@ -24,6 +27,11 @@ def ingest_dicom_bytes(
 ) -> WorklistRow:
     if not payload:
         raise DICOMIngestionError("The uploaded file is empty.")
+    if len(payload) > MAX_DICOM_UPLOAD_BYTES:
+        raise DICOMIngestionError(
+            "The uploaded DICOM exceeds the 32 MiB upload limit "
+            f"({len(payload):,} bytes received)."
+        )
     try:
         dataset = pydicom.dcmread(BytesIO(payload))
     except InvalidDicomError as exc:

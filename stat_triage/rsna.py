@@ -28,6 +28,11 @@ RSNA_LABELS = (
     "any",
 )
 
+MAX_CT_ROWS = 4096
+MAX_CT_COLUMNS = 4096
+MAX_CT_FRAMES = 1
+MAX_CT_DECODED_BYTES = 64 * 1024 * 1024
+
 def _default_bundle_dir() -> Path:
     configured = os.environ.get("STAT_TRIAGE_BUNDLE_DIR")
     if configured:
@@ -159,6 +164,7 @@ class RSNAPreprocessor:
             "SOPInstanceUID",
             "Rows",
             "Columns",
+            "BitsAllocated",
             "PhotometricInterpretation",
             "RescaleSlope",
             "RescaleIntercept",
@@ -173,6 +179,36 @@ class RSNAPreprocessor:
         if int(getattr(dataset, "SamplesPerPixel", 1)) != 1:
             raise RSNAInputError("Expected a single-channel CT image.")
         try:
+            rows = int(dataset.Rows)
+            columns = int(dataset.Columns)
+            frames = int(getattr(dataset, "NumberOfFrames", 1))
+            bits_allocated = int(dataset.BitsAllocated)
+        except (TypeError, ValueError, OverflowError) as exc:
+            raise RSNAInputError(
+                "Rows, Columns, NumberOfFrames, and BitsAllocated must be valid integers."
+            ) from exc
+        if rows <= 0 or columns <= 0:
+            raise RSNAInputError("DICOM Rows and Columns must be positive.")
+        if rows > MAX_CT_ROWS or columns > MAX_CT_COLUMNS:
+            raise RSNAInputError(
+                "DICOM dimensions exceed the supported CT limit of "
+                f"{MAX_CT_ROWS} rows by {MAX_CT_COLUMNS} columns."
+            )
+        if frames != MAX_CT_FRAMES:
+            raise RSNAInputError(
+                "Expected one single-frame CT slice; multi-frame DICOM instances are unsupported."
+            )
+        if bits_allocated <= 0 or bits_allocated > 32 or bits_allocated % 8:
+            raise RSNAInputError(
+                "BitsAllocated must be a positive multiple of 8 no greater than 32."
+            )
+        decoded_bytes = rows * columns * frames * bits_allocated // 8
+        if decoded_bytes > MAX_CT_DECODED_BYTES:
+            raise RSNAInputError(
+                "Estimated decoded pixel data exceeds the 64 MiB safety limit "
+                f"({decoded_bytes:,} bytes requested)."
+            )
+        try:
             pixels = dataset.pixel_array.astype(np.float32)
         except Exception as exc:
             raise RSNAInputError(f"Pixel data could not be decoded: {exc}") from exc
@@ -180,7 +216,9 @@ class RSNAPreprocessor:
             raise RSNAInputError(
                 f"Expected one two-dimensional CT slice; received shape {pixels.shape}."
             )
-        expected_shape = (int(dataset.Rows), int(dataset.Columns))
+        if pixels.nbytes > MAX_CT_DECODED_BYTES:
+            raise RSNAInputError("Decoded pixel data exceeds the 64 MiB safety limit.")
+        expected_shape = (rows, columns)
         if pixels.shape != expected_shape:
             raise RSNAInputError(
                 f"Decoded pixel shape {pixels.shape} does not match DICOM rows/columns {expected_shape}."

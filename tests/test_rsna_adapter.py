@@ -9,6 +9,7 @@ from pydicom.uid import ExplicitVRLittleEndian, generate_uid
 import pytest
 import torch
 
+import stat_triage.rsna as rsna
 from stat_triage.rsna import (
     DEFAULT_BUNDLE_DIR,
     RSNA_LABELS,
@@ -76,6 +77,27 @@ def test_input_contract_rejects_other_modalities_and_missing_physics(adapter):
     del missing_rescale.RescaleSlope
     with pytest.raises(RSNAInputError, match="RescaleSlope"):
         adapter.preprocessor.transform_dataset(missing_rescale)
+
+
+def test_input_contract_rejects_unsafe_dimensions_before_pixel_decode(adapter):
+    oversized = ct_dataset()
+    oversized.Rows = rsna.MAX_CT_ROWS + 1
+    with pytest.raises(RSNAInputError, match="dimensions exceed"):
+        adapter.preprocessor.transform_dataset(oversized)
+
+
+def test_input_contract_rejects_multiframe_ct_before_pixel_decode(adapter):
+    multiframe = ct_dataset()
+    multiframe.NumberOfFrames = 2
+    with pytest.raises(RSNAInputError, match="single-frame"):
+        adapter.preprocessor.transform_dataset(multiframe)
+
+
+def test_input_contract_rejects_excessive_decoded_allocation(adapter, monkeypatch):
+    dataset = ct_dataset()
+    monkeypatch.setattr(rsna, "MAX_CT_DECODED_BYTES", 1024)
+    with pytest.raises(RSNAInputError, match="decoded pixel data exceeds"):
+        adapter.preprocessor.transform_dataset(dataset)
 
 
 def test_inference_returns_named_auditable_evidence(adapter):
