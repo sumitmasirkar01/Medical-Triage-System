@@ -82,3 +82,36 @@ def test_unified_worklist_orders_overrides_completes_and_audits():
     ]
     service.complete("GREEN", actor="DR1")
     assert [row.case_id for row in service.active_worklist()] == ["RED"]
+
+
+def test_same_zone_is_fifo_without_cross_modality_score_comparison():
+    clock = [1_000.0]
+    service = UnifiedWorklistService(clock=lambda: clock[0])
+    older_mri = make_evidence(
+        Modality.KNEE_MRI, {"acl": 0.51}, {"acl": 0.5}, exam_id="MRI"
+    )
+    newer_cxr = make_evidence(
+        Modality.CHEST_XRAY,
+        {"pneumothorax": 0.1, "pleural_effusion": 0.99},
+        {"pneumothorax": 0.5, "pleural_effusion": 0.5},
+        exam_id="CXR",
+    )
+    service.enqueue(older_mri, arrival_time=900.0)
+    service.enqueue(newer_cxr, arrival_time=950.0)
+
+    rows = service.active_worklist()
+    assert [row.case_id for row in rows] == ["MRI", "CXR"]
+    assert rows[0].automatic_zone is rows[1].automatic_zone is PriorityZone.YELLOW
+
+
+def test_override_priority_matches_effective_zone():
+    service = UnifiedWorklistService(clock=lambda: 1_000.0)
+    green = make_evidence(
+        Modality.KNEE_MRI, {"acl": 0.1}, {"acl": 0.5}, exam_id="GREEN"
+    )
+    row = service.enqueue(green)
+    assert row.priority_score < 10.0
+
+    row = service.override("GREEN", PriorityZone.RED, "clinical concern", actor="DR1")
+    assert row.effective_zone is PriorityZone.RED
+    assert row.priority_score >= 20.0

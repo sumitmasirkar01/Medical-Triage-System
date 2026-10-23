@@ -16,6 +16,18 @@ RED_TARGETS: dict[Modality, frozenset[str]] = {
     Modality.KNEE_MRI: frozenset(),
 }
 
+_ZONE_BASE = {
+    PriorityZone.GREEN: 0.0,
+    PriorityZone.YELLOW: 10.0,
+    PriorityZone.RED: 20.0,
+}
+
+_ZONE_RANK = {
+    PriorityZone.GREEN: 0,
+    PriorityZone.YELLOW: 1,
+    PriorityZone.RED: 2,
+}
+
 
 @dataclass(frozen=True)
 class TriagePolicyDecision:
@@ -29,7 +41,14 @@ class TriagePolicyDecision:
 
 
 class MultimodalTriagePolicy:
-    """Map locked target decisions to workflow urgency without changing them."""
+    """Map locked decisions to zones without comparing scores across modalities.
+
+    Model scores and operating thresholds are only used inside their originating
+    endpoint to determine locked and near-threshold decisions. They never rank a
+    chest X-ray against a head CT or knee MRI. Cases share a zone-level workflow
+    score based only on their wait time; the worklist uses FIFO ordering inside
+    each effective zone.
+    """
 
     def __init__(
         self,
@@ -66,17 +85,6 @@ class MultimodalTriagePolicy:
         else:
             zone = PriorityZone.GREEN
 
-        ratios = [
-            evidence.calibrated_scores[target] / threshold
-            for target, threshold in evidence.thresholds.items()
-            if threshold > 0
-        ]
-        signal = min(max(ratios, default=0.0), 2.0)
-        zone_base = {
-            PriorityZone.GREEN: 0.0,
-            PriorityZone.YELLOW: 10.0,
-            PriorityZone.RED: 20.0,
-        }[zone]
         rationale = []
         if urgent:
             rationale.append("urgent_locked_decision:" + ",".join(urgent))
@@ -94,7 +102,7 @@ class MultimodalTriagePolicy:
             urgent_targets=urgent,
             near_threshold_targets=near,
             aged=aged,
-            priority_score=zone_base + signal + self.aging_per_minute * wait_minutes,
+            priority_score=_ZONE_BASE[zone] + self.aging_per_minute * wait_minutes,
             rationale=tuple(rationale),
         )
 
@@ -171,7 +179,16 @@ class UnifiedWorklistService:
             for case in self._cases.values()
             if case.status is CaseStatus.ACTIVE
         ]
-        return tuple(sorted(rows, key=lambda row: (-row.priority_score, row.case_id)))
+        return tuple(
+            sorted(
+                rows,
+                key=lambda row: (
+                    -_ZONE_RANK[row.effective_zone],
+                    self._cases[row.case_id].arrival_time,
+                    row.case_id,
+                ),
+            )
+        )
 
     def override(
         self, case_id: str, zone: PriorityZone, reason: str, *, actor: str
@@ -235,6 +252,8 @@ class UnifiedWorklistService:
     def _row(self, case: UnifiedWorklistCase, now: float) -> UnifiedWorklistRow:
         wait = max(0.0, (now - case.arrival_time) / 60.0)
         decision = self.policy.evaluate(case.evidence, wait)
+        effective_zone = case.override_zone or decision.zone
+        priority_score = _ZONE_BASE[effective_zone] + self.policy.aging_per_minute * wait
         return UnifiedWorklistRow(
             case_id=case.case_id,
             exam_id=case.evidence.exam_id,
@@ -244,9 +263,9 @@ class UnifiedWorklistService:
             positive_targets=decision.positive_targets,
             rationale=decision.rationale,
             wait_minutes=wait,
-            priority_score=decision.priority_score,
+            priority_score=priority_score,
             automatic_zone=decision.zone,
-            effective_zone=case.override_zone or decision.zone,
+            effective_zone=effective_zone,
             overridden=case.override_zone is not None,
             override_reason=case.override_reason,
             model_sha256=case.evidence.model_sha256,

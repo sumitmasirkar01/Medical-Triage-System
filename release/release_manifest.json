@@ -4385,7 +4385,7 @@
       "scripts/evaluate_mrnet_robustness.py": "58bab5494a57fbe3b9b55f6f3ea00e263d7dd26577139e51898874298874ce5c",
       "stat_triage/mrnet.py": "6834b724921304d586610898e5846b55b6cfc0f2fbc288ce214392278f31dcbd",
       "stat_triage/multimodal.py": "0a7794084a4a3fb769f7ecd2a5564f95b36be7064209f0cc95dcf98473d3c12b",
-      "stat_triage/multimodal_worklist.py": "34af4e61ef1b198d3232acae202b799f641a0f628f7f5ec854fbfdf58260f571",
+      "stat_triage/multimodal_worklist.py": "c14d8b5b106499b1674eeb3b218a3f50c80953b66ceb3345f1b8b8abae32acf5",
       "stat_triage/artifacts.py": "8ad36cddfd2a51d978040aed4926524d5e6439f2632c32dd242f53e69fb54c4c",
       "stat_triage/experiments.py": "1bde43faa803c016b4542d5bdd34cc33f4f44d144214bf4c3a4fea1b43d1f2ac",
       "artifacts/multimodal_registry.json": "2723795a4fcc4b084528ba121487a1f2109baf2a9b3c15fc91989ca7b71cb16e",
@@ -4416,7 +4416,7 @@
   },
   "verification": {
     "python": "3.12.7",
-    "expected_tests": 161,
+    "expected_tests": 163,
     "commands": [
       ".\\.venv\\Scripts\\python.exe -m pip check",
       ".\\.venv\\Scripts\\python.exe -m scripts.validate_multimodal_evidence",
