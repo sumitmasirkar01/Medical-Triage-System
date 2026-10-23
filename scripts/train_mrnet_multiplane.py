@@ -241,7 +241,7 @@ def main() -> None:
         history.append(row)
         print(json.dumps(row), flush=True)
 
-    state = torch.load(checkpoint_path, map_location=device, weights_only=False)
+    state = torch.load(checkpoint_path, map_location=device, weights_only=True)
     model.load_state_dict(state["model_state_dict"])
     configure_mrnet_stage(model, "upper_backbone")
     optimizer = torch.optim.AdamW(

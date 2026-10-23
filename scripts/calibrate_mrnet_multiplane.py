@@ -68,7 +68,7 @@ def main() -> None:
     rows = manifest.loc[manifest["split"] == "calibration"].reset_index(drop=True)
     if rows.empty:
         raise ValueError("Manifest has no calibration exams")
-    checkpoint = torch.load(args.checkpoint, map_location="cpu", weights_only=False)
+    checkpoint = torch.load(args.checkpoint, map_location="cpu", weights_only=True)
     if tuple(checkpoint.get("targets", ())) != MRNET_TARGETS:
         raise ValueError("Checkpoint target order does not match MRNet")
     if tuple(checkpoint.get("planes", ())) != MRNET_PLANES:
