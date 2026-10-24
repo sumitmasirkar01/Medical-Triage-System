@@ -20,7 +20,11 @@ from .triage_service import UnifiedTriageService
 from .worklist import CaseStatus, PriorityZone
 
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
+_GENESIS_HASH = "0" * 64
+_AUDIT_COUNT_KEY = "audit_event_count"
+_AUDIT_HEAD_KEY = "audit_chain_head"
+_AUDIT_ACTIONS = {"SUBMITTED", "OVERRIDDEN", "OVERRIDE_CLEARED", "COMPLETED"}
 _ZONE_BASE = {PriorityZone.GREEN: 0.0, PriorityZone.YELLOW: 10.0, PriorityZone.RED: 20.0}
 _ZONE_RANK = {PriorityZone.GREEN: 0, PriorityZone.YELLOW: 1, PriorityZone.RED: 2}
 
@@ -197,12 +201,58 @@ class PersistentCaseStore:
                 "SELECT value FROM metadata WHERE key='schema_version'"
             ).fetchone()
             if row is None:
-                connection.execute(
-                    "INSERT INTO metadata(key,value) VALUES('schema_version',?)",
-                    (str(SCHEMA_VERSION),),
+                populated = connection.execute(
+                    "SELECT (SELECT COUNT(*) FROM cases) + "
+                    "(SELECT COUNT(*) FROM audit_events) AS total"
+                ).fetchone()["total"]
+                if populated:
+                    raise CaseStoreError("case store schema metadata is missing")
+                connection.executemany(
+                    "INSERT INTO metadata(key,value) VALUES(?,?)",
+                    (
+                        ("schema_version", str(SCHEMA_VERSION)),
+                        (_AUDIT_COUNT_KEY, "0"),
+                        (_AUDIT_HEAD_KEY, _GENESIS_HASH),
+                    ),
                 )
+            elif row["value"] == "1":
+                self._migrate_v1(connection)
             elif row["value"] != str(SCHEMA_VERSION):
                 raise CaseStoreError("unsupported case store schema version")
+            self._require_audit_anchor(connection)
+            self._install_audit_guards(connection)
+
+    @staticmethod
+    def _install_audit_guards(connection: sqlite3.Connection) -> None:
+        connection.executescript("""
+            CREATE TRIGGER IF NOT EXISTS audit_events_no_update
+            BEFORE UPDATE ON audit_events
+            BEGIN
+                SELECT RAISE(ABORT, 'audit events are immutable');
+            END;
+            CREATE TRIGGER IF NOT EXISTS audit_events_no_delete
+            BEFORE DELETE ON audit_events
+            BEGIN
+                SELECT RAISE(ABORT, 'audit events are immutable');
+            END;
+        """)
+
+    def _migrate_v1(self, connection: sqlite3.Connection) -> None:
+        """Validate a legacy chain before establishing version-2 anchors."""
+        cases = tuple(self._decode_case(row) for row in connection.execute(
+            "SELECT * FROM cases ORDER BY arrival_time, case_id"
+        ).fetchall())
+        events = self._events_from_connection(connection)
+        head = self._validate_event_chain(events)
+        self._validate_case_lifecycles(cases, events)
+        connection.executemany(
+            "INSERT OR REPLACE INTO metadata(key,value) VALUES(?,?)",
+            (
+                (_AUDIT_COUNT_KEY, str(len(events))),
+                (_AUDIT_HEAD_KEY, head),
+                ("schema_version", str(SCHEMA_VERSION)),
+            ),
+        )
 
     def create(self, case_id: str, outcome: TriageOutcome, *, actor: str = "system") -> StoredCase:
         if not isinstance(case_id, str) or not case_id.strip() or not actor.strip():
@@ -294,20 +344,56 @@ class PersistentCaseStore:
         return self.get(case_id)
 
     def audit_history(self, case_id: str | None = None) -> tuple[PersistentAuditEvent, ...]:
-        query = "SELECT * FROM audit_events" + (" WHERE case_id=?" if case_id else "") + " ORDER BY sequence"
         with self._connect() as connection:
-            if case_id and connection.execute("SELECT 1 FROM cases WHERE case_id=?", (case_id,)).fetchone() is None:
+            connection.execute("BEGIN")
+            cases = tuple(self._decode_case(row) for row in connection.execute(
+                "SELECT * FROM cases ORDER BY arrival_time, case_id"
+            ).fetchall())
+            events = self._events_from_connection(connection)
+            expected_count, expected_head = self._require_audit_anchor(connection)
+            self._validate_snapshot(cases, events, expected_count, expected_head)
+            if case_id and all(case.case_id != case_id for case in cases):
                 raise KeyError(case_id)
-            rows = connection.execute(query, (case_id,) if case_id else ()).fetchall()
-        return tuple(self._decode_event(row) for row in rows)
+        return tuple(event for event in events if case_id is None or event.case_id == case_id)
 
     def validate_integrity(self) -> dict[str, int | str]:
-        cases = self.list_cases()
-        events = self.audit_history()
-        previous = "0" * 64
+        with self._connect() as connection:
+            cases = tuple(self._decode_case(row) for row in connection.execute(
+                "SELECT * FROM cases ORDER BY arrival_time, case_id"
+            ).fetchall())
+            events = self._events_from_connection(connection)
+            expected_count, expected_head = self._require_audit_anchor(connection)
+        self._validate_snapshot(cases, events, expected_count, expected_head)
+        return {"status": "passed", "cases": len(cases), "audit_events": len(events)}
+
+    @classmethod
+    def _validate_snapshot(
+        cls,
+        cases: tuple[StoredCase, ...],
+        events: tuple[PersistentAuditEvent, ...],
+        expected_count: int,
+        expected_head: str,
+    ) -> None:
+        head = cls._validate_event_chain(events)
+        if len(events) != expected_count:
+            raise CaseIntegrityError("audit event count mismatch")
+        if head != expected_head:
+            raise CaseIntegrityError("audit chain head mismatch")
+        cls._validate_case_lifecycles(cases, events)
+
+    @staticmethod
+    def _validate_event_chain(events: tuple[PersistentAuditEvent, ...]) -> str:
+        previous = _GENESIS_HASH
+        expected_sequence = 1
         for event in events:
+            if event.sequence != expected_sequence:
+                raise CaseIntegrityError("audit event sequence mismatch")
             if event.previous_hash != previous:
                 raise CaseIntegrityError("audit chain previous hash mismatch")
+            if event.action not in _AUDIT_ACTIONS:
+                raise CaseIntegrityError("unknown audit action")
+            if not event.actor.strip() or not math.isfinite(event.timestamp):
+                raise CaseIntegrityError("invalid audit event fields")
             payload = {
                 "timestamp": event.timestamp, "case_id": event.case_id,
                 "action": event.action, "actor": event.actor,
@@ -316,7 +402,70 @@ class PersistentCaseStore:
             if _digest(payload) != event.event_hash:
                 raise CaseIntegrityError("audit event hash mismatch")
             previous = event.event_hash
-        return {"status": "passed", "cases": len(cases), "audit_events": len(events)}
+            expected_sequence += 1
+        return previous
+
+    @staticmethod
+    def _validate_case_lifecycles(
+        cases: tuple[StoredCase, ...], events: tuple[PersistentAuditEvent, ...]
+    ) -> None:
+        by_case: dict[str, list[PersistentAuditEvent]] = {case.case_id: [] for case in cases}
+        for event in events:
+            if event.case_id not in by_case:
+                raise CaseIntegrityError(f"audit event references unknown case: {event.case_id}")
+            by_case[event.case_id].append(event)
+
+        for case in cases:
+            history = by_case[case.case_id]
+            submitted = [event for event in history if event.action == "SUBMITTED"]
+            if len(submitted) != 1 or not history or history[0].action != "SUBMITTED":
+                raise CaseIntegrityError(f"case must have exactly one initial submission: {case.case_id}")
+            first = history[0]
+            expected_initial = "ACTIVE" if case.outcome.evidence is not None else "REJECTED"
+            if first.timestamp != case.arrival_time:
+                raise CaseIntegrityError(f"case submission timestamp mismatch: {case.case_id}")
+            if first.details.get("status") != expected_initial:
+                raise CaseIntegrityError(f"case submission status mismatch: {case.case_id}")
+            if first.details.get("disposition") != case.outcome.disposition.value:
+                raise CaseIntegrityError(f"case submission disposition mismatch: {case.case_id}")
+
+            status = expected_initial
+            override_zone = None
+            override_reason = None
+            completed_at = None
+            for event in history[1:]:
+                if status != "ACTIVE" or event.action == "SUBMITTED":
+                    raise CaseIntegrityError(f"invalid case event transition: {case.case_id}")
+                if event.action == "OVERRIDDEN":
+                    try:
+                        override_zone = PriorityZone(event.details["zone"])
+                    except (KeyError, ValueError) as exc:
+                        raise CaseIntegrityError(
+                            f"invalid override audit event: {case.case_id}"
+                        ) from exc
+                    override_reason = event.details.get("reason")
+                    if not override_reason:
+                        raise CaseIntegrityError(f"missing override reason: {case.case_id}")
+                elif event.action == "OVERRIDE_CLEARED":
+                    if override_zone is None or event.details.get("previous_zone") != override_zone.value:
+                        raise CaseIntegrityError(f"invalid override clear event: {case.case_id}")
+                    if not event.details.get("reason"):
+                        raise CaseIntegrityError(f"missing override clear reason: {case.case_id}")
+                    override_zone = None
+                    override_reason = None
+                elif event.action == "COMPLETED":
+                    status = "COMPLETED"
+                    completed_at = event.timestamp
+                else:
+                    raise CaseIntegrityError(f"invalid case event transition: {case.case_id}")
+
+            if (
+                case.status != status
+                or case.override_zone != override_zone
+                or case.override_reason != override_reason
+                or case.completed_at != completed_at
+            ):
+                raise CaseIntegrityError(f"case lifecycle state mismatch: {case.case_id}")
 
     def _decode_case(self, row: sqlite3.Row) -> StoredCase:
         payload = _case_payload(
@@ -337,19 +486,59 @@ class PersistentCaseStore:
         )
 
     def _append_event(self, connection, case_id, action, actor, details, timestamp):
-        last = connection.execute(
-            "SELECT event_hash FROM audit_events ORDER BY sequence DESC LIMIT 1"
+        expected_count, expected_head = self._require_audit_anchor(connection)
+        actual = connection.execute(
+            "SELECT COUNT(*) AS count, COALESCE((SELECT event_hash FROM audit_events "
+            "ORDER BY sequence DESC LIMIT 1), ?) AS head FROM audit_events",
+            (_GENESIS_HASH,),
         ).fetchone()
-        previous = last["event_hash"] if last else "0" * 64
+        if actual["count"] != expected_count or actual["head"] != expected_head:
+            raise CaseIntegrityError("audit anchor mismatch before append")
+        previous = expected_head
         clean_details = {str(key): str(value) for key, value in details.items() if value is not None}
         payload = {
             "timestamp": timestamp, "case_id": case_id, "action": action,
             "actor": actor, "details": clean_details, "previous_hash": previous,
         }
+        event_hash = _digest(payload)
         connection.execute(
             "INSERT INTO audit_events(timestamp,case_id,action,actor,details_json,previous_hash,event_hash) VALUES(?,?,?,?,?,?,?)",
-            (timestamp, case_id, action, actor, _canonical(clean_details), previous, _digest(payload)),
+            (timestamp, case_id, action, actor, _canonical(clean_details), previous, event_hash),
         )
+        connection.executemany(
+            "UPDATE metadata SET value=? WHERE key=?",
+            ((str(expected_count + 1), _AUDIT_COUNT_KEY), (event_hash, _AUDIT_HEAD_KEY)),
+        )
+
+    @staticmethod
+    def _require_audit_anchor(connection: sqlite3.Connection) -> tuple[int, str]:
+        rows = connection.execute(
+            "SELECT key,value FROM metadata WHERE key IN (?,?)",
+            (_AUDIT_COUNT_KEY, _AUDIT_HEAD_KEY),
+        ).fetchall()
+        values = {row["key"]: row["value"] for row in rows}
+        try:
+            count = int(values[_AUDIT_COUNT_KEY])
+            head = values[_AUDIT_HEAD_KEY]
+        except (KeyError, TypeError, ValueError) as exc:
+            raise CaseIntegrityError("audit anchor metadata is missing or invalid") from exc
+        if count < 0 or len(head) != 64 or any(char not in "0123456789abcdef" for char in head):
+            raise CaseIntegrityError("audit anchor metadata is invalid")
+        if count == 0 and head != _GENESIS_HASH:
+            raise CaseIntegrityError("empty audit anchor has a non-genesis head")
+        if count > 0 and head == _GENESIS_HASH:
+            raise CaseIntegrityError("non-empty audit anchor has a genesis head")
+        return count, head
+
+    @classmethod
+    def _events_from_connection(
+        cls, connection: sqlite3.Connection
+    ) -> tuple[PersistentAuditEvent, ...]:
+        rows = connection.execute("SELECT * FROM audit_events ORDER BY sequence").fetchall()
+        try:
+            return tuple(cls._decode_event(row) for row in rows)
+        except (TypeError, ValueError, json.JSONDecodeError) as exc:
+            raise CaseIntegrityError("invalid audit event encoding") from exc
 
     @staticmethod
     def _decode_event(row: sqlite3.Row) -> PersistentAuditEvent:

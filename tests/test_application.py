@@ -134,7 +134,19 @@ def test_health_fails_closed_when_integrity_is_broken(tmp_path):
     app.submit(ChestXrayRequest("x.png"), case_id="CASE", actor=TECHNICIAN)
     assert app.health().code == "healthy"
     with sqlite3.connect(app.store.path) as connection:
+        connection.execute("DROP TRIGGER audit_events_no_update")
         connection.execute("UPDATE audit_events SET actor='tampered'")
     response = app.health()
     assert response.ok is False
     assert response.code == "unhealthy"
+
+
+def test_audit_retrieval_fails_closed_when_history_is_deleted(tmp_path):
+    app = application(tmp_path)
+    app.submit(ChestXrayRequest("x.png"), case_id="CASE", actor=TECHNICIAN)
+    with sqlite3.connect(app.store.path) as connection:
+        connection.execute("DROP TRIGGER audit_events_no_delete")
+        connection.execute("DELETE FROM audit_events")
+    response = app.audit(actor=AUDITOR, case_id="CASE")
+    assert response.ok is False
+    assert response.code == "case_integrity_failure"

@@ -4389,7 +4389,7 @@
       "stat_triage/triage_outcome.py": "a6be4cef1d2a35e1b3e8a14f1e432e5793c3b9c6e661770d7364e1e666e8caca",
       "stat_triage/ct_series.py": "4dea07609e6ee46e1e6679d1291464fc9a43d97ef3ec5a56ed2a922e90a313a0",
       "stat_triage/triage_service.py": "802234421fa20dae4d9c4b6d943a230a9ae24feb265eba29e3272d2e22842a77",
-      "stat_triage/persistent_cases.py": "146c6ed077538b60fc29be80a309d217961e5e9d775f10c9cac4b508eea5f185",
+      "stat_triage/persistent_cases.py": "c7a9bdf09e279ab3e79d2fcbb4d711993facf045a4b8f918e42d89a90cc5b92e",
       "stat_triage/application.py": "fef2cf7f6909199c0d8770067bc306191747d60e05a034b8d6348b3789091587",
       "stat_triage/artifacts.py": "8ad36cddfd2a51d978040aed4926524d5e6439f2632c32dd242f53e69fb54c4c",
       "stat_triage/experiments.py": "1bde43faa803c016b4542d5bdd34cc33f4f44d144214bf4c3a4fea1b43d1f2ac",
@@ -4402,7 +4402,7 @@
       "docs/PHASE3_TRIAGE_CONTRACT.md": "f349d65361610eda6641ec0e9d716ed1bedcdeddc887f35ee3d804b1d0f30504",
       "docs/PHASE3_CT_SERIES_INGESTION.md": "6e05755a2f67f68faa1ee81b99948ded029b98d20581aaafe50602f853885b5f",
       "docs/PHASE3_UNIFIED_SERVICE.md": "c3c69aac0dbacdb443a9fc8094e026c58dbd22c1d97190c0d35b5bc29c526726",
-      "docs/PHASE3_PERSISTENT_ORCHESTRATION.md": "94f2f32b1d1d660ab7623af806f290eb7b3cc307a512f7f3dcc0b3e400ef46c8",
+      "docs/PHASE3_PERSISTENT_ORCHESTRATION.md": "91e2086c6d8840c1b982d5e2046b7297688fb5323e974aae1e72df49a94a5454",
       "docs/PHASE3_APPLICATION_BOUNDARY.md": "71be708a6d63c48b85994ccf1313e30705c145c26311f343e90c0fd88d3c48e4",
       "scripts/multimodal_smoke.py": "088a995b4e0fc6be129df870ac897784ce3e7557d88bb970968556784b7723d5",
       "stat_triage/results.py": "d36a4102e0346e66bc1a0da6fad7bf3a0f7340f1903565f0efaf565f9a786627",
@@ -4426,7 +4426,7 @@
   },
   "verification": {
     "python": "3.12.7",
-    "expected_tests": 207,
+    "expected_tests": 213,
     "commands": [
       ".\\.venv\\Scripts\\python.exe -m pip check",
       ".\\.venv\\Scripts\\python.exe -m scripts.validate_multimodal_evidence",
