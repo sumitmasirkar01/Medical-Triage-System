@@ -5,6 +5,7 @@ from PIL import Image
 import pytest
 import torch
 
+from stat_triage.datasets import nih_preprocessing
 from stat_triage.datasets.nih_preprocessing import (
     NIHImageError,
     decode_nih_radiograph,
@@ -55,4 +56,36 @@ def test_corrupt_image_is_rejected(tmp_path):
 
     with pytest.raises(NIHImageError, match="could not be decoded"):
         decode_nih_radiograph(source)
+
+
+def test_file_size_limit_is_checked_before_image_decode(tmp_path, monkeypatch):
+    source = tmp_path / "large.png"
+    source.write_bytes(b"not-decoded")
+    monkeypatch.setattr(nih_preprocessing, "MAX_NIH_IMAGE_FILE_BYTES", 4)
+
+    with pytest.raises(NIHImageError, match="file exceeds") as error:
+        decode_nih_radiograph(source)
+    assert error.value.code == "input_resource_limit"
+
+
+def test_dimensions_and_pixels_are_bounded_before_conversion(tmp_path, monkeypatch):
+    source = tmp_path / "bounded.png"
+    Image.new("L", (20, 10), color=1).save(source)
+    monkeypatch.setattr(nih_preprocessing, "MAX_NIH_IMAGE_WIDTH", 10)
+    with pytest.raises(NIHImageError, match="dimensions exceed"):
+        decode_nih_radiograph(source)
+
+    monkeypatch.setattr(nih_preprocessing, "MAX_NIH_IMAGE_WIDTH", 100)
+    monkeypatch.setattr(nih_preprocessing, "MAX_NIH_IMAGE_PIXELS", 100)
+    with pytest.raises(NIHImageError, match="pixel limit"):
+        decode_nih_radiograph(source)
+
+
+def test_multichannel_decoded_memory_is_bounded(tmp_path, monkeypatch):
+    source = tmp_path / "rgb.png"
+    Image.new("RGB", (10, 10), color=(1, 2, 3)).save(source)
+    monkeypatch.setattr(nih_preprocessing, "MAX_NIH_DECODED_BYTES", 299)
+    with pytest.raises(NIHImageError, match="decoded representation") as error:
+        decode_nih_radiograph(source)
+    assert error.value.code == "input_resource_limit"
 

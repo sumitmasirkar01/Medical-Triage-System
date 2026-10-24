@@ -13,10 +13,23 @@ from torch import Tensor
 
 IMAGENET_MEAN = (0.485, 0.456, 0.406)
 IMAGENET_STD = (0.229, 0.224, 0.225)
+MAX_NIH_IMAGE_FILE_BYTES = 32 * 1024 * 1024
+MAX_NIH_IMAGE_WIDTH = 8192
+MAX_NIH_IMAGE_HEIGHT = 8192
+MAX_NIH_IMAGE_PIXELS = 32 * 1024 * 1024
+MAX_NIH_DECODED_BYTES = 128 * 1024 * 1024
 
 
 class NIHImageError(ValueError):
     """A radiograph cannot satisfy the locked image input contract."""
+
+    def __init__(self, message: str, *, code: str = "image_decode_failed") -> None:
+        super().__init__(message)
+        self.code = code
+
+
+def _resource_error(message: str) -> NIHImageError:
+    return NIHImageError(message, code="input_resource_limit")
 
 
 @dataclass(frozen=True)
@@ -39,6 +52,11 @@ def decode_nih_radiograph(path: str | Path) -> tuple[np.ndarray, NIHImageInspect
     source = Path(path)
     if not source.is_file():
         raise NIHImageError(f"Image does not exist: {source}")
+    file_bytes = source.stat().st_size
+    if file_bytes > MAX_NIH_IMAGE_FILE_BYTES:
+        raise _resource_error(
+            f"Image file exceeds {MAX_NIH_IMAGE_FILE_BYTES} bytes"
+        )
     try:
         with Image.open(source) as image:
             image_format = image.format or "UNKNOWN"
@@ -46,6 +64,27 @@ def decode_nih_radiograph(path: str | Path) -> tuple[np.ndarray, NIHImageInspect
             original_width, original_height = image.size
             if original_width <= 0 or original_height <= 0:
                 raise NIHImageError(f"Image has invalid dimensions: {image.size}")
+            if (
+                original_width > MAX_NIH_IMAGE_WIDTH
+                or original_height > MAX_NIH_IMAGE_HEIGHT
+            ):
+                raise _resource_error(
+                    "Image dimensions exceed the supported maximum of "
+                    f"{MAX_NIH_IMAGE_WIDTH} by {MAX_NIH_IMAGE_HEIGHT}"
+                )
+            pixels = original_width * original_height
+            if pixels > MAX_NIH_IMAGE_PIXELS:
+                raise _resource_error(
+                    f"Image exceeds the {MAX_NIH_IMAGE_PIXELS}-pixel limit"
+                )
+            # Conservatively cover the source raster, grayscale conversion, and
+            # copied NumPy output without trusting compressed file size.
+            estimated_decoded_bytes = pixels * (max(4, len(image.getbands())) + 2)
+            if estimated_decoded_bytes > MAX_NIH_DECODED_BYTES:
+                raise _resource_error(
+                    "Image decoded representation exceeds "
+                    f"{MAX_NIH_DECODED_BYTES} bytes"
+                )
             grayscale = np.asarray(image.convert("L"), dtype=np.uint8).copy()
     except NIHImageError:
         raise
@@ -53,6 +92,8 @@ def decode_nih_radiograph(path: str | Path) -> tuple[np.ndarray, NIHImageInspect
         raise NIHImageError(f"Image could not be decoded: {source}: {exc}") from exc
     if grayscale.ndim != 2 or grayscale.size == 0:
         raise NIHImageError(f"Decoded image is not two-dimensional: {source}")
+    if grayscale.nbytes > MAX_NIH_DECODED_BYTES:
+        raise _resource_error("Decoded grayscale image exceeds the memory limit")
     inspection = NIHImageInspection(
         path=str(source),
         format=image_format,

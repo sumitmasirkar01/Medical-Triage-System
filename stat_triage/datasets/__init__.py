@@ -28,9 +28,12 @@ from .mrnet import (
 )
 from .mrnet_preprocessing import (
     MRNetVolumeError,
+    MRNetVolumeHeader,
     MRNetVolumeInspection,
+    inspect_mrnet_volume_header,
     load_mrnet_volume,
     preprocess_mrnet_volume,
+    validate_mrnet_exam_resources,
 )
 from .mrnet_training import (
     MRNetExamDataset,
@@ -62,9 +65,12 @@ __all__ = [
     "build_mrnet_manifest",
     "discover_mrnet_layout",
     "MRNetVolumeError",
+    "MRNetVolumeHeader",
     "MRNetVolumeInspection",
+    "inspect_mrnet_volume_header",
     "load_mrnet_volume",
     "preprocess_mrnet_volume",
+    "validate_mrnet_exam_resources",
     "MRNetExamDataset",
     "collate_mrnet_exams",
     "compute_mrnet_positive_weights",

@@ -8,9 +8,11 @@ import pytest
 
 from scripts.create_demo_dicom import create_demo_ct
 from stat_triage.contracts import Modality, ModelEvidence
+from stat_triage.datasets import mrnet_preprocessing, nih_preprocessing
 from stat_triage.multimodal import (
     ChestXrayRequest,
     HeadCTRequest,
+    InferenceIssue,
     KneeMRIRequest,
     UnifiedInferenceError,
     UnifiedInferenceRouter,
@@ -49,6 +51,18 @@ def test_unreadable_chest_xray_is_rejected(real_router, tmp_path):
         real_router.predict(ChestXrayRequest(source))
 
 
+def test_oversized_chest_xray_has_stable_resource_error(
+    real_router, tmp_path, monkeypatch
+):
+    source = tmp_path / "oversized.png"
+    source.write_bytes(b"larger-than-limit")
+    monkeypatch.setattr(nih_preprocessing, "MAX_NIH_IMAGE_FILE_BYTES", 4)
+    with pytest.raises(UnifiedInferenceError) as error:
+        real_router.predict(ChestXrayRequest(source))
+    assert error.value.code == "input_resource_limit"
+    assert error.value.issue is InferenceIssue.FAILED
+
+
 def test_missing_mri_plane_fails_with_plane_context(real_router, tmp_path):
     valid = np.zeros((3, 32, 32), dtype=np.uint8)
     coronal = tmp_path / "coronal.npy"
@@ -80,6 +94,26 @@ def test_malformed_mri_shape_fails_closed(real_router, tmp_path):
                 exam_id="MALFORMED",
             )
         )
+
+
+def test_oversized_mri_exam_has_stable_resource_error(
+    real_router, tmp_path, monkeypatch
+):
+    paths = {}
+    for plane in ("axial", "coronal", "sagittal"):
+        path = tmp_path / f"{plane}.npy"
+        np.save(path, np.zeros((3, 16, 16), dtype=np.uint8))
+        paths[plane] = path
+    monkeypatch.setattr(mrnet_preprocessing, "MAX_MRNET_EXAM_DECODED_BYTES", 2000)
+    with pytest.raises(UnifiedInferenceError) as error:
+        real_router.predict(
+            KneeMRIRequest(
+                axial_path=paths["axial"], coronal_path=paths["coronal"],
+                sagittal_path=paths["sagittal"], exam_id="OVERSIZED",
+            )
+        )
+    assert error.value.code == "input_resource_limit"
+    assert error.value.issue is InferenceIssue.FAILED
 
 
 def test_unsupported_request_object_is_rejected_without_guessing(real_router):

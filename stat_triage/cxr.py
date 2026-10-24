@@ -209,7 +209,7 @@ class NIHChestXrayAdapter:
             endpoint="nih_cxr14_four_target_triage",
             model_id=f"densenet121_epoch_{self.model_epoch}",
             model_sha256=self.model_sha256,
-            preprocess_version="nih_grayscale_aspect_pad_imagenet_v1",
+            preprocess_version="nih_grayscale_aspect_pad_imagenet_bounded_v2",
             raw_scores=raw_scores,
             calibrated_scores=calibrated_scores,
             thresholds=self.thresholds,

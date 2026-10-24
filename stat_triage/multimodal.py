@@ -296,9 +296,18 @@ class UnifiedInferenceRouter:
             raise UnifiedInferenceError(str(exc), issue=issue, code=exc.code) from exc
         except NIHImageError as exc:
             raise UnifiedInferenceError(
-                str(exc), issue=InferenceIssue.FAILED, code="image_decode_failed"
+                str(exc), issue=InferenceIssue.FAILED,
+                code=getattr(exc, "code", "image_decode_failed"),
             ) from exc
-        except (RSNAInputError, MRNetInputError, MRNetVolumeError) as exc:
+        except (MRNetInputError, MRNetVolumeError) as exc:
+            code = getattr(exc, "code", "input_contract_violation")
+            issue = (
+                InferenceIssue.FAILED
+                if code == "input_resource_limit"
+                else InferenceIssue.UNSUPPORTED
+            )
+            raise UnifiedInferenceError(str(exc), issue=issue, code=code) from exc
+        except RSNAInputError as exc:
             raise UnifiedInferenceError(
                 str(exc), issue=InferenceIssue.UNSUPPORTED,
                 code="input_contract_violation",

@@ -16,7 +16,11 @@ import torch
 from .calibration import sigmoid
 from .contracts import Modality, ModelEvidence
 from .datasets.mrnet import MRNET_PLANES, MRNET_TARGETS
-from .datasets.mrnet_preprocessing import MRNetVolumeError, preprocess_mrnet_volume
+from .datasets.mrnet_preprocessing import (
+    MRNetVolumeError,
+    preprocess_mrnet_volume,
+    validate_mrnet_exam_resources,
+)
 from .evaluation import binary_metrics
 from .models import MRNetMultiPlaneModel
 
@@ -41,6 +45,10 @@ class MRNetEvidenceError(ValueError):
 
 class MRNetInputError(ValueError):
     """A knee MRI input cannot satisfy the three-plane MRNet contract."""
+
+    def __init__(self, message: str, *, code: str = "input_contract_violation") -> None:
+        super().__init__(message)
+        self.code = code
 
 
 def _sha256(path: Path) -> str:
@@ -224,11 +232,21 @@ class MRNetInferenceAdapter:
     ) -> tuple[dict[str, torch.Tensor], dict[str, torch.Tensor]]:
         volumes: dict[str, torch.Tensor] = {}
         masks: dict[str, torch.Tensor] = {}
+        try:
+            validate_mrnet_exam_resources(paths, size=224)
+        except (MRNetVolumeError, OSError, ValueError) as exc:
+            raise MRNetInputError(
+                f"Invalid MRI exam resources: {exc}",
+                code=getattr(exc, "code", "input_contract_violation"),
+            ) from exc
         for plane in MRNET_PLANES:
             try:
                 tensor, _, _ = preprocess_mrnet_volume(paths[plane], size=224)
             except (MRNetVolumeError, OSError, ValueError) as exc:
-                raise MRNetInputError(f"Invalid {plane} volume: {exc}") from exc
+                raise MRNetInputError(
+                    f"Invalid {plane} volume: {exc}",
+                    code=getattr(exc, "code", "input_contract_violation"),
+                ) from exc
             volumes[plane] = tensor.unsqueeze(0).to(self.device)
             masks[plane] = torch.ones(
                 (1, tensor.shape[0]), dtype=torch.bool, device=self.device
@@ -284,7 +302,7 @@ class MRNetInferenceAdapter:
             endpoint="mrnet_three_target_exam_triage",
             model_id=f"shared_resnet18_three_plane_epoch_{self.model_epoch}",
             model_sha256=self.model_sha256,
-            preprocess_version="mrnet_uint8_resize224_imagenet_v1",
+            preprocess_version="mrnet_uint8_resize224_imagenet_bounded_v2",
             raw_scores=raw_scores,
             calibrated_scores=calibrated_scores,
             thresholds=self.thresholds,
