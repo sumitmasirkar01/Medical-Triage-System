@@ -77,6 +77,7 @@ SUPPORTED_SOURCE = (
     "stat_triage/mrnet.py",
     "stat_triage/multimodal.py",
     "stat_triage/multimodal_worklist.py",
+    "stat_triage/triage_outcome.py",
     "stat_triage/artifacts.py",
     "stat_triage/experiments.py",
     "artifacts/multimodal_registry.json",
@@ -85,6 +86,7 @@ SUPPORTED_SOURCE = (
     "scripts/experiment_registry.py",
     "scripts/rebuild_experiment_registry.py",
     "docs/PROTOCOL_AMENDMENT_PHASE2.md",
+    "docs/PHASE3_TRIAGE_CONTRACT.md",
     "scripts/multimodal_smoke.py",
     "stat_triage/results.py",
     "scripts/generate_multimodal_results.py",
@@ -407,7 +409,7 @@ def build_manifest() -> dict:
         },
         "verification": {
             "python": "3.12.7",
-            "expected_tests": 164,
+            "expected_tests": 169,
             "commands": [
                 ".\\.venv\\Scripts\\python.exe -m pip check",
                 ".\\.venv\\Scripts\\python.exe -m scripts.validate_multimodal_evidence",

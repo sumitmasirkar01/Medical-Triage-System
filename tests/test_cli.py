@@ -56,7 +56,9 @@ def test_cli_returns_strict_common_evidence_and_optional_triage(tmp_path):
     assert result["status"] == "complete"
     assert result["evidence"]["modality"] == "chest_xray"
     assert result["evidence"]["exam_id"] == "CXR-1"
-    assert result["triage"]["zone"] == "YELLOW"
+    assert result["triage"]["disposition"] == "YELLOW"
+    assert result["triage"]["assessment"] == "supported_finding_detected"
+    assert result["triage"]["requires_human_review"] is True
 
 
 def test_cli_rejects_missing_input_before_loading_model(tmp_path):

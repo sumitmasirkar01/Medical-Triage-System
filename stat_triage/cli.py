@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-from dataclasses import asdict
 from pathlib import Path
 from typing import Sequence
 
@@ -15,6 +14,7 @@ from .multimodal import (
     UnifiedInferenceRouter,
 )
 from .multimodal_worklist import MultimodalTriagePolicy
+from .triage_outcome import TriageOutcome
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -108,10 +108,7 @@ def run_inference(
     }
     if arguments.with_triage:
         decision = MultimodalTriagePolicy().evaluate(evidence, wait_minutes=0)
-        result["triage"] = {
-            **asdict(decision),
-            "zone": decision.zone.value,
-        }
+        result["triage"] = TriageOutcome.from_policy(evidence, decision).to_dict()
     return result
 
 

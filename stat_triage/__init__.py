@@ -87,6 +87,12 @@ from .multimodal_worklist import (
     UnifiedWorklistRow,
     UnifiedWorklistService,
 )
+from .triage_outcome import (
+    FindingAssessment,
+    TriageDisposition,
+    TriageOutcome,
+    TriageOutcomeError,
+)
 from .artifacts import (
     DEFAULT_MULTIMODAL_REGISTRY,
     MultimodalRegistryError,
@@ -166,6 +172,10 @@ __all__ = [
     "TriagePolicyDecision",
     "UnifiedWorklistRow",
     "UnifiedWorklistService",
+    "FindingAssessment",
+    "TriageDisposition",
+    "TriageOutcome",
+    "TriageOutcomeError",
     "DEFAULT_MULTIMODAL_REGISTRY",
     "MultimodalRegistryError",
     "validate_multimodal_evidence_registry",
