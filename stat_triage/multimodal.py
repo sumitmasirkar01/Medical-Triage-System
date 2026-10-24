@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from enum import Enum
 import gc
 from pathlib import Path
 import time
@@ -13,12 +14,20 @@ import torch
 from pydicom.errors import InvalidDicomError
 
 from .contracts import Modality, ModelEvidence
-from .cxr import DEFAULT_CXR_BUNDLE_DIR, NIHChestXrayAdapter
+from .cxr import CXREvidenceError, DEFAULT_CXR_BUNDLE_DIR, NIHChestXrayAdapter
+from .ct_series import CTSeriesInputError, CTSeriesIssue, HeadCTStudyInferenceAdapter
+from .datasets.mrnet_preprocessing import MRNetVolumeError
+from .datasets.nih_preprocessing import NIHImageError
 from .datasets.mrnet import MRNET_PLANES, MRNET_TARGETS
 from .datasets.nih_training import NIH_TARGET_ORDER
 from .evaluation import sha256
-from .mrnet import DEFAULT_MRNET_BUNDLE_DIR, MRNetInferenceAdapter
-from .rsna import DEFAULT_BUNDLE_DIR, RSNAInferenceAdapter, RSNA_LABELS
+from .mrnet import (
+    DEFAULT_MRNET_BUNDLE_DIR,
+    MRNetEvidenceError,
+    MRNetInferenceAdapter,
+    MRNetInputError,
+)
+from .rsna import DEFAULT_BUNDLE_DIR, RSNAInferenceAdapter, RSNAInputError, RSNA_LABELS
 
 
 @dataclass(frozen=True)
@@ -89,6 +98,16 @@ class HeadCTRequest:
 
 
 @dataclass(frozen=True)
+class HeadCTStudyRequest:
+    dicom_paths: tuple[Path, ...]
+
+    def __init__(self, dicom_paths: tuple[str | Path, ...] | list[str | Path]) -> None:
+        if isinstance(dicom_paths, (str, bytes, Path)):
+            raise TypeError("dicom_paths must be a sequence of paths")
+        object.__setattr__(self, "dicom_paths", tuple(Path(path) for path in dicom_paths))
+
+
+@dataclass(frozen=True)
 class ChestXrayRequest:
     image_path: Path
     exam_id: str | None = None
@@ -130,11 +149,29 @@ class KneeMRIRequest:
         object.__setattr__(self, "patient_id", patient_id)
 
 
-InferenceRequest: TypeAlias = HeadCTRequest | ChestXrayRequest | KneeMRIRequest
+InferenceRequest: TypeAlias = (
+    HeadCTRequest | HeadCTStudyRequest | ChestXrayRequest | KneeMRIRequest
+)
+
+
+class InferenceIssue(str, Enum):
+    UNSUPPORTED = "unsupported"
+    FAILED = "failed"
 
 
 class UnifiedInferenceError(ValueError):
     """A modality request could not be routed or processed."""
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        issue: InferenceIssue = InferenceIssue.FAILED,
+        code: str = "inference_failed",
+    ) -> None:
+        super().__init__(message)
+        self.issue = InferenceIssue(issue)
+        self.code = code
 
 
 class UnifiedInferenceRouter:
@@ -146,6 +183,7 @@ class UnifiedInferenceRouter:
         device: str | None = None,
         bundle_dirs: Mapping[Modality, str | Path] | None = None,
         adapter_factories: Mapping[Modality, Callable[[], object]] | None = None,
+        study_adapter_factory: Callable[[], object] | None = None,
     ) -> None:
         defaults = {
             Modality.HEAD_CT: DEFAULT_BUNDLE_DIR,
@@ -158,10 +196,12 @@ class UnifiedInferenceRouter:
         }
         self.device = device
         self.adapter_factories = dict(adapter_factories or {})
+        self.study_adapter_factory = study_adapter_factory
         unknown = set(self.adapter_factories).difference(MODALITY_REGISTRY)
         if unknown:
             raise UnifiedInferenceError(f"Unregistered adapter modalities: {unknown}")
         self._adapters: dict[Modality, object] = {}
+        self._ct_study_adapter: object | None = None
 
     @property
     def registered_modalities(self) -> tuple[ModalityDefinition, ...]:
@@ -169,16 +209,24 @@ class UnifiedInferenceRouter:
 
     @property
     def loaded_modalities(self) -> tuple[Modality, ...]:
-        return tuple(self._adapters)
+        loaded = list(self._adapters)
+        if self._ct_study_adapter is not None and Modality.HEAD_CT not in loaded:
+            loaded.append(Modality.HEAD_CT)
+        return tuple(loaded)
 
     def unload(self, modality: Modality | None = None) -> tuple[Modality, ...]:
         """Drop one or all cached adapters and release reclaimable accelerator memory."""
         if modality is None:
-            removed = tuple(self._adapters)
+            removed = self.loaded_modalities
             self._adapters.clear()
+            self._ct_study_adapter = None
         else:
             resolved = Modality(modality)
-            removed = (resolved,) if self._adapters.pop(resolved, None) is not None else ()
+            was_loaded = resolved in self.loaded_modalities
+            self._adapters.pop(resolved, None)
+            removed = (resolved,) if was_loaded else ()
+            if resolved is Modality.HEAD_CT:
+                self._ct_study_adapter = None
         gc.collect()
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
@@ -199,6 +247,16 @@ class UnifiedInferenceRouter:
             self._adapters[modality] = adapter
         return self._adapters[modality]
 
+    def _study_adapter(self) -> object:
+        if self._ct_study_adapter is None:
+            if self.study_adapter_factory is not None:
+                self._ct_study_adapter = self.study_adapter_factory()
+            else:
+                self._ct_study_adapter = HeadCTStudyInferenceAdapter(
+                    slice_adapter=self._adapter(Modality.HEAD_CT)
+                )
+        return self._ct_study_adapter
+
     def predict(self, request: InferenceRequest) -> ModelEvidence:
         try:
             if isinstance(request, HeadCTRequest):
@@ -209,6 +267,8 @@ class UnifiedInferenceRouter:
                     latency_ms=(time.perf_counter() - started) * 1000.0,
                     input_hashes={request.dicom_path.name: sha256(request.dicom_path)},
                 )
+            if isinstance(request, HeadCTStudyRequest):
+                return self._study_adapter().predict_series(request.dicom_paths)
             if isinstance(request, ChestXrayRequest):
                 adapter = self._adapter(Modality.CHEST_XRAY)
                 return adapter.predict_file(
@@ -225,8 +285,38 @@ class UnifiedInferenceRouter:
                     exam_id=request.exam_id,
                     patient_id=request.patient_id,
                 )
-        except (OSError, ValueError, InvalidDicomError) as exc:
-            raise UnifiedInferenceError(str(exc)) from exc
+        except UnifiedInferenceError:
+            raise
+        except CTSeriesInputError as exc:
+            issue = (
+                InferenceIssue.UNSUPPORTED
+                if exc.issue is CTSeriesIssue.UNSUPPORTED
+                else InferenceIssue.FAILED
+            )
+            raise UnifiedInferenceError(str(exc), issue=issue, code=exc.code) from exc
+        except NIHImageError as exc:
+            raise UnifiedInferenceError(
+                str(exc), issue=InferenceIssue.FAILED, code="image_decode_failed"
+            ) from exc
+        except (RSNAInputError, MRNetInputError, MRNetVolumeError) as exc:
+            raise UnifiedInferenceError(
+                str(exc), issue=InferenceIssue.UNSUPPORTED,
+                code="input_contract_violation",
+            ) from exc
+        except InvalidDicomError as exc:
+            raise UnifiedInferenceError(
+                str(exc), issue=InferenceIssue.UNSUPPORTED, code="invalid_dicom"
+            ) from exc
+        except (OSError, RuntimeError, CXREvidenceError, MRNetEvidenceError) as exc:
+            raise UnifiedInferenceError(
+                str(exc), issue=InferenceIssue.FAILED, code="inference_runtime_failure"
+            ) from exc
+        except ValueError as exc:
+            raise UnifiedInferenceError(
+                str(exc), issue=InferenceIssue.FAILED, code="inference_validation_failure"
+            ) from exc
         raise UnifiedInferenceError(
-            f"Unsupported inference request type: {type(request).__name__}"
+            f"Unsupported inference request type: {type(request).__name__}",
+            issue=InferenceIssue.UNSUPPORTED,
+            code="unsupported_request_type",
         )

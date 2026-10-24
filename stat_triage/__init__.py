@@ -76,6 +76,8 @@ from .multimodal import (
     MODALITY_REGISTRY,
     ChestXrayRequest,
     HeadCTRequest,
+    HeadCTStudyRequest,
+    InferenceIssue,
     KneeMRIRequest,
     ModalityDefinition,
     UnifiedInferenceError,
@@ -174,6 +176,8 @@ __all__ = [
     "MODALITY_REGISTRY",
     "ChestXrayRequest",
     "HeadCTRequest",
+    "HeadCTStudyRequest",
+    "InferenceIssue",
     "KneeMRIRequest",
     "ModalityDefinition",
     "UnifiedInferenceError",
@@ -200,3 +204,7 @@ __all__ = [
     "build_inference_cli_parser",
     "serialize_evidence",
 ]
+
+from .triage_service import UnifiedTriageService, requested_modality
+
+__all__ += ["UnifiedTriageService", "requested_modality"]
