@@ -29,6 +29,18 @@ class CaseStoreError(RuntimeError):
     """Persistent case data is invalid, inconsistent, or cannot be changed."""
 
 
+class CaseConflictError(CaseStoreError):
+    """A case identifier already exists."""
+
+
+class CaseTransitionError(CaseStoreError):
+    """A requested case state transition is not permitted."""
+
+
+class CaseIntegrityError(CaseStoreError):
+    """Stored case or audit data failed integrity validation."""
+
+
 @dataclass(frozen=True)
 class StoredCase:
     case_id: str
@@ -209,7 +221,7 @@ class PersistentCaseStore:
                     (case_id, outcome_json, status, now, None, None, None, _digest(payload)),
                 )
             except sqlite3.IntegrityError as exc:
-                raise CaseStoreError(f"case already exists: {case_id}") from exc
+                raise CaseConflictError(f"case already exists: {case_id}") from exc
             self._append_event(connection, case_id, "SUBMITTED", actor, {
                 "disposition": outcome.disposition.value, "status": status,
             }, now)
@@ -255,9 +267,9 @@ class PersistentCaseStore:
                 raise KeyError(case_id)
             current = self._decode_case(row)
             if current.status != "ACTIVE":
-                raise CaseStoreError(f"case is not active: {case_id}")
+                raise CaseTransitionError(f"case is not active: {case_id}")
             if action == "OVERRIDE_CLEARED" and current.override_zone is None:
-                raise CaseStoreError(f"case has no override: {case_id}")
+                raise CaseTransitionError(f"case has no override: {case_id}")
             status = "COMPLETED" if complete else "ACTIVE"
             completed_at = now if complete else None
             if complete:
@@ -295,14 +307,14 @@ class PersistentCaseStore:
         previous = "0" * 64
         for event in events:
             if event.previous_hash != previous:
-                raise CaseStoreError("audit chain previous hash mismatch")
+                raise CaseIntegrityError("audit chain previous hash mismatch")
             payload = {
                 "timestamp": event.timestamp, "case_id": event.case_id,
                 "action": event.action, "actor": event.actor,
                 "details": dict(event.details), "previous_hash": previous,
             }
             if _digest(payload) != event.event_hash:
-                raise CaseStoreError("audit event hash mismatch")
+                raise CaseIntegrityError("audit event hash mismatch")
             previous = event.event_hash
         return {"status": "passed", "cases": len(cases), "audit_events": len(events)}
 
@@ -312,11 +324,11 @@ class PersistentCaseStore:
             row["override_zone"], row["override_reason"], row["completed_at"],
         )
         if _digest(payload) != row["integrity_sha256"]:
-            raise CaseStoreError(f"case integrity mismatch: {row['case_id']}")
+            raise CaseIntegrityError(f"case integrity mismatch: {row['case_id']}")
         try:
             outcome = _outcome_from_dict(json.loads(row["outcome_json"]))
         except (KeyError, TypeError, ValueError, json.JSONDecodeError) as exc:
-            raise CaseStoreError(f"invalid stored outcome: {row['case_id']}") from exc
+            raise CaseIntegrityError(f"invalid stored outcome: {row['case_id']}") from exc
         return StoredCase(
             case_id=row["case_id"], outcome=outcome, status=row["status"],
             arrival_time=float(row["arrival_time"]),

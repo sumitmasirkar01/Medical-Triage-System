@@ -208,18 +208,34 @@ __all__ = [
 from .triage_service import UnifiedTriageService, requested_modality
 from .persistent_cases import (
     CaseStoreError,
+    CaseConflictError,
+    CaseIntegrityError,
+    CaseTransitionError,
     PersistentAuditEvent,
     PersistentCaseStore,
     PersistentTriageCoordinator,
     StoredCase,
+)
+from .application import (
+    ActorRole,
+    ApplicationActor,
+    ApplicationResponse,
+    TriageApplication,
 )
 
 __all__ += [
     "UnifiedTriageService",
     "requested_modality",
     "CaseStoreError",
+    "CaseConflictError",
+    "CaseIntegrityError",
+    "CaseTransitionError",
     "PersistentAuditEvent",
     "PersistentCaseStore",
     "PersistentTriageCoordinator",
     "StoredCase",
+    "ActorRole",
+    "ApplicationActor",
+    "ApplicationResponse",
+    "TriageApplication",
 ]
