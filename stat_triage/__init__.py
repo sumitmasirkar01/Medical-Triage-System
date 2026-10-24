@@ -206,5 +206,20 @@ __all__ = [
 ]
 
 from .triage_service import UnifiedTriageService, requested_modality
+from .persistent_cases import (
+    CaseStoreError,
+    PersistentAuditEvent,
+    PersistentCaseStore,
+    PersistentTriageCoordinator,
+    StoredCase,
+)
 
-__all__ += ["UnifiedTriageService", "requested_modality"]
+__all__ += [
+    "UnifiedTriageService",
+    "requested_modality",
+    "CaseStoreError",
+    "PersistentAuditEvent",
+    "PersistentCaseStore",
+    "PersistentTriageCoordinator",
+    "StoredCase",
+]
