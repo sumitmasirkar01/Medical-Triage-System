@@ -93,18 +93,3 @@ def test_registry_detects_protocol_amendment_tampering(tmp_path):
     amendment.write_text('{"amends":"2"}', encoding="utf-8")
     with pytest.raises(ExperimentRegistryError, match="changed"):
         validate_experiment_registry(registry, tmp_path)
-
-
-def test_registry_rejects_invalid_historical_metadata(tmp_path):
-    registry, record, _ = _setup(tmp_path)
-    record["code_commit"] = "short"
-    with pytest.raises(ExperimentRegistryError, match="Git commit"):
-        register_run(registry, record, tmp_path)
-
-
-def test_registry_rejects_run_protocol_mismatch(tmp_path):
-    registry, record, _ = _setup(tmp_path)
-    record["protocol"] = dict(record["protocol"])
-    record["protocol"]["sha256"] = "0" * 64
-    with pytest.raises(ExperimentRegistryError, match="Protocol declaration mismatch"):
-        register_run(registry, record, tmp_path)

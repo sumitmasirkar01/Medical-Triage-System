@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 import argparse
+import ast
 import hashlib
 import json
+import os
 from pathlib import Path
+import tempfile
 import tomllib
 
 
@@ -13,107 +16,101 @@ ROOT = Path(__file__).resolve().parents[1]
 BUNDLE = ROOT / "artifacts" / "rsna_baseline" / "rsna_baseline_bundle"
 CXR_BUNDLE = ROOT / "artifacts" / "chest_xray" / "nih_cxr14_locked_test_bundle"
 MRNET_BUNDLE = ROOT / "artifacts" / "mrnet_baseline"
-SUPPORTED_SOURCE = (
+_TOP_LEVEL_SOURCE = (
     "app.py",
     "generate_pilot_report.py",
+    "PROJECT_PLAN.md",
+    "README.md",
     "pyproject.toml",
     "requirements.txt",
     "requirements-dev.txt",
-    "research/protocol.json",
-    "research/protocol_amendment_phase2.json",
-    "research/experiment_registry.json",
-    "stat_triage/__init__.py",
-    "stat_triage/contracts.py",
-    "stat_triage/calibration.py",
-    "stat_triage/bootstrap.py",
-    "stat_triage/evaluation.py",
-    "stat_triage/ingestion.py",
-    "stat_triage/rsna.py",
-    "stat_triage/ct_study.py",
-    "stat_triage/ct_phase2_evidence.py",
-    "stat_triage/ct_selective.py",
-    "stat_triage/ct_robustness.py",
-    "stat_triage/thresholds.py",
-    "stat_triage/selective.py",
-    "stat_triage/orchestration.py",
-    "stat_triage/losses.py",
-    "stat_triage/datasets/__init__.py",
-    "stat_triage/datasets/rsna_study.py",
-    "stat_triage/datasets/nih_cxr14.py",
-    "scripts/inventory_nih_cxr14.py",
-    "scripts/build_nih_cxr14_manifest.py",
-    "stat_triage/datasets/nih_preprocessing.py",
-    "scripts/audit_nih_preprocessing.py",
-    "stat_triage/datasets/nih_training.py",
-    "stat_triage/models/__init__.py",
-    "stat_triage/models/densenet_multilabel.py",
-    "scripts/preflight_nih_densenet.py",
-    "stat_triage/cxr_training.py",
-    "stat_triage/cxr_calibration.py",
-    "stat_triage/cxr_evaluation.py",
-    "stat_triage/cxr_robustness.py",
-    "stat_triage/cxr.py",
-    "stat_triage/cxr_policy.py",
-    "scripts/train_nih_densenet.py",
-    "scripts/calibrate_nih_densenet.py",
-    "scripts/evaluate_nih_densenet.py",
-    "scripts/evaluate_cxr_robustness.py",
-    "scripts/cache_nih_images.py",
-    "stat_triage/datasets/mrnet.py",
-    "scripts/inventory_mrnet.py",
-    "scripts/build_mrnet_manifest.py",
-    "stat_triage/datasets/mrnet_preprocessing.py",
-    "scripts/audit_mrnet_preprocessing.py",
-    "stat_triage/datasets/mrnet_training.py",
-    "stat_triage/models/mrnet_multiplane.py",
-    "scripts/preflight_mrnet_model.py",
-    "scripts/train_mrnet_multiplane.py",
-    "stat_triage/mrnet_calibration.py",
-    "scripts/calibrate_mrnet_multiplane.py",
-    "stat_triage/mrnet_evaluation.py",
-    "stat_triage/mrnet_robustness.py",
-    "scripts/evaluate_mrnet_multiplane.py",
-    "scripts/evaluate_mrnet_robustness.py",
-    "stat_triage/mrnet.py",
-    "stat_triage/multimodal.py",
-    "stat_triage/multimodal_worklist.py",
-    "stat_triage/triage_outcome.py",
-    "stat_triage/ct_series.py",
-    "stat_triage/triage_service.py",
-    "stat_triage/persistent_cases.py",
-    "stat_triage/application.py",
-    "stat_triage/artifacts.py",
-    "stat_triage/experiments.py",
+)
+_EVIDENCE_DECLARATIONS = (
     "artifacts/multimodal_registry.json",
-    "scripts/validate_multimodal_evidence.py",
-    "scripts/validate_release.py",
-    "scripts/experiment_registry.py",
-    "scripts/rebuild_experiment_registry.py",
-    "docs/PROTOCOL_AMENDMENT_PHASE2.md",
-    "docs/PHASE3_TRIAGE_CONTRACT.md",
-    "docs/PHASE3_CT_SERIES_INGESTION.md",
-    "docs/PHASE3_UNIFIED_SERVICE.md",
-    "docs/PHASE3_PERSISTENT_ORCHESTRATION.md",
-    "docs/PHASE3_APPLICATION_BOUNDARY.md",
-    "scripts/multimodal_smoke.py",
-    "stat_triage/results.py",
-    "scripts/generate_multimodal_results.py",
-    "stat_triage/cli.py",
-    "scripts/infer_multimodal.py",
-    "stat_triage/worklist.py",
-    "scripts/create_demo_dicom.py",
-    "scripts/demo_smoke.py",
-    "scripts/evaluate_rsna_study_pooling.py",
-    "scripts/lock_rsna_study_protocol.py",
-    "scripts/evaluate_locked_rsna_studies.py",
-    "scripts/build_rsna_study_cohort.py",
-    "scripts/validate_rsna_study_cohort.py",
-    "scripts/predict_rsna_study_slices.py",
-    "scripts/validate_ct_phase2_evidence.py",
-    "scripts/evaluate_ct_phase2_selective.py",
-    "scripts/evaluate_ct_phase2_robustness.py",
     "artifacts/rsna_phase2/evidence_registry.json",
 )
+
+
+def supported_source_paths(root: Path = ROOT) -> tuple[str, ...]:
+    """Discover the complete release-controlled source inventory deterministically."""
+    candidates = {root / relative for relative in _TOP_LEVEL_SOURCE}
+    candidates.update((root / "stat_triage").rglob("*.py"))
+    candidates.update((root / "scripts").glob("*.py"))
+    candidates.update((root / "tests").glob("test_*.py"))
+    candidates.update((root / "docs").glob("*.md"))
+    candidates.update((root / "research").glob("*.json"))
+    candidates.update(root / relative for relative in _EVIDENCE_DECLARATIONS)
+    missing = [path for path in candidates if not path.is_file()]
+    if missing:
+        raise FileNotFoundError(f"Missing release-controlled source: {missing[0]}")
+    return tuple(
+        sorted(path.relative_to(root).as_posix() for path in candidates)
+    )
+
+
+def _parametrize_cases(decorator: ast.expr, path: Path) -> int:
+    if not isinstance(decorator, ast.Call):
+        return 1
+    function = decorator.func
+    if not isinstance(function, ast.Attribute) or function.attr != "parametrize":
+        return 1
+    if len(decorator.args) < 2 or not isinstance(
+        decorator.args[1], (ast.List, ast.Tuple, ast.Set)
+    ):
+        raise ValueError(f"Cannot statically count pytest parametrization in {path}")
+    return len(decorator.args[1].elts)
+
+
+def collected_test_count(root: Path = ROOT) -> int:
+    """Count this suite's statically declared pytest cases without invoking pytest."""
+    total = 0
+    for relative in supported_source_paths(root):
+        if not relative.startswith("tests/") or not relative.endswith(".py"):
+            continue
+        path = root / relative
+        tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+        module_tests = {
+            node.name: node
+            for node in tree.body
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+            and node.name.startswith("test_")
+        }
+        nodes = list(module_tests.values())
+        for item in tree.body:
+            if isinstance(item, ast.ClassDef):
+                class_tests = {
+                    node.name: node
+                    for node in item.body
+                    if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+                    and node.name.startswith("test_")
+                }
+                nodes.extend(class_tests.values())
+        for node in nodes:
+            cases = 1
+            for decorator in node.decorator_list:
+                cases *= _parametrize_cases(decorator, path)
+            total += cases
+    return total
+
+
+def write_json_atomic(path: Path, value: object) -> None:
+    """Replace a JSON artifact only after its complete deterministic serialization."""
+    path = path.resolve()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = json.dumps(value, indent=2) + "\n"
+    descriptor, temporary_name = tempfile.mkstemp(
+        dir=path.parent, prefix=f".{path.name}.", suffix=".tmp"
+    )
+    temporary = Path(temporary_name)
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8", newline="\n") as handle:
+            handle.write(payload)
+            handle.flush()
+            os.fsync(handle.fileno())
+        temporary.replace(path)
+    except Exception:
+        temporary.unlink(missing_ok=True)
+        raise
 
 
 def sha256(path: Path) -> str:
@@ -412,12 +409,12 @@ def build_manifest() -> dict:
                 "sha256": sha256(report),
             },
             "supported_source_sha256": {
-                name: sha256(ROOT / name) for name in SUPPORTED_SOURCE
+                name: sha256(ROOT / name) for name in supported_source_paths()
             },
         },
         "verification": {
             "python": "3.12.7",
-            "expected_tests": 213,
+            "expected_tests": collected_test_count(),
             "commands": [
                 ".\\.venv\\Scripts\\python.exe -m pip check",
                 ".\\.venv\\Scripts\\python.exe -m scripts.validate_multimodal_evidence",
@@ -434,10 +431,7 @@ def main() -> None:
         "--output", type=Path, default=ROOT / "release" / "release_manifest.json"
     )
     args = parser.parse_args()
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(
-        json.dumps(build_manifest(), indent=2) + "\n", encoding="utf-8"
-    )
+    write_json_atomic(args.output, build_manifest())
     print(args.output.resolve())
 
 

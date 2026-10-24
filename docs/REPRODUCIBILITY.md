@@ -40,11 +40,16 @@ install this project with `--no-deps`.
 ```powershell
 .\.venv\Scripts\python.exe -m pip check
 .\.venv\Scripts\python.exe -m pytest -q
+.\.venv\Scripts\python.exe -m scripts.refresh_release
 .\.venv\Scripts\python.exe -m scripts.create_demo_dicom --output sample_dicoms\DEMO_CT.dcm
 .\.venv\Scripts\python.exe -m scripts.demo_smoke --dicom sample_dicoms\DEMO_CT.dcm
 ```
 
-Expected supported-suite result as of 2026-10-22: `130 passed`.
+The exact collected-test count is discovered from `tests/test_*.py` and recorded in
+`release/release_manifest.json`; it is not maintained manually in this document.
+`scripts.refresh_release` atomically regenerates the manifest, validates that exact
+manifest, and then replaces the deterministic validation report. Running it twice
+without source or evidence changes produces identical release JSON files.
 
 ## Research experiment provenance
 

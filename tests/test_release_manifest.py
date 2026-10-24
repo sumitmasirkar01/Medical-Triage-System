@@ -4,7 +4,13 @@ from pathlib import Path
 
 import pytest
 
-from scripts.generate_release_manifest import ROOT, build_manifest
+from scripts.generate_release_manifest import (
+    ROOT,
+    build_manifest,
+    collected_test_count,
+    supported_source_paths,
+    write_json_atomic,
+)
 from stat_triage.orchestration import (
     ReleaseValidationError,
     validate_phase2_release_artifacts,
@@ -23,7 +29,7 @@ def test_release_manifest_uses_locked_model_and_test_metrics():
     assert manifest["supported_scope"]["locked_threshold"] == 0.2538610100746155
     assert manifest["locked_test"]["images"] == 242
     assert manifest["locked_test"]["primary_metrics"]["roc_auc"] == 0.8417158598976782
-    assert manifest["verification"]["expected_tests"] == 213
+    assert manifest["verification"]["expected_tests"] == collected_test_count()
     phase2 = manifest["modalities"]["head_ct"]["phase_2_study_level"]
     assert phase2["status"] == "passed"
     assert phase2["selected_pooling"] == "mean"
@@ -66,3 +72,21 @@ def test_phase2_release_validation_rejects_bad_declaration():
     ] = "0" * 64
     with pytest.raises(ReleaseValidationError, match="SHA-256 mismatch"):
         validate_phase2_release_artifacts(manifest, Path(ROOT))
+
+
+def test_release_source_and_test_inventories_are_discovered():
+    sources = supported_source_paths()
+    assert sources == tuple(sorted(sources))
+    assert "scripts/generate_release_manifest.py" in sources
+    assert "scripts/refresh_release.py" in sources
+    assert "tests/test_release_manifest.py" in sources
+    assert not any(path.startswith("release/") for path in sources)
+    assert collected_test_count() > 0
+
+
+def test_atomic_manifest_serialization_is_repeatable(tmp_path):
+    output = tmp_path / "manifest.json"
+    write_json_atomic(output, build_manifest())
+    first = output.read_bytes()
+    write_json_atomic(output, build_manifest())
+    assert output.read_bytes() == first

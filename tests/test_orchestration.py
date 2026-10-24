@@ -1,5 +1,6 @@
 """The unified evaluator must fail closed and reproduce the locked release."""
 
+import hashlib
 from pathlib import Path
 
 import scripts.validate_release as release_validator
@@ -47,6 +48,10 @@ def test_release_builder_validates_experiment_registry_once(monkeypatch):
         "registered_runs": 1,
         "run_ids": ["run-1"],
     }
+    assert "generated_at" not in report
+    assert report["release_manifest_sha256"] == hashlib.sha256(
+        RELEASE.read_bytes()
+    ).hexdigest()
 
 
 def test_release_manifest_sources_and_report_are_intact():
@@ -93,6 +98,10 @@ def test_unified_evaluator_passes_every_rsna_gate():
         "knee_mri",
     ]
     assert unified["multimodal_validation"]["metrics_recomputed"] is True
+    assert all(
+        not Path(values["bundle_path"]).is_absolute()
+        for values in unified["multimodal_validation"]["modalities"].values()
+    )
     assert unified["head_ct_deep_validation"]["policy"][
         "threshold_retuned_on_test"
     ] is False

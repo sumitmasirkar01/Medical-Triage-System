@@ -3,7 +3,7 @@
 ## Files
 
 - [ ] `README.md` contains only supported commands and current limitations.
-- [ ] `release/release_manifest.json` has been regenerated after the final edit.
+- [ ] `python -m scripts.refresh_release` completes after the final edit.
 - [ ] `docs/STAT_Triage_RSNA_Pilot_Report.docx` opens and its tables match the
   locked metrics.
 - [ ] The artifact bundle contains the checkpoint, configuration, predictions,
@@ -15,7 +15,8 @@
 ## Verification
 
 - [ ] `python -m pip check` reports no broken requirements.
-- [ ] `python -m pytest -q` reports 15 passed.
+- [ ] `python -m pytest -q` matches the dynamically recorded count in
+  `release/release_manifest.json`.
 - [ ] The generated demo DICOM passes the CLI rehearsal.
 - [ ] Streamlit accepts the generated DICOM and displays six scores.
 - [ ] Override, override clearing, audit history, and completion work interactively.
