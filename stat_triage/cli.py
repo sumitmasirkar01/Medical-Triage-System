@@ -1,4 +1,4 @@
-"""Command-line contracts for unified multimodal inference."""
+"""Safe command-line contracts for unified multimodal triage."""
 
 from __future__ import annotations
 
@@ -10,29 +10,38 @@ from .contracts import ModelEvidence
 from .multimodal import (
     ChestXrayRequest,
     HeadCTRequest,
+    HeadCTStudyRequest,
     KneeMRIRequest,
     UnifiedInferenceRouter,
 )
-from .multimodal_worklist import MultimodalTriagePolicy
-from .triage_outcome import TriageOutcome
+from .triage_outcome import TriageDisposition, TriageOutcome
+from .triage_service import UnifiedTriageService
+
+
+CLI_SCHEMA_VERSION = "2.0"
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="stat-triage-infer",
-        description="Run one verified modality-specific model and emit JSON evidence.",
+        description="Run one verified modality-specific model and emit a safe triage outcome.",
     )
     parser.add_argument("--device", choices=("cpu", "cuda"), default=None)
     parser.add_argument("--output", type=Path)
-    parser.add_argument("--with-triage", action="store_true")
+    parser.add_argument("--with-triage", action="store_true", help=argparse.SUPPRESS)
     subcommands = parser.add_subparsers(dest="command", required=True)
 
     ct = subcommands.add_parser("head-ct", help="Infer one head CT DICOM slice")
     ct.add_argument("--dicom", type=Path, required=True)
 
+    ct_series = subcommands.add_parser(
+        "head-ct-series", help="Infer one complete head CT DICOM series"
+    )
+    ct_series.add_argument("--dicom", type=Path, nargs="+", required=True)
+
     cxr = subcommands.add_parser("chest-xray", help="Infer one frontal chest radiograph")
     cxr.add_argument("--image", type=Path, required=True)
-    cxr.add_argument("--exam-id")
+    cxr.add_argument("--exam-id", required=True)
     cxr.add_argument("--patient-id")
 
     mri = subcommands.add_parser("knee-mri", help="Infer one three-plane MRNet exam")
@@ -44,28 +53,28 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def _required_file(path: Path, role: str) -> Path:
-    resolved = path.expanduser().resolve()
-    if not resolved.is_file():
-        raise ValueError(f"{role} file does not exist: {resolved}")
-    return resolved
+def _resolved(path: Path) -> Path:
+    """Normalize a path without probing or disclosing it in an exception."""
+
+    return path.expanduser().resolve()
 
 
 def request_from_arguments(arguments: argparse.Namespace):
     if arguments.command == "head-ct":
-        return HeadCTRequest(_required_file(arguments.dicom, "DICOM"))
+        return HeadCTRequest(_resolved(arguments.dicom))
+    if arguments.command == "head-ct-series":
+        return HeadCTStudyRequest([_resolved(path) for path in arguments.dicom])
     if arguments.command == "chest-xray":
-        image = _required_file(arguments.image, "Chest X-ray")
         return ChestXrayRequest(
-            image,
-            exam_id=arguments.exam_id or image.stem,
-            patient_id=arguments.patient_id,
+            _resolved(arguments.image),
+            exam_id=arguments.exam_id,
+            patient_id=arguments.patient_id or arguments.exam_id,
         )
     if arguments.command == "knee-mri":
         return KneeMRIRequest(
-            axial_path=_required_file(arguments.axial, "Axial"),
-            coronal_path=_required_file(arguments.coronal, "Coronal"),
-            sagittal_path=_required_file(arguments.sagittal, "Sagittal"),
+            axial_path=_resolved(arguments.axial),
+            coronal_path=_resolved(arguments.coronal),
+            sagittal_path=_resolved(arguments.sagittal),
             exam_id=arguments.exam_id,
             patient_id=arguments.patient_id,
         )
@@ -73,6 +82,10 @@ def request_from_arguments(arguments: argparse.Namespace):
 
 
 def serialize_evidence(evidence: ModelEvidence) -> dict[str, object]:
+    input_hashes = {
+        f"input_{index:04d}": digest
+        for index, digest in enumerate(evidence.input_hashes.values(), start=1)
+    }
     return {
         "exam_id": evidence.exam_id,
         "patient_id": evidence.patient_id,
@@ -86,7 +99,7 @@ def serialize_evidence(evidence: ModelEvidence) -> dict[str, object]:
         "thresholds": dict(evidence.thresholds),
         "decisions": dict(evidence.decisions),
         "latency_ms": evidence.latency_ms,
-        "input_hashes": dict(evidence.input_hashes),
+        "input_hashes": input_hashes,
         "created_at": evidence.created_at.isoformat(),
         "warnings": list(evidence.warnings),
         "study_instance_uid": evidence.study_instance_uid,
@@ -94,22 +107,41 @@ def serialize_evidence(evidence: ModelEvidence) -> dict[str, object]:
     }
 
 
+def serialize_outcome(outcome: TriageOutcome) -> dict[str, object]:
+    return {
+        "schema_version": CLI_SCHEMA_VERSION,
+        "status": "complete",
+        "outcome": outcome.to_dict(),
+        "evidence": serialize_evidence(outcome.evidence) if outcome.evidence else None,
+    }
+
+
 def run_inference(
     arguments: argparse.Namespace,
     *,
+    service: UnifiedTriageService | None = None,
     router: UnifiedInferenceRouter | None = None,
 ) -> dict[str, object]:
-    active_router = router or UnifiedInferenceRouter(device=arguments.device)
-    evidence = active_router.predict(request_from_arguments(arguments))
-    result: dict[str, object] = {
-        "schema_version": "1.0",
-        "status": "complete",
-        "evidence": serialize_evidence(evidence),
-    }
-    if arguments.with_triage:
-        decision = MultimodalTriagePolicy().evaluate(evidence, wait_minutes=0)
-        result["triage"] = TriageOutcome.from_policy(evidence, decision).to_dict()
-    return result
+    if service is not None and router is not None:
+        raise ValueError("service and router are mutually exclusive")
+    active_service = service or UnifiedTriageService(
+        router=router, device=arguments.device
+    )
+    try:
+        request = request_from_arguments(arguments)
+    except Exception:
+        return serialize_outcome(TriageOutcome.failed("invalid_cli_request"))
+    return serialize_outcome(active_service.triage(request))
+
+
+def exit_code_for_result(result: dict[str, object]) -> int:
+    outcome = result.get("outcome")
+    disposition = outcome.get("disposition") if isinstance(outcome, dict) else None
+    if disposition == TriageDisposition.UNSUPPORTED.value:
+        return 3
+    if disposition == TriageDisposition.FAILED.value:
+        return 2
+    return 0
 
 
 def parse_arguments(argv: Sequence[str] | None = None) -> argparse.Namespace:

@@ -19,6 +19,7 @@ and locked-positive targets consistent with the evidence. Unsupported and failed
 outcomes cannot contain predictions or positive targets. Human review is mandatory
 for all five dispositions because this release is a research demonstration.
 
-The unified CLI emits this contract when `--with-triage` is supplied. The next
-Phase 3 step will add study-level input validation and map ingestion failures into
-`UNSUPPORTED` or `FAILED` outcomes at the service boundary.
+The unified CLI always emits this contract. `--with-triage` remains accepted as a
+hidden compatibility no-op, but callers no longer need it. Study-level CT input is
+supported, and ingestion failures are mapped into `UNSUPPORTED` or `FAILED`
+outcomes at the service boundary without exposing paths or decoder details.

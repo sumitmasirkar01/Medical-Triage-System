@@ -68,10 +68,14 @@ contract:
 
 The app accepts one single-frame CT DICOM instance up to 32 MiB, runs the verified
 slice-level adapter, and adds its evidence to the session-local worklist. It
-provides explicit override and completion controls with audit history. The
-three-modality backend is exercised through `scripts/infer_multimodal.py` and
-`scripts/multimodal_smoke.py`; the graphical interface remains intentionally
-CT-only.
+provides explicit override and completion controls with audit history. The safe
+command-line boundary in `scripts/infer_multimodal.py` supports CT slices, complete
+CT series, frontal chest radiographs, and three-plane knee MRI exams. Every command
+returns the same versioned triage envelope and requires human review. The graphical
+interface remains intentionally CT-only.
+
+See `docs/CLI_INFERENCE.md` for commands, output fields, resource limits, and exit
+codes.
 
 Generate a complete de-identified fixture and rehearse the workflow with:
 
