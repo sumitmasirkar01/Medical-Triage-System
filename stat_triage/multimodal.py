@@ -40,12 +40,13 @@ MODALITY_REGISTRY: Mapping[Modality, ModalityDefinition] = MappingProxyType(
             display_name="Head CT",
             endpoint="slice_level_any_hemorrhage",
             evaluation_level="slice",
-            input_roles=("dicom_slice",),
+            input_roles=("dicom_slice", "dicom_series"),
             labels=RSNA_LABELS,
             locked_decision_targets=("any",),
             limitations=(
-                "pilot_is_slice_level_not_study_level",
-                "any_score_is_not_population_calibrated",
+                "slice_and_study_endpoints_are_distinct",
+                "study_input_requires_one_complete_series",
+                "scores_are_not_population_calibrated",
             ),
         ),
         Modality.CHEST_XRAY: ModalityDefinition(

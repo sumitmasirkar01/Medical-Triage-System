@@ -61,6 +61,9 @@ def router():
 def test_registry_declares_three_distinct_input_contracts():
     assert set(MODALITY_REGISTRY) == set(Modality)
     assert MODALITY_REGISTRY[Modality.HEAD_CT].evaluation_level == "slice"
+    assert MODALITY_REGISTRY[Modality.HEAD_CT].input_roles == (
+        "dicom_slice", "dicom_series"
+    )
     assert MODALITY_REGISTRY[Modality.KNEE_MRI].input_roles == (
         "axial", "coronal", "sagittal"
     )

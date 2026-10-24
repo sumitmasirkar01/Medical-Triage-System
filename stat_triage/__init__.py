@@ -93,6 +93,16 @@ from .triage_outcome import (
     TriageOutcome,
     TriageOutcomeError,
 )
+from .ct_series import (
+    DEFAULT_CT_STUDY_PROTOCOL_BUNDLE,
+    CTSeriesInputError,
+    CTSeriesIssue,
+    CTSeriesSlice,
+    ValidatedHeadCTSeries,
+    HeadCTStudyInferenceAdapter,
+    load_locked_ct_study_protocol,
+    validate_head_ct_series,
+)
 from .artifacts import (
     DEFAULT_MULTIMODAL_REGISTRY,
     MultimodalRegistryError,
@@ -176,6 +186,14 @@ __all__ = [
     "TriageDisposition",
     "TriageOutcome",
     "TriageOutcomeError",
+    "CTSeriesInputError",
+    "DEFAULT_CT_STUDY_PROTOCOL_BUNDLE",
+    "CTSeriesIssue",
+    "CTSeriesSlice",
+    "ValidatedHeadCTSeries",
+    "HeadCTStudyInferenceAdapter",
+    "load_locked_ct_study_protocol",
+    "validate_head_ct_series",
     "DEFAULT_MULTIMODAL_REGISTRY",
     "MultimodalRegistryError",
     "validate_multimodal_evidence_registry",
