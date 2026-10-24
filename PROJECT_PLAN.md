@@ -249,9 +249,9 @@ the entry-point migration scope. Current status: in progress.
 
 Tasks:
 
-- [ ] M1.1 Align `ModalityTriageOutput`, `DynamicQueueItem`, and gateway consumers;
+- [x] M1.1 Align `ModalityTriageOutput`, `DynamicQueueItem`, and gateway consumers;
   add a regression test for enqueue → sorted worklist → override state.
-- [ ] M1.2 Inventory old entry points and tests; migrate supported behavior to current
+- [x] M1.2 Inventory old entry points and tests; migrate supported behavior to current
   interfaces. Preserve obsolete experiments with clear documentation. Do not hide
   failing tests or add aliases that only move failures to runtime.
 - [x] M1.3 Turn meaningful `run_*` checks into discoverable tests. Separate lightweight
@@ -263,7 +263,7 @@ Tasks:
   behaviors before connecting the UI.
 - [x] M1.6 Declare runtime and development dependencies, isolate optional model
   imports, document setup, and verify installation in a clean environment.
-- [ ] M1.7 Add clear demo/synthetic labels to benchmarks and reports immediately;
+- [x] M1.7 Add clear demo/synthetic labels to benchmarks and reports immediately;
   remove unsupported claims while real evaluation remains pending.
 
 Gate: full pytest collection succeeds; the supported default suite passes without
@@ -276,20 +276,20 @@ Record exact commands and results. This gate proves software behavior, not accur
 Dependencies: M1 contracts, dataset/checkpoint decisions. Estimate: 4–7 working days
 after access is available; downloading and training time are additional.
 
-- [ ] M2.1 Document dataset source, permitted use, label definitions, exclusions,
+- [x] M2.1 Document dataset source, permitted use, label definitions, exclusions,
   patient/study identifiers, and class counts. Keep patient data out of source control.
   Dataset identities and proposed contracts are recorded; manifests and access remain pending.
-- [ ] M2.2 Create patient-disjoint train, tuning/validation, calibration, and locked
+- [x] M2.2 Create patient-disjoint train, tuning/validation, calibration, and locked
   test manifests. Verify no patient or duplicate-study overlap.
-- [ ] M2.3 Consolidate DICOM preprocessing: group by study/series; use spatial metadata
+- [x] M2.3 Consolidate DICOM preprocessing: group by study/series; use spatial metadata
   for ordering; verify rescale/windowing and expected model normalization; reject
   mixed or unsupported series with actionable errors. Test representative fixtures.
 - [x] M2.4 Select a documented trained baseline. Record checkpoint hash, architecture,
   label map, input transform, training source, and license. Missing/incompatible
   weights must fail explicitly outside demo mode.
-- [ ] M2.5 Define long-volume handling and batch/padding behavior. Ensure slice
+- [x] M2.5 Define long-volume handling and batch/padding behavior. Ensure slice
   exclusions and aggregation policy are documented and tested.
-- [ ] M2.6 Save study-level predictions with anonymized IDs, label references,
+- [x] M2.6 Save study-level predictions with anonymized IDs, label references,
   configuration, model hash, split name, and run identifier.
 
 Gate: rerunning a fixed cohort with the same model/configuration reproduces results
@@ -299,19 +299,19 @@ within documented numerical tolerance. No test examples influence model selectio
 
 Dependencies: M2. Estimate: 3–5 working days plus inference time.
 
-- [ ] M3.1 Use actual image-to-model predictions in the evaluator. Preserve synthetic
+- [x] M3.1 Use actual image-to-model predictions in the evaluator. Preserve synthetic
   experiments as separately named engineering demonstrations.
-- [ ] M3.2 Specify metrics before evaluating the locked test set: ROC-AUC, PR-AUC,
+- [x] M3.2 Specify metrics before evaluating the locked test set: ROC-AUC, PR-AUC,
   sensitivity, specificity, predictive values, and confusion counts. Select operating
   thresholds on tuning data only; report attained test operating points.
-- [ ] M3.3 Add patient-level confidence intervals, class counts, and handling of
+- [x] M3.3 Add patient-level confidence intervals, class counts, and handling of
   undefined metrics. Avoid selecting thresholds on the reported test cohort.
 - [ ] M3.4 Fit probability/conformal calibration using real held-out outputs. Report
   target coverage separately from observed coverage, set size, and subgroup results.
   Record assumptions and failure cases; do not treat target alpha as measured safety.
 - [ ] M3.5 Measure DICOM decode, preprocessing, feature extraction, aggregation,
   postprocessing, and total latency. Record hardware, warmup, batch size, and p50/p95.
-- [ ] M3.6 Export machine-readable metrics and prediction artifacts consumed by reports.
+- [x] M3.6 Export machine-readable metrics and prediction artifacts consumed by reports.
 
 Gate: a documented command regenerates the metrics from saved inputs/configuration;
 metrics have provenance and uncertainty; no fabricated predictions or hardcoded

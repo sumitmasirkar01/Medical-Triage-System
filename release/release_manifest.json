@@ -4179,18 +4179,18 @@
     "consolidated_results": {
       "csv": {
         "path": "artifacts/consolidated_results/locked_multimodal_results.csv",
-        "bytes": 5552,
-        "sha256": "413beff2de7d7a7486252d9d4a1038c8245ccdac35783df4c62b5045c2b5dad0"
+        "bytes": 6403,
+        "sha256": "7e054a667a9f362994e0367bd33a4624f00a4eb47ef2122c619548d12f4d5756"
       },
       "json": {
         "path": "artifacts/consolidated_results/locked_multimodal_results.json",
-        "bytes": 14313,
-        "sha256": "2ca7436043a827f8676ebb248c09d9b1c306d183fdcd1c536c06b467e10e7703"
+        "bytes": 17781,
+        "sha256": "4baebf5e04c52f90e82fcce8d052f29d2afbc22d732a8a96912e00c2aa775312"
       },
       "markdown": {
         "path": "artifacts/consolidated_results/locked_multimodal_results.md",
-        "bytes": 969,
-        "sha256": "1cfdd0c10c8a59070d7f88f08ea1ca101d7abc5d0d6bd3eaf1c88b92a76c9b0d"
+        "bytes": 1420,
+        "sha256": "9adcb97e04504a48c55272822b221c1a2a053a9c2e4edb89aeef2ed558b2728f"
       }
     },
     "smoke_uses_synthetic_deidentified_inputs": true
@@ -4323,7 +4323,7 @@
       "sha256": "5c7345a7fc9fa26fd74d92152c36e268e49b0a0bf15bb7503799d05838b063ef"
     },
     "supported_source_sha256": {
-      "PROJECT_PLAN.md": "f1070ebf57e1e65b92f7994cdfd3650f43304a96f3da745b7e8536233370669a",
+      "PROJECT_PLAN.md": "06f362773fb8c0c700829730db514e4865a9f5c5a2e82c429548e6d8dd78e0f4",
       "README.md": "e1fbe537062c88ce811d687a0d152a4982e6b3dcf97731c2dcac938344654f4e",
       "app.py": "2fc2ff6124caf76fdb6c6f1c4ec7567a86a87e72b4b0a70cf98cdde5a62c9bde",
       "artifacts/multimodal_registry.json": "2723795a4fcc4b084528ba121487a1f2109baf2a9b3c15fc91989ca7b71cb16e",
@@ -4431,7 +4431,7 @@
       "stat_triage/multimodal_worklist.py": "c14d8b5b106499b1674eeb3b218a3f50c80953b66ceb3345f1b8b8abae32acf5",
       "stat_triage/orchestration.py": "0651fe5b986f08a9be7df286ae14b1ce5453c6e4642b1a6157d3949b672f1d05",
       "stat_triage/persistent_cases.py": "c7a9bdf09e279ab3e79d2fcbb4d711993facf045a4b8f918e42d89a90cc5b92e",
-      "stat_triage/results.py": "d36a4102e0346e66bc1a0da6fad7bf3a0f7340f1903565f0efaf565f9a786627",
+      "stat_triage/results.py": "d9544518c5e60ad614e0a4387fe3bbcf61013f7f1e4e64df5746d707143c59f6",
       "stat_triage/rsna.py": "3895d47b1f74e76b5362e9a8ca68314802fb2c792a7da30b7f68df0fc7b4e1db",
       "stat_triage/selective.py": "bbf54580c5349f7fc7df0febdb9771ff5e4abde41811373e7ae33dca1d8803fc",
       "stat_triage/thresholds.py": "28e0b88d2cd45c7efd04f4eca3253e5b941d5fc7ea0af6b0e9f1864cc40bed3e",
@@ -4478,7 +4478,7 @@
       "tests/test_orchestration.py": "4719e2dd82f5c5a66ea772c876f27dfef7b8e9b7022eeb25abacb544965fe167",
       "tests/test_persistent_cases.py": "2ad6ce965d0e2cf21839f8f07c0bba57f1d939ade0ea5c9f7ddb4d771b6f24f9",
       "tests/test_release_manifest.py": "b7cfdb7012c31fbbc79cc044413b676ce3ee951d04b930c2a992dda55734a991",
-      "tests/test_results.py": "6f637cc22eeb5de9f31506209b56e7ebe4ba5e8bc607e8e4b50b99cc0578a8dd",
+      "tests/test_results.py": "3d88fe94ee1e176f2b265fa12114c46f38193398a9863d5363a8b4d0124b8b11",
       "tests/test_rsna_adapter.py": "7d1dc515a367bda4d114848a5040335cb8d3a27071174d058f9f9b4e726dcee4",
       "tests/test_rsna_study_cohort.py": "91ef3e9d714973b7186f6a92b05191d1573d351abb522c954df7408b3f8caa66",
       "tests/test_selective.py": "eeb864a19000e270a0e385ce6e7f6899b3409a16bb5b942ac093f198116e0283",
