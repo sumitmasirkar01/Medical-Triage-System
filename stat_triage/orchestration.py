@@ -200,6 +200,7 @@ def validate_project_release_manifest(
         multimodal.get("smoke_report"),
         *(multimodal.get("bundle_manifests") or {}).values(),
         *(multimodal.get("consolidated_results") or {}).values(),
+        *(multimodal.get("paper_assets") or {}).values(),
     ]
     for declaration in declarations:
         if not isinstance(declaration, dict):

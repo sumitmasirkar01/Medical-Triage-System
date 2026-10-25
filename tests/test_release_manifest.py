@@ -65,6 +65,15 @@ def test_all_phase2_release_artifacts_validate():
     assert len(result["verified_analyses"]) == 4
 
 
+def test_release_declares_complete_manuscript_asset_pack():
+    assets = build_manifest()["multimodal_evidence"]["paper_assets"]
+    assert len(assets) == 13
+    assert "figure_1_system_architecture.svg" in assets
+    assert "figure_4_locked_operating_points.png" in assets
+    assert "methods_equations.md" in assets
+    assert "table_1_locked_results.csv" in assets
+
+
 def test_phase2_release_validation_rejects_bad_declaration():
     manifest = build_manifest()
     manifest["modalities"]["knee_mri"]["threshold_robustness"]["report"][

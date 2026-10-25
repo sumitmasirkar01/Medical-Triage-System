@@ -63,6 +63,13 @@ missing or altered. Its default output is:
 docs/STAT_Triage_RSNA_Pilot_Report.docx
 ```
 
+Manuscript-ready SVG/PNG figures, Markdown/CSV tables, and implemented equations
+are under `docs/paper_assets/`. Regenerate them from locked evidence with:
+
+```powershell
+.\.venv\Scripts\python.exe -m scripts.generate_paper_assets
+```
+
 ## Tests
 
 The active suite covers all three adapters, evidence bundles, upload boundaries,

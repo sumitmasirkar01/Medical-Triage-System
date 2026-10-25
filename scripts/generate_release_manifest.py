@@ -144,6 +144,7 @@ def build_manifest() -> dict:
     validation_path = ROOT / "artifacts" / "multimodal_validation.json"
     smoke_path = ROOT / "artifacts" / "multimodal_smoke_report.json"
     results_dir = ROOT / "artifacts" / "consolidated_results"
+    paper_assets_dir = ROOT / "docs" / "paper_assets"
     registry = load_json(registry_path)
     cxr_locked = load_json(
         CXR_BUNDLE / "nih_densenet_calibration" / "locked_calibration.json"
@@ -374,6 +375,11 @@ def build_manifest() -> dict:
                 "csv": declaration(results_dir / "locked_multimodal_results.csv"),
                 "json": declaration(results_dir / "locked_multimodal_results.json"),
                 "markdown": declaration(results_dir / "locked_multimodal_results.md"),
+            },
+            "paper_assets": {
+                path.name: declaration(path)
+                for path in sorted(paper_assets_dir.iterdir())
+                if path.is_file()
             },
             "smoke_uses_synthetic_deidentified_inputs": True,
         },
