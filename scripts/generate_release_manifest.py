@@ -24,6 +24,7 @@ _TOP_LEVEL_SOURCE = (
     "pyproject.toml",
     "requirements.txt",
     "requirements-dev.txt",
+    "setup_collaborator.ps1",
 )
 _EVIDENCE_DECLARATIONS = (
     "artifacts/multimodal_registry.json",

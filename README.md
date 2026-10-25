@@ -35,6 +35,19 @@ limitations are documented in `docs/DATASET_CONTRACTS.md`. The frozen research
 protocol is in `docs/RESEARCH_PROTOCOL.md`, with machine-readable experiment
 provenance under `research/`.
 
+## Collaborator setup
+
+For a fresh laptop checkout, use the tested handoff instructions in
+`docs/COLLABORATOR_HANDOFF.md`. On Windows with Python 3.12 installed:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\setup_collaborator.ps1
+```
+
+This creates an isolated environment, installs the package, verifies the locked
+artifact hashes, and runs the supported test suite. It does not download or include
+the original medical-image datasets.
+
 ## Authoritative report
 
 Generate the report from the locked artifact bundle with:
